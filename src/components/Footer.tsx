@@ -1,4 +1,4 @@
-import { Mail, Globe, Facebook, Twitter, Youtube, ArrowUpRight } from 'lucide-react';
+import { Mail, Globe, Facebook, Twitter, Youtube, ArrowUpRight, Music2 as Tiktok } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 
@@ -34,13 +34,15 @@ export default function Footer() {
             </p>
             <div className="flex space-x-5">
               {[
-                { icon: Facebook, href: "#" },
-                { icon: Twitter, href: "#" },
-                { icon: Youtube, href: "#" }
+                { icon: Facebook, href: "https://www.facebook.com/sunday.osas.9" },
+                { icon: Tiktok, href: "https://www.tiktok.com/@apostlesundayiyi?_r=1&_t=ZN-94kNzz3rsMk" },
+                { icon: Youtube, href: "https://youtube.com/@apostlesundayiyi?si=2aeYqaFrQ6LmioPo" }
               ].map((social, idx) => (
                 <motion.a 
                   key={idx}
                   href={social.href}
+                  target={social.href !== "#" ? "_blank" : undefined}
+                  rel={social.href !== "#" ? "noopener noreferrer" : undefined}
                   whileHover={{ y: -5, scale: 1.1 }}
                   className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-secondary hover:border-secondary/50 transition-all duration-300"
                 >
@@ -82,7 +84,7 @@ export default function Footer() {
                 </div>
                 <div>
                   <span className="block text-xs text-slate-500 uppercase tracking-widest mb-1">Email Inquiry</span>
-                  <span className="text-white font-light group-hover:text-secondary transition-colors">office@sundayiyi.org</span>
+                  <span className="text-white font-light group-hover:text-secondary transition-colors">Trachurch@yahoo.co.uk</span>
                 </div>
               </div>
               <div className="flex items-start space-x-4 group cursor-pointer">
@@ -108,17 +110,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
-      {/* Scroll to Top Button */}
-      <motion.button
-        onClick={scrollToTop}
-        whileHover={{ y: -5 }}
-        className="absolute bottom-12 right-8 w-12 h-12 rounded-full bg-secondary text-primary flex items-center justify-center shadow-lg hover:bg-white transition-colors duration-300 hidden md:flex"
-      >
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M7 13V1M7 1L1 7M7 1L13 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </motion.button>
     </footer>
   );
 }
