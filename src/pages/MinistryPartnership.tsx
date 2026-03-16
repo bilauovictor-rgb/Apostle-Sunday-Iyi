@@ -92,7 +92,7 @@ export default function MinistryPartnership() {
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="order-2 lg:order-1"
+              className="order-1 lg:order-1"
             >
               <div className="mb-8">
                 <h2 className="text-4xl sm:text-6xl font-serif text-primary mb-6 leading-[1.1]">
@@ -119,12 +119,12 @@ export default function MinistryPartnership() {
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="order-1 lg:order-2 relative"
+              className="order-2 lg:order-2 relative"
             >
               <div className="aspect-square rounded-[3rem] overflow-hidden shadow-premium group">
                 <img 
-                  src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070&auto=format&fit=crop" 
-                  alt="Shared Ministry" 
+                  src="https://i.ibb.co/BVLTgMhN/papa-mama-iyi-2.jpg" 
+                  alt="Apostolic Calling" 
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100"
                   referrerPolicy="no-referrer"
                 />
@@ -261,7 +261,10 @@ export default function MinistryPartnership() {
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
-              <button className="premium-button px-10 py-5 flex items-center group w-full sm:w-auto justify-center">
+              <button 
+                onClick={() => window.location.href = '/connect'}
+                className="premium-button px-10 py-5 flex items-center group w-full sm:w-auto justify-center"
+              >
                 Partner With the Mission <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </button>
               <button className="px-10 py-5 rounded-full border border-white/20 hover:bg-white/5 transition-all duration-300 w-full sm:w-auto">

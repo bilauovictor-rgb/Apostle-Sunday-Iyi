@@ -23,7 +23,7 @@ export default function App() {
             <Route path="/about" element={<About />} />
             <Route path="/mission" element={<Mission />} />
             <Route path="/teachings" element={<Teachings />} />
-            <Route path="/contact" element={<Contact />} />
+            <Route path="/connect" element={<Contact />} />
             <Route path="/speaking-invitations" element={<SpeakingInvitations />} />
             <Route path="/ministry-partnership" element={<MinistryPartnership />} />
             <Route path="/gsom-admissions" element={<GSOMAdmissions />} />

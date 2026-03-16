@@ -82,7 +82,7 @@ export default function Home() {
               
               <div className="flex flex-wrap justify-center lg:justify-start gap-6">
                 <Link 
-                  to="/contact" 
+                  to="/connect" 
                   className="premium-button bg-secondary text-primary px-10 py-5 rounded-full font-bold hover:bg-white flex items-center group text-sm sm:text-base"
                 >
                   Partner With Me
@@ -129,31 +129,54 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Transition Divider */}
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white via-white/40 to-transparent z-40"></div>
       </section>
 
       {/* Core Apostolic Convictions */}
-      <section className="py-20 sm:py-28 bg-white relative">
+      <section className="py-20 sm:py-28 bg-white relative overflow-visible">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-            <div className="relative order-2 lg:order-1">
-              <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-premium grayscale hover:grayscale-0 transition-all duration-1000">
-                <img 
-                  src="https://i.ibb.co/PzmYRgM6/Apostle-4.jpg" 
-                  alt="Apostle Sunday Iyi" 
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <div className="absolute -bottom-10 -right-10 bg-primary p-10 sm:p-14 rounded-[2.5rem] shadow-2xl hidden lg:block max-w-xs">
-                <span className="text-secondary text-5xl font-serif absolute top-4 left-4 opacity-20">"</span>
-                <p className="text-white font-serif italic text-2xl leading-tight relative z-10">
-                  The church owes the world a definitive encounter with the divine.
-                </p>
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+            {/* Image & Quote Card Container */}
+            <div className="relative order-1 lg:order-1 flex flex-col items-center lg:items-start">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8 }}
+                className="relative w-full max-w-md lg:max-w-none"
+              >
+                <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-premium grayscale hover:grayscale-0 transition-all duration-1000">
+                  <img 
+                    src="https://i.ibb.co/HRNgSzR/papa-mama-iyi-3.jpg" 
+                    alt="Apostle Sunday Iyi and Pastor Gladys Iyi" 
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                
+                {/* Quote Card */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                  className="relative lg:absolute mt-6 lg:mt-0 lg:-bottom-10 lg:-right-10 bg-primary p-8 sm:p-10 lg:p-14 rounded-[2.5rem] shadow-2xl max-w-[90%] sm:max-w-xs z-20"
+                >
+                  <span className="text-secondary text-4xl sm:text-5xl font-serif absolute top-4 left-4 opacity-20">"</span>
+                  <p className="text-white font-serif italic text-xl sm:text-2xl leading-tight relative z-10">
+                    The church owes the world a definitive encounter with the divine.
+                  </p>
+                </motion.div>
+              </motion.div>
             </div>
-            <div className="order-1 lg:order-2">
+
+            {/* Content Block */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="order-2 lg:order-2 mt-8 lg:mt-0"
+            >
               <div className="inline-flex items-center space-x-4 mb-6">
                 <span className="text-secondary font-bold tracking-[0.3em] uppercase text-[10px] sm:text-xs">Restoring the Original Power & Purity</span>
                 <div className="h-px w-10 bg-secondary/40"></div>
@@ -173,15 +196,23 @@ export default function Home() {
                 </p>
               </div>
               
+              {/* Stats Grid */}
               <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-12">
-                {stats.map((stat) => (
-                  <div key={stat.label} className="bg-slate-50/50 p-8 rounded-3xl border border-slate-100 group hover:border-secondary/30 hover:bg-white hover:shadow-xl transition-all duration-500">
-                    <div className="text-4xl sm:text-5xl font-serif text-primary mb-3 group-hover:text-secondary transition-colors">{stat.value}</div>
+                {stats.map((stat, idx) => (
+                  <motion.div 
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.4 + (idx * 0.1) }}
+                    className="bg-slate-50/50 p-6 sm:p-8 rounded-3xl border border-slate-100 group hover:border-secondary/30 hover:bg-white hover:shadow-xl transition-all duration-500"
+                  >
+                    <div className="text-3xl sm:text-5xl font-serif text-primary mb-3 group-hover:text-secondary transition-colors">{stat.value}</div>
                     <div className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">{stat.label}</div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>

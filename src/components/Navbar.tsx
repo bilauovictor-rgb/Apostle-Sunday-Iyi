@@ -20,7 +20,7 @@ export default function Navbar() {
     { name: 'About', path: '/about' },
     { name: 'Mission', path: '/mission' },
     { name: 'Teachings', path: '/teachings' },
-    { name: 'Connect', path: '/contact' },
+    { name: 'Connect', path: '/connect' },
   ];
 
   return (
