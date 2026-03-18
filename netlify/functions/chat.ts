@@ -23,8 +23,8 @@ export const handler: Handler = async (event) => {
     const body = JSON.parse(event.body || '{}');
     const { message, history } = body;
     
-    // Use API_KEY for Netlify deployment, fallback to GEMINI_API_KEY for local preview
-    const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
+    // Use GEMINI_API_KEY for Netlify deployment, fallback to API_KEY just in case
+    const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
     
     if (!apiKey) {
       return { 
@@ -36,11 +36,9 @@ export const handler: Handler = async (event) => {
 
     const ai = new GoogleGenAI({ apiKey });
     
-    const systemInstruction = `You are a helpful chat assistant representing Apostle Sunday Iyi. 
-Your goal is to assist visitors with their inquiries.
-If a visitor asks about a specific topic, try to provide a relevant YouTube link from his channel.
-If there is no specific video or you don't know the answer, politely tell them to contact the Apostle directly at https://Apostlesundayiyi.netlify.app/contact.
-Keep your responses concise, respectful, and aligned with Christian teachings.`;
+    const systemInstruction = `You are the digital representative for Apostle Sunday Iyi.
+If someone asks a spiritual question, check if there is a related video on his YouTube channel and provide the link.
+The Rule: If you don't have a specific video link for their question, say: 'I don't have a specific video on that yet, but Apostle Sunday Iyi would love to hear from you directly. You can message him here: https://Apostlesundayiyi.netlify.app/contact'`;
 
     const contents = history?.map((msg: any) => ({
       role: msg.role === 'user' ? 'user' : 'model',
