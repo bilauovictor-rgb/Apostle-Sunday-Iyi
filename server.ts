@@ -10,6 +10,10 @@ async function startServer() {
   app.use(express.json());
 
   // API routes FIRST
+  app.get("/api/config", (req, res) => {
+    res.json({ apiKey: process.env.GEMINI_API_KEY || process.env.API_KEY });
+  });
+
   app.post("/api/chat", async (req, res) => {
     try {
       const { message, history } = req.body;
