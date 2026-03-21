@@ -34,7 +34,7 @@ export default function Footer() {
             </p>
             <div className="flex space-x-5">
               {[
-                { icon: Facebook, href: "https://www.facebook.com/sunday.osas.9" },
+                { icon: Facebook, href: "https://web.facebook.com/sunday.osas.9/" },
                 { icon: Tiktok, href: "https://www.tiktok.com/@apostlesundayiyi?_r=1&_t=ZN-94kNzz3rsMk" },
                 { icon: Youtube, href: "https://youtube.com/@apostlesundayiyi?si=2aeYqaFrQ6LmioPo" }
               ].map((social, idx) => (
@@ -105,6 +105,7 @@ export default function Footer() {
             © {new Date().getFullYear()} Apostle Sunday Iyi. All Rights Reserved.
           </p>
           <div className="flex items-center space-x-8 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+            <Link to="/admin" onClick={scrollToTop} className="hover:text-secondary transition-colors">Admin Access</Link>
             <a href="#" className="hover:text-secondary transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-secondary transition-colors">Terms of Service</a>
           </div>

@@ -1,0 +1,69 @@
+{
+  "entities": {
+    "Sermon": {
+      "title": "Sermon",
+      "description": "A sermon input by the admin",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the sermon"
+        },
+        "topic": {
+          "type": "string",
+          "description": "The topic of the sermon"
+        },
+        "goal": {
+          "type": "string",
+          "description": "The goal of the message"
+        },
+        "manuscript": {
+          "type": "string",
+          "description": "The full manuscript of the sermon"
+        },
+        "inputMode": {
+          "type": "string",
+          "enum": ["topic_goal", "manuscript"],
+          "description": "The mode of input used to create the sermon"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "published", "processed"],
+          "description": "The status of the sermon"
+        },
+        "createdAt": {
+          "type": "timestamp",
+          "description": "The time the sermon was created"
+        },
+        "updatedAt": {
+          "type": "timestamp",
+          "description": "The time the sermon was last updated"
+        },
+        "blog": {
+          "type": "string",
+          "description": "AI generated blog post"
+        },
+        "youtubeScript": {
+          "type": "string",
+          "description": "AI generated YouTube script"
+        },
+        "socialPosts": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "AI generated social media posts"
+        },
+        "email": {
+          "type": "string",
+          "description": "AI generated email newsletter"
+        }
+      },
+      "required": ["title", "topic", "goal", "manuscript", "inputMode", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/sermons/{sermonId}": {
+      "schema": "Sermon",
+      "description": "Collection of sermons"
+    }
+  }
+}

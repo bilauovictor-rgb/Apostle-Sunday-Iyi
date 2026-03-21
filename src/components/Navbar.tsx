@@ -21,6 +21,7 @@ export default function Navbar() {
     { name: 'Mission', path: '/mission' },
     { name: 'Teachings', path: '/teachings' },
     { name: 'Connect', path: '/connect' },
+    { name: 'Admin', path: '/admin' },
   ];
 
   return (
