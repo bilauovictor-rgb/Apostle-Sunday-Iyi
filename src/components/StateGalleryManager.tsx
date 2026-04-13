@@ -60,6 +60,7 @@ export default function StateGalleryManager() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStatus, setUploadStatus] = useState({ current: 0, total: 0 });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   
@@ -95,9 +96,11 @@ export default function StateGalleryManager() {
     if (acceptedFiles.length === 0) return;
     
     setUploading(true);
+    setUploadStatus({ current: 0, total: acceptedFiles.length });
+    setUploadProgress(0);
     setError(null);
     
-    for (const file of acceptedFiles) {
+    const uploadPromises = acceptedFiles.map(async (file, index) => {
       try {
         const timestamp = Date.now();
         const fileName = `${timestamp}-${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
@@ -106,50 +109,65 @@ export default function StateGalleryManager() {
         
         const uploadTask = uploadBytesResumable(storageRef, file);
         
-        await new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
           uploadTask.on('state_changed', 
             (snapshot) => {
-              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              setUploadProgress(progress);
+              // We could track individual progress here if we wanted a more complex UI
+              // For now, we'll just update the global status when a file finishes
             }, 
             (error) => reject(error), 
             async () => {
-              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-              
-              await addDoc(collection(db, 'state_galleries'), {
-                state: selectedState,
-                title: file.name.split('.')[0],
-                caption: '',
-                imageUrl: downloadURL,
-                storagePath: storagePath,
-                order: images.length,
-                featured: false,
-                status: 'active',
-                createdAt: serverTimestamp(),
-                updatedAt: serverTimestamp()
-              });
-              resolve(true);
+              try {
+                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                
+                await addDoc(collection(db, 'state_galleries'), {
+                  state: selectedState,
+                  title: file.name.split('.')[0],
+                  caption: '',
+                  imageUrl: downloadURL,
+                  storagePath: storagePath,
+                  order: images.length + index, // Approximate order for bulk upload
+                  featured: false,
+                  status: 'active',
+                  createdAt: serverTimestamp(),
+                  updatedAt: serverTimestamp()
+                });
+                
+                setUploadStatus(prev => {
+                  const nextCurrent = prev.current + 1;
+                  setUploadProgress((nextCurrent / acceptedFiles.length) * 100);
+                  return { ...prev, current: nextCurrent };
+                });
+                resolve(true);
+              } catch (e) {
+                reject(e);
+              }
             }
           );
         });
       } catch (err: any) {
-        console.error("Upload error:", err);
-        let errorMessage = `Failed to upload ${file.name}: ${err.message}`;
-        
-        if (err.code === 'storage/retry-limit-exceeded') {
-          errorMessage = `Upload failed: Max retry time exceeded. This is often caused by missing CORS configuration on your Firebase Storage bucket or an incorrect Storage Bucket name in your settings. Please ensure VITE_FIREBASE_STORAGE_BUCKET is set to "${import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'your-bucket-name'}" and CORS is configured.`;
-        } else if (err.code === 'storage/unauthorized') {
-          errorMessage = `Upload failed: Unauthorized. Please check your Firebase Storage security rules.`;
-        }
-        
-        setError(errorMessage);
+        throw new Error(`Failed to upload ${file.name}: ${err.message}`);
       }
+    });
+
+    try {
+      await Promise.all(uploadPromises);
+      setSuccess(`${acceptedFiles.length} images uploaded successfully!`);
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err: any) {
+      console.error("Bulk upload error:", err);
+      let errorMessage = err.message || "Some images failed to upload.";
+      
+      if (err.code === 'storage/retry-limit-exceeded') {
+        errorMessage = `Upload failed: Max retry time exceeded. Check CORS and Storage Bucket settings.`;
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setUploading(false);
+      setUploadStatus({ current: 0, total: 0 });
+      setUploadProgress(0);
     }
-    
-    setUploading(false);
-    setUploadProgress(0);
-    setSuccess("Images uploaded successfully!");
-    setTimeout(() => setSuccess(null), 3000);
   }, [selectedState, images.length]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ 
@@ -281,7 +299,9 @@ export default function StateGalleryManager() {
             {uploading ? <Loader2 className="w-8 h-8 animate-spin" /> : <Upload className="w-8 h-8" />}
           </div>
           <h3 className="text-xl font-serif text-primary mb-2">
-            {uploading ? `Uploading... ${Math.round(uploadProgress)}%` : 'Click or drag images to upload'}
+            {uploading 
+              ? `Uploading ${uploadStatus.current} of ${uploadStatus.total} images...` 
+              : 'Click or drag images to upload'}
           </h3>
           <p className="text-slate-500 font-light">Support JPG, PNG, WEBP. Max 5MB per image.</p>
         </div>

@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { LogIn, Loader2, ShieldAlert } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth, provider } from '../firebase';
 import SermonInput from '../components/SermonInput';
 import AdminSermonDashboard from '../components/AdminSermonDashboard';
 import StateGalleryManager from '../components/StateGalleryManager';
@@ -27,7 +27,6 @@ export default function Admin() {
     setIsLoggingIn(true);
     setError(null);
     try {
-      const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
     } catch (err: any) {
       console.error('Login error:', err);
