@@ -43,12 +43,33 @@ service cloud.firestore {
              (!('publishAt' in data) || (data.publishAt is string && data.publishAt.size() < 100));
     }
 
+    function isValidGalleryImage(data) {
+      return hasOnlyAllowedFields(['state', 'title', 'caption', 'imageUrl', 'storagePath', 'order', 'featured', 'status', 'createdAt', 'updatedAt']) &&
+             data.state is string && data.state.size() > 0 && data.state.size() < 100 &&
+             data.imageUrl is string && data.imageUrl.size() > 0 && data.imageUrl.size() < 2000 &&
+             data.storagePath is string && data.storagePath.size() > 0 && data.storagePath.size() < 1000 &&
+             data.createdAt is timestamp &&
+             (!('title' in data) || (data.title is string && data.title.size() < 200)) &&
+             (!('caption' in data) || (data.caption is string && data.caption.size() < 1000)) &&
+             (!('order' in data) || data.order is number) &&
+             (!('featured' in data) || data.featured is bool) &&
+             (!('status' in data) || data.status in ['active', 'inactive']) &&
+             (!('updatedAt' in data) || data.updatedAt is timestamp);
+    }
+
     match /sermons/{sermonId} {
       // Allow read for everyone if the sermon is published or scheduled
       // Admins can read everything
       allow read: if isAdmin() || resource.data.status in ['published', 'scheduled'];
       allow create: if isAdmin() && isValidSermon(request.resource.data);
       allow update: if isAdmin() && isValidSermon(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /state_galleries/{imageId} {
+      allow read: if true; // Publicly readable
+      allow create: if isAdmin() && isValidGalleryImage(request.resource.data);
+      allow update: if isAdmin() && isValidGalleryImage(request.resource.data);
       allow delete: if isAdmin();
     }
   }

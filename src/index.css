@@ -47,7 +47,7 @@
   }
 
   .premium-button {
-    @apply relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-secondary/20 active:scale-95;
+    @apply relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-secondary/20 active:scale-95 bg-secondary text-primary font-bold uppercase tracking-[0.2em] rounded-xl text-center px-8 py-4;
   }
 
   .section-divider {
