@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -9,6 +9,7 @@ export default function PublicSermonsList() {
   const [sermons, setSermons] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(6);
+  const loaderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const q = query(
@@ -49,9 +50,28 @@ export default function PublicSermonsList() {
     return () => unsubscribe();
   }, []);
 
-  const handleLoadMore = () => {
-    setVisibleCount(prev => prev + 6);
-  };
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (first.isIntersecting && visibleCount < sermons.length) {
+          setVisibleCount(prev => prev + 6);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentLoader = loaderRef.current;
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+
+    return () => {
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
+    };
+  }, [visibleCount, sermons.length]);
 
   if (loading) {
     return (
@@ -152,13 +172,11 @@ export default function PublicSermonsList() {
         </div>
 
         {visibleCount < sermons.length && (
-          <div className="mt-16 text-center">
-            <button
-              onClick={handleLoadMore}
-              className="premium-button inline-flex items-center px-8 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
-            >
-              Load More Teachings
-            </button>
+          <div ref={loaderRef} className="mt-16 flex justify-center items-center py-8">
+            <div className="flex flex-col items-center gap-4">
+              <Loader2 className="w-6 h-6 animate-spin text-secondary" aria-hidden="true" />
+              <span className="text-xs font-bold tracking-widest text-slate-400 uppercase">Loading more teachings...</span>
+            </div>
           </div>
         )}
       </div>
