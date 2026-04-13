@@ -1,8 +1,32 @@
+# Dependencies
 node_modules/
-build/
+/.pnp
+.pnp.js
+
+# Production
 dist/
-coverage/
-.DS_Store
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 *.log
-.env*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 !.env.example
+
+# Editor folders and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# AI Studio Metadata
+metadata.json
+firebase-blueprint.json

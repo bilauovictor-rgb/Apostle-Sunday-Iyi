@@ -5,7 +5,7 @@ import path from "path";
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
   app.use(express.json());
 
@@ -54,8 +54,10 @@ The Rule: If you don't have a specific video link for their question, say: 'I do
     }
   });
 
+  const isProduction = process.env.NODE_ENV === "production" || process.env.HOSTINGER === "true";
+
   // Vite middleware for development
-  if (process.env.NODE_ENV !== "production") {
+  if (!isProduction) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
@@ -70,7 +72,7 @@ The Rule: If you don't have a specific video link for their question, say: 'I do
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
   });
 }
 

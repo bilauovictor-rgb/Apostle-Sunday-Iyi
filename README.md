@@ -1,20 +1,34 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Apostle Sunday Iyi - Virtual Assistant
 
-# Run and deploy your AI Studio app
+This is a full-stack application featuring a React frontend and a Node.js/Express backend integrated with the Google Gemini API.
 
-This contains everything you need to run your app locally.
+## Hostinger Deployment Settings
 
-View your app in AI Studio: https://ai.studio/apps/d57c70c3-1c10-4394-a68c-88c0d1054c8c
+To deploy this application on Hostinger's Node.js platform via GitHub, use the following settings:
 
-## Run Locally
+- **Install command:** `npm install`
+- **Build command:** `npm run build`
+- **Start command:** `npm start`
+- **Output directory:** `dist`
+- **Entry file:** `dist/server.cjs`
 
-**Prerequisites:**  Node.js
+### Environment Variables
 
+Ensure the following environment variables are configured in your Hostinger Node.js application settings:
+
+- `NODE_ENV`: `production`
+- `HOSTINGER`: `true`
+- `GEMINI_API_KEY`: Your Google Gemini API Key
+- `PORT`: (Optional, Hostinger sets this automatically)
+
+## Local Development
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+   ```bash
+   npm install
+   ```
+2. Create a `.env` file based on `.env.example` and add your `GEMINI_API_KEY`.
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
