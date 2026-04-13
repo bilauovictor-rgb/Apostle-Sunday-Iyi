@@ -33,10 +33,10 @@ export default function ScrollToTopButton() {
           exit={{ opacity: 0, scale: 0.5, y: 20 }}
           onClick={scrollToTop}
           whileHover={{ y: -5, backgroundColor: '#ffffff' }}
-          className="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-secondary text-primary flex items-center justify-center shadow-2xl z-50 transition-colors duration-300"
+          className="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-secondary text-primary flex items-center justify-center shadow-2xl z-50 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
           aria-label="Scroll to top"
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M7 13V1M7 1L1 7M7 1L13 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </motion.button>

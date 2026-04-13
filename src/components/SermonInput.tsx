@@ -231,14 +231,14 @@ Please generate the following items:
 
           {error && (
             <div className="mb-8 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start text-red-600">
-              <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0 mt-0.5" aria-hidden="true" />
               <p className="text-sm">{error}</p>
             </div>
           )}
 
           {success && (
             <div className="mb-8 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center text-emerald-700">
-              <CheckCircle2 className="w-5 h-5 mr-3 flex-shrink-0" />
+              <CheckCircle2 className="w-5 h-5 mr-3 flex-shrink-0" aria-hidden="true" />
               <p className="text-sm font-medium">Content generated successfully</p>
             </div>
           )}
@@ -249,16 +249,16 @@ Please generate the following items:
               <button
                 onClick={handleLogin}
                 disabled={isLoggingIn}
-                className="premium-button inline-flex items-center px-8 py-4 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="premium-button inline-flex items-center px-8 py-4 disabled:opacity-70 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
               >
                 {isLoggingIn ? (
                   <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" aria-hidden="true" />
                     Signing In...
                   </>
                 ) : (
                   <>
-                    <LogIn className="w-5 h-5 mr-2" />
+                    <LogIn className="w-5 h-5 mr-2" aria-hidden="true" />
                     Sign In with Google
                   </>
                 )}
@@ -323,16 +323,16 @@ Please generate the following items:
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="premium-button w-full sm:w-auto px-8 py-4 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="premium-button w-full sm:w-auto px-8 py-4 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" aria-hidden="true" />
                       {loadingText || 'Saving...'}
                     </>
                   ) : (
                     <>
-                      <Save className="w-5 h-5 mr-2" />
+                      <Save className="w-5 h-5 mr-2" aria-hidden="true" />
                       Generate & Save Sermon
                     </>
                   )}

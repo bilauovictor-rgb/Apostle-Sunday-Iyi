@@ -349,7 +349,7 @@ ${fieldPrompt}`;
 
         {actionSuccess && (
           <div className="mb-8 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center text-emerald-700">
-            <CheckCircle2 className="w-5 h-5 mr-3 flex-shrink-0" />
+            <CheckCircle2 className="w-5 h-5 mr-3 flex-shrink-0" aria-hidden="true" />
             <p className="text-sm font-medium">{actionSuccess}</p>
           </div>
         )}
@@ -363,7 +363,7 @@ ${fieldPrompt}`;
             <div className="overflow-y-auto flex-grow p-4 space-y-3">
               {loading ? (
                 <div className="flex justify-center items-center h-32">
-                  <Loader2 className="w-6 h-6 animate-spin text-secondary" />
+                  <Loader2 className="w-6 h-6 animate-spin text-secondary" aria-hidden="true" />
                 </div>
               ) : sermons.length === 0 ? (
                 <p className="text-slate-500 text-center py-8 font-light">No sermons found.</p>
@@ -386,7 +386,7 @@ ${fieldPrompt}`;
                         {sermon.status}
                       </span>
                       <span className={`flex items-center text-[10px] ${selectedSermon?.id === sermon.id ? 'text-slate-300' : 'text-slate-400'}`}>
-                        {sermon.status === 'scheduled' && <Calendar className="w-3 h-3 mr-1" />}
+                        {sermon.status === 'scheduled' && <Calendar className="w-3 h-3 mr-1" aria-hidden="true" />}
                         {sermon.status === 'scheduled' && sermon.publishAt 
                           ? new Date(sermon.publishAt).toLocaleDateString()
                           : sermon.createdAt?.toDate().toLocaleDateString()}
@@ -411,27 +411,27 @@ ${fieldPrompt}`;
                     <button
                       onClick={() => setShowDeleteConfirm(true)}
                       disabled={actionLoading}
-                      className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 text-sm font-medium rounded-xl transition-colors flex items-center disabled:opacity-50"
+                      className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 text-sm font-medium rounded-xl transition-colors flex items-center disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
                     >
-                      <Trash2 className="w-4 h-4 mr-2" />
+                      <Trash2 className="w-4 h-4 mr-2" aria-hidden="true" />
                       Delete
                     </button>
                     {selectedSermon.status === 'published' || selectedSermon.status === 'scheduled' ? (
                       <button 
                         onClick={() => handleStatusChange(selectedSermon.id, 'draft')}
                         disabled={actionLoading}
-                        className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-medium rounded-xl transition-colors flex items-center disabled:opacity-50"
+                        className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-medium rounded-xl transition-colors flex items-center disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2"
                       >
-                        {actionLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <XCircle className="w-4 h-4 mr-2" />}
+                        {actionLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" /> : <XCircle className="w-4 h-4 mr-2" aria-hidden="true" />}
                         Move to Draft
                       </button>
                     ) : (
                       <button 
                         onClick={() => handleStatusChange(selectedSermon.id, 'published')}
                         disabled={actionLoading || (!selectedSermon.blog && !selectedSermon.youtubeScript && !selectedSermon.email)}
-                        className="px-4 py-2 bg-primary hover:bg-primary/90 text-white text-sm font-medium rounded-xl transition-colors flex items-center disabled:opacity-50"
+                        className="px-4 py-2 bg-primary hover:bg-primary/90 text-white text-sm font-medium rounded-xl transition-colors flex items-center disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                       >
-                        {actionLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
+                        {actionLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" /> : <CheckCircle2 className="w-4 h-4 mr-2" aria-hidden="true" />}
                         Publish Now
                       </button>
                     )}
@@ -440,7 +440,7 @@ ${fieldPrompt}`;
 
                 {selectedSermon.status === 'draft' && !selectedSermon.blog ? (
                   <div className="flex-grow flex flex-col items-center justify-center p-8 text-center">
-                    <RefreshCw className="w-12 h-12 text-slate-300 mb-4" />
+                    <RefreshCw className="w-12 h-12 text-slate-300 mb-4" aria-hidden="true" />
                     <h4 className="text-lg font-medium text-slate-700 mb-2">No generated content available yet.</h4>
                     <p className="text-slate-500 font-light max-w-md">This sermon is still a draft. Content may be generating or it was saved without AI generation.</p>
                   </div>
@@ -449,33 +449,33 @@ ${fieldPrompt}`;
                     <div className="flex border-b border-slate-100 overflow-x-auto">
                       <button 
                         onClick={() => setActiveTab('blog')}
-                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === 'blog' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
+                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-inset ${activeTab === 'blog' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
                       >
-                        <FileText className="w-4 h-4 mr-2" /> Blog Post
+                        <FileText className="w-4 h-4 mr-2" aria-hidden="true" /> Blog Post
                       </button>
                       <button 
                         onClick={() => setActiveTab('youtube')}
-                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === 'youtube' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
+                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-inset ${activeTab === 'youtube' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
                       >
-                        <Youtube className="w-4 h-4 mr-2" /> YouTube Script
+                        <Youtube className="w-4 h-4 mr-2" aria-hidden="true" /> YouTube Script
                       </button>
                       <button 
                         onClick={() => setActiveTab('social')}
-                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === 'social' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
+                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-inset ${activeTab === 'social' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
                       >
-                        <Share2 className="w-4 h-4 mr-2" /> Social Posts
+                        <Share2 className="w-4 h-4 mr-2" aria-hidden="true" /> Social Posts
                       </button>
                       <button 
                         onClick={() => setActiveTab('email')}
-                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === 'email' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
+                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-inset ${activeTab === 'email' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
                       >
-                        <Mail className="w-4 h-4 mr-2" /> Email
+                        <Mail className="w-4 h-4 mr-2" aria-hidden="true" /> Email
                       </button>
                       <button 
                         onClick={() => setActiveTab('settings')}
-                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === 'settings' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
+                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-inset ${activeTab === 'settings' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
                       >
-                        <Settings className="w-4 h-4 mr-2" /> Settings
+                        <Settings className="w-4 h-4 mr-2" aria-hidden="true" /> Settings
                       </button>
                     </div>
 
@@ -493,24 +493,24 @@ ${fieldPrompt}`;
                             <div className="flex items-center space-x-3">
                               <button 
                                 onClick={() => setShowBlogPreview(!showBlogPreview)}
-                                className="text-xs flex items-center px-3 py-1.5 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-lg transition-colors"
+                                className="text-xs flex items-center px-3 py-1.5 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2"
                               >
-                                <Eye className="w-3 h-3 mr-1.5" />
+                                <Eye className="w-3 h-3 mr-1.5" aria-hidden="true" />
                                 {showBlogPreview ? 'Edit Mode' : 'Preview'}
                               </button>
                               <button 
                                 onClick={() => handleRegenerate('blog')}
                                 disabled={isRegenerating}
-                                className="text-xs flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50"
+                                className="text-xs flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
                               >
                                 {isRegenerating && regeneratingField === 'blog' ? (
                                   <>
-                                    <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
+                                    <Loader2 className="w-3 h-3 mr-1.5 animate-spin" aria-hidden="true" />
                                     {regeneratingStatus || 'Regenerating...'}
                                   </>
                                 ) : (
                                   <>
-                                    <Wand2 className="w-3 h-3 mr-1.5" />
+                                    <Wand2 className="w-3 h-3 mr-1.5" aria-hidden="true" />
                                     Regenerate Blog
                                   </>
                                 )}
@@ -540,16 +540,16 @@ ${fieldPrompt}`;
                             <button 
                               onClick={() => handleRegenerate('youtubeScript')}
                               disabled={isRegenerating}
-                              className="text-xs flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50"
+                              className="text-xs flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
                             >
                               {isRegenerating && regeneratingField === 'youtubeScript' ? (
                                 <>
-                                  <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
+                                  <Loader2 className="w-3 h-3 mr-1.5 animate-spin" aria-hidden="true" />
                                   {regeneratingStatus || 'Regenerating...'}
                                 </>
                               ) : (
                                 <>
-                                  <Wand2 className="w-3 h-3 mr-1.5" />
+                                  <Wand2 className="w-3 h-3 mr-1.5" aria-hidden="true" />
                                   Regenerate Script
                                 </>
                               )}
@@ -570,16 +570,16 @@ ${fieldPrompt}`;
                             <button 
                               onClick={() => handleRegenerate('socialPosts')}
                               disabled={isRegenerating}
-                              className="text-xs flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50"
+                              className="text-xs flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
                             >
                               {isRegenerating && regeneratingField === 'socialPosts' ? (
                                 <>
-                                  <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
+                                  <Loader2 className="w-3 h-3 mr-1.5 animate-spin" aria-hidden="true" />
                                   {regeneratingStatus || 'Regenerating...'}
                                 </>
                               ) : (
                                 <>
-                                  <Wand2 className="w-3 h-3 mr-1.5" />
+                                  <Wand2 className="w-3 h-3 mr-1.5" aria-hidden="true" />
                                   Regenerate Posts
                                 </>
                               )}
@@ -610,16 +610,16 @@ ${fieldPrompt}`;
                             <button 
                               onClick={() => handleRegenerate('email')}
                               disabled={isRegenerating}
-                              className="text-xs flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50"
+                              className="text-xs flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
                             >
                               {isRegenerating && regeneratingField === 'email' ? (
                                 <>
-                                  <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
+                                  <Loader2 className="w-3 h-3 mr-1.5 animate-spin" aria-hidden="true" />
                                   {regeneratingStatus || 'Regenerating...'}
                                 </>
                               ) : (
                                 <>
-                                  <Wand2 className="w-3 h-3 mr-1.5" />
+                                  <Wand2 className="w-3 h-3 mr-1.5" aria-hidden="true" />
                                   Regenerate Email
                                 </>
                               )}
@@ -673,9 +673,9 @@ ${fieldPrompt}`;
                               <button
                                 onClick={() => handleSchedulePublish(selectedSermon.id)}
                                 disabled={actionLoading || !editedPublishAt}
-                                className="px-4 py-3 bg-secondary hover:bg-secondary/90 text-white text-sm font-medium rounded-xl transition-colors flex items-center disabled:opacity-50"
+                                className="px-4 py-3 bg-secondary hover:bg-secondary/90 text-white text-sm font-medium rounded-xl transition-colors flex items-center disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
                               >
-                                {actionLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Calendar className="w-4 h-4 mr-2" />}
+                                {actionLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" /> : <Calendar className="w-4 h-4 mr-2" aria-hidden="true" />}
                                 Schedule Publish
                               </button>
                             </div>
@@ -689,9 +689,9 @@ ${fieldPrompt}`;
                       <button
                         onClick={handleSave}
                         disabled={isSaving || isRegenerating}
-                        className="premium-button px-6 py-2.5 flex items-center text-sm disabled:opacity-50"
+                        className="premium-button px-6 py-2.5 flex items-center text-sm disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                       >
-                        {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                        {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" /> : <Save className="w-4 h-4 mr-2" aria-hidden="true" />}
                         Save Changes
                       </button>
                     </div>
@@ -700,7 +700,7 @@ ${fieldPrompt}`;
               </>
             ) : (
               <div className="flex-grow flex flex-col items-center justify-center p-8 text-center text-slate-400">
-                <Eye className="w-16 h-16 mb-4 opacity-20" />
+                <Eye className="w-16 h-16 mb-4 opacity-20" aria-hidden="true" />
                 <p className="text-lg font-light">Select a sermon from the list to preview its content.</p>
               </div>
             )}
@@ -718,16 +718,16 @@ ${fieldPrompt}`;
               <button
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={isDeleting}
-                className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors disabled:opacity-50"
+                className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl transition-colors flex items-center disabled:opacity-50"
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl transition-colors flex items-center disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
               >
-                {isDeleting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
+                {isDeleting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" /> : <Trash2 className="w-4 h-4 mr-2" aria-hidden="true" />}
                 Delete
               </button>
             </div>

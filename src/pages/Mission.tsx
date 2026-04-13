@@ -99,7 +99,7 @@ export default function Mission() {
                 className="group p-10 sm:p-12 bg-slate-50 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-premium transition-all duration-700"
               >
                 <div className="mb-10 inline-flex p-6 bg-white rounded-2xl text-secondary group-hover:bg-secondary group-hover:text-white transition-all duration-500 shadow-sm border border-slate-100">
-                  <exp.icon className="h-8 w-8" />
+                  <exp.icon className="h-8 w-8" aria-hidden="true" />
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-serif text-primary mb-6 group-hover:text-secondary transition-colors duration-300">{exp.title}</h3>
                 <p className="text-slate-600 mb-10 leading-relaxed text-base sm:text-lg font-light">
@@ -110,7 +110,7 @@ export default function Mission() {
                   <ul className="space-y-4">
                     {exp.details.map((detail) => (
                       <li key={detail} className="flex items-center text-sm text-slate-500 font-medium">
-                        <ArrowRight className="h-3 w-3 text-secondary mr-4 opacity-50" />
+                        <ArrowRight className="h-3 w-3 text-secondary mr-4 opacity-50" aria-hidden="true" />
                         {detail}
                       </li>
                     ))}
@@ -180,7 +180,7 @@ export default function Mission() {
                     className="flex items-start space-x-8 group"
                   >
                     <div className="bg-secondary/10 p-5 rounded-2xl text-secondary group-hover:bg-secondary group-hover:text-primary transition-all duration-500 border border-secondary/20 shadow-lg">
-                      <Droplets className="h-8 w-8" />
+                      <Droplets className="h-8 w-8" aria-hidden="true" />
                     </div>
                     <div>
                       <h4 className="text-xl sm:text-2xl font-serif mb-3 text-white group-hover:text-secondary transition-colors">Benue Water Project</h4>
@@ -195,7 +195,7 @@ export default function Mission() {
                     className="flex items-start space-x-8 group"
                   >
                     <div className="bg-secondary/10 p-5 rounded-2xl text-secondary group-hover:bg-secondary group-hover:text-primary transition-all duration-500 border border-secondary/20 shadow-lg">
-                      <Globe className="h-8 w-8" />
+                      <Globe className="h-8 w-8" aria-hidden="true" />
                     </div>
                     <div>
                       <h4 className="text-xl sm:text-2xl font-serif mb-3 text-white group-hover:text-secondary transition-colors">Onwubiko Mission</h4>

@@ -98,7 +98,7 @@ export default function GSOMAdmissions() {
                 />
               </div>
               <div className="absolute -bottom-6 -left-6 bg-secondary p-8 rounded-2xl text-primary shadow-xl hidden sm:block">
-                <GraduationCap className="h-8 w-8" />
+                <GraduationCap className="h-8 w-8" aria-hidden="true" />
               </div>
             </motion.div>
           </div>
@@ -124,7 +124,7 @@ export default function GSOMAdmissions() {
               >
                 <div className="flex justify-between items-start mb-8">
                   <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-all duration-500">
-                    <BookOpen className="h-6 w-6" />
+                    <BookOpen className="h-6 w-6" aria-hidden="true" />
                   </div>
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-3 py-1 rounded-full">{program.duration}</span>
                 </div>
@@ -152,14 +152,14 @@ export default function GSOMAdmissions() {
                     transition={{ delay: idx * 0.1 }}
                     className="flex items-center space-x-4 text-slate-300 font-light"
                   >
-                    <CheckCircle2 className="h-5 w-5 text-secondary shrink-0" />
+                    <CheckCircle2 className="h-5 w-5 text-secondary shrink-0" aria-hidden="true" />
                     <span>{req}</span>
                   </motion.div>
                 ))}
               </div>
             </div>
             <div className="bg-white/5 border border-white/10 p-12 rounded-[3rem] text-center">
-              <Award className="h-16 w-16 text-secondary mx-auto mb-6" />
+              <Award className="h-16 w-16 text-secondary mx-auto mb-6" aria-hidden="true" />
               <h3 className="text-2xl font-serif text-white mb-4">Accredited Excellence</h3>
               <p className="text-slate-400 font-light text-sm leading-relaxed">
                 GSOM is recognized globally for its high academic and spiritual standards, ensuring our graduates are prepared for international ministry.
@@ -179,38 +179,45 @@ export default function GSOMAdmissions() {
           <form className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Full Name</label>
-                <input type="text" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="John Doe" />
+                <label htmlFor="gsom-name" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Full Name</label>
+                <input id="gsom-name" type="text" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="John Doe" />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Email Address</label>
-                <input type="email" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="email@example.com" />
+                <label htmlFor="gsom-email" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Email Address</label>
+                <input id="gsom-email" type="email" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="email@example.com" />
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Desired Program</label>
-                <select className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light appearance-none">
-                  <option>Apostolic Leadership</option>
-                  <option>Ministry of Reconciliation</option>
-                  <option>Socio-Economic Mandate</option>
-                </select>
+                <label htmlFor="gsom-program" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Desired Program</label>
+                <div className="relative">
+                  <select id="gsom-program" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light appearance-none">
+                    <option>Apostolic Leadership</option>
+                    <option>Ministry of Reconciliation</option>
+                    <option>Socio-Economic Mandate</option>
+                  </select>
+                  <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  </div>
+                </div>
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Highest Qualification</label>
-                <input type="text" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="e.g. Bachelor's Degree" />
+                <label htmlFor="gsom-qualification" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Highest Qualification</label>
+                <input id="gsom-qualification" type="text" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="e.g. Bachelor's Degree" />
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Statement of Purpose</label>
-              <textarea rows={6} className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light resize-none" placeholder="Briefly describe your calling and why you wish to enroll in GSOM..."></textarea>
+              <label htmlFor="gsom-statement" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Statement of Purpose</label>
+              <textarea id="gsom-statement" rows={6} className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light resize-none" placeholder="Briefly describe your calling and why you wish to enroll in GSOM..."></textarea>
             </div>
             <div className="flex items-center space-x-3 p-6 bg-slate-50 rounded-2xl border border-slate-100">
-              <FileText className="h-6 w-6 text-secondary" />
+              <FileText className="h-6 w-6 text-secondary" aria-hidden="true" />
               <p className="text-xs text-slate-500 font-light">By submitting this form, you agree to our admission process and will be contacted for an interview.</p>
             </div>
-            <button className="premium-button w-full py-6 flex items-center justify-center group">
-              Submit Application <Send className="ml-3 h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            <button type="submit" className="premium-button w-full py-6 flex items-center justify-center group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2">
+              Submit Application <Send className="ml-3 h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" aria-hidden="true" />
             </button>
           </form>
         </div>

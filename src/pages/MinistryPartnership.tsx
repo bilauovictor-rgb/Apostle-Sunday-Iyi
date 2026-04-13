@@ -130,7 +130,7 @@ export default function MinistryPartnership() {
                 />
               </div>
               <div className="absolute -bottom-6 -left-6 bg-primary p-8 rounded-3xl border border-white/10 shadow-2xl hidden sm:block">
-                <Users className="h-10 w-10 text-secondary" />
+                <Users className="h-10 w-10 text-secondary" aria-hidden="true" />
               </div>
             </motion.div>
           </div>
@@ -174,7 +174,7 @@ export default function MinistryPartnership() {
                 
                 <div className="relative z-10">
                   <div className="w-20 h-20 rounded-3xl bg-primary flex items-center justify-center text-secondary mb-10 shadow-xl group-hover:scale-110 transition-transform duration-500">
-                    <area.icon className="h-10 w-10" />
+                    <area.icon className="h-10 w-10" aria-hidden="true" />
                   </div>
                   
                   <h3 className="text-2xl sm:text-3xl font-serif text-primary mb-6 group-hover:text-secondary transition-colors duration-500 leading-tight">
@@ -186,7 +186,7 @@ export default function MinistryPartnership() {
                   </p>
                   
                   <div className="flex items-center text-secondary font-medium tracking-widest text-xs uppercase group-hover:translate-x-2 transition-transform duration-500">
-                    Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                    Learn More <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
                   </div>
                 </div>
 
@@ -263,11 +263,11 @@ export default function MinistryPartnership() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
               <button 
                 onClick={() => window.location.href = '/connect'}
-                className="premium-button px-10 py-5 flex items-center group w-full sm:w-auto justify-center"
+                className="premium-button px-10 py-5 flex items-center group w-full sm:w-auto justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
               >
-                Partner With the Mission <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                Partner With the Mission <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </button>
-              <button className="px-10 py-5 rounded-full border border-white/20 hover:bg-white/5 transition-all duration-300 w-full sm:w-auto">
+              <button className="px-10 py-5 rounded-full border border-white/20 hover:bg-white/5 transition-all duration-300 w-full sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary">
                 Explore Ministry Initiatives
               </button>
             </div>

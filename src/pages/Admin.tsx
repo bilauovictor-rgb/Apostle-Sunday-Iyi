@@ -38,7 +38,7 @@ export default function Admin() {
   if (loading) {
     return (
       <div className="min-h-screen pt-32 pb-20 flex justify-center items-center bg-primary">
-        <Loader2 className="w-12 h-12 animate-spin text-secondary" />
+        <Loader2 className="w-12 h-12 animate-spin text-secondary" aria-hidden="true" />
       </div>
     );
   }
@@ -46,7 +46,7 @@ export default function Admin() {
   if (!user) {
     return (
       <div className="min-h-screen pt-32 pb-20 flex flex-col justify-center items-center bg-primary text-center px-4">
-        <ShieldAlert className="w-16 h-16 text-secondary mb-6" />
+        <ShieldAlert className="w-16 h-16 text-secondary mb-6" aria-hidden="true" />
         <h2 className="text-3xl font-serif text-white mb-4">Admin Access Required</h2>
         <p className="text-slate-300 font-light mb-8 max-w-md">You must be logged in as an administrator to access the sermon management dashboard.</p>
         
@@ -59,16 +59,16 @@ export default function Admin() {
         <button
           onClick={handleLogin}
           disabled={isLoggingIn}
-          className="premium-button inline-flex items-center px-8 py-4 disabled:opacity-70 disabled:cursor-not-allowed"
+          className="premium-button inline-flex items-center px-8 py-4 disabled:opacity-70 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
         >
           {isLoggingIn ? (
             <>
-              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+              <Loader2 className="w-5 h-5 mr-2 animate-spin" aria-hidden="true" />
               Signing In...
             </>
           ) : (
             <>
-              <LogIn className="w-5 h-5 mr-2" />
+              <LogIn className="w-5 h-5 mr-2" aria-hidden="true" />
               Sign In with Google
             </>
           )}
@@ -83,12 +83,12 @@ export default function Admin() {
   if (!isAuthorized) {
     return (
       <div className="min-h-screen pt-32 pb-20 flex flex-col justify-center items-center bg-primary text-center px-4">
-        <ShieldAlert className="w-16 h-16 text-red-500 mb-6" />
+        <ShieldAlert className="w-16 h-16 text-red-500 mb-6" aria-hidden="true" />
         <h2 className="text-3xl font-serif text-white mb-4">Access Denied</h2>
         <p className="text-slate-300 font-light mb-8 max-w-md">You are not authorized to access this page.</p>
         <button 
           onClick={() => auth.signOut()}
-          className="text-secondary hover:text-white transition-colors underline"
+          className="text-secondary hover:text-white transition-colors underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary rounded-sm"
         >
           Sign Out
         </button>
@@ -127,7 +127,7 @@ export default function Admin() {
             <span>Logged in as {user.email}</span>
             <button 
               onClick={() => auth.signOut()}
-              className="text-secondary hover:text-white transition-colors text-sm underline"
+              className="text-secondary hover:text-white transition-colors text-sm underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary rounded-sm"
             >
               Sign Out
             </button>

@@ -83,14 +83,14 @@ export default function Home() {
               <div className="flex flex-wrap justify-center lg:justify-start gap-6">
                 <Link 
                   to="/connect" 
-                  className="premium-button bg-secondary text-primary px-10 py-5 rounded-full font-bold hover:bg-white flex items-center group text-sm sm:text-base"
+                  className="premium-button bg-secondary text-primary px-10 py-5 rounded-full font-bold hover:bg-white flex items-center group text-sm sm:text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
                 >
                   Partner With Me
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </Link>
                 <Link 
                   to="/about" 
-                  className="premium-button border border-secondary/30 text-secondary px-10 py-5 rounded-full font-bold hover:bg-secondary/10 transition-all backdrop-blur-sm text-sm sm:text-base"
+                  className="premium-button border border-secondary/30 text-secondary px-10 py-5 rounded-full font-bold hover:bg-secondary/10 transition-all backdrop-blur-sm text-sm sm:text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
                 >
                   The Journey
                 </Link>
@@ -273,13 +273,13 @@ export default function Home() {
               className="bg-white/5 p-10 sm:p-12 rounded-[2.5rem] border border-white/10 shadow-2xl hover:bg-white/10 transition-all duration-500 group"
             >
               <div className="w-14 h-14 bg-secondary/10 border border-secondary/20 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-secondary transition-colors duration-500">
-                <pillar.icon className="h-6 w-6 text-secondary group-hover:text-primary transition-colors duration-500" />
+                <pillar.icon className="h-6 w-6 text-secondary group-hover:text-primary transition-colors duration-500" aria-hidden="true" />
               </div>
               <h3 className="text-2xl sm:text-3xl font-serif text-white mb-6 group-hover:text-secondary transition-colors duration-300">{pillar.title}</h3>
               <p className="text-slate-400 leading-relaxed mb-10 text-base font-light">{pillar.desc}</p>
-              <Link to="/mission" className="text-secondary font-bold flex items-center group/link text-xs tracking-[0.2em] uppercase">
+              <Link to="/mission" className="text-secondary font-bold flex items-center group/link text-xs tracking-[0.2em] uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary rounded-sm">
                 Explore Expression 
-                <ArrowRight className="ml-3 h-4 w-4 group-hover/link:translate-x-2 transition-transform" />
+                <ArrowRight className="ml-3 h-4 w-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true" />
               </Link>
             </motion.div>
           ))}
@@ -321,15 +321,15 @@ export default function Home() {
           >
             <Link 
               to="/ministry-partnership" 
-              className="premium-button w-full sm:w-auto px-10 py-5 flex items-center justify-center group"
+              className="premium-button w-full sm:w-auto px-10 py-5 flex items-center justify-center group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
             >
-              Partner With the Mission <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              Partner With the Mission <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
             </Link>
             <Link 
               to="/teachings" 
-              className="w-full sm:w-auto px-10 py-5 rounded-full border border-slate-200 text-primary font-bold tracking-[0.2em] uppercase text-xs hover:border-secondary hover:text-secondary hover:bg-white transition-all duration-300 flex items-center justify-center group shadow-sm hover:shadow-md"
+              className="w-full sm:w-auto px-10 py-5 rounded-full border border-slate-200 text-primary font-bold tracking-[0.2em] uppercase text-xs hover:border-secondary hover:text-secondary hover:bg-white transition-all duration-300 flex items-center justify-center group shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
             >
-              Explore Teachings <BookOpen className="ml-3 h-4 w-4" />
+              Explore Teachings <BookOpen className="ml-3 h-4 w-4" aria-hidden="true" />
             </Link>
           </motion.div>
         </div>

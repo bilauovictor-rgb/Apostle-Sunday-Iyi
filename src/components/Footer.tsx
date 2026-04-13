@@ -34,19 +34,20 @@ export default function Footer() {
             </p>
             <div className="flex space-x-5">
               {[
-                { icon: Facebook, href: "https://web.facebook.com/sunday.osas.9/" },
-                { icon: Tiktok, href: "https://www.tiktok.com/@apostlesundayiyi?_r=1&_t=ZN-94kNzz3rsMk" },
-                { icon: Youtube, href: "https://youtube.com/@apostlesundayiyi?si=2aeYqaFrQ6LmioPo" }
+                { name: "Facebook", icon: Facebook, href: "https://web.facebook.com/sunday.osas.9/" },
+                { name: "TikTok", icon: Tiktok, href: "https://www.tiktok.com/@apostlesundayiyi?_r=1&_t=ZN-94kNzz3rsMk" },
+                { name: "YouTube", icon: Youtube, href: "https://youtube.com/@apostlesundayiyi?si=2aeYqaFrQ6LmioPo" }
               ].map((social, idx) => (
                 <motion.a 
                   key={idx}
                   href={social.href}
                   target={social.href !== "#" ? "_blank" : undefined}
                   rel={social.href !== "#" ? "noopener noreferrer" : undefined}
+                  aria-label={`Visit Apostle Sunday Iyi on ${social.name}`}
                   whileHover={{ y: -5, scale: 1.1 }}
-                  className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-secondary hover:border-secondary/50 transition-all duration-300"
+                  className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-secondary hover:border-secondary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary transition-all duration-300"
                 >
-                  <social.icon className="h-5 w-5" />
+                  <social.icon className="h-5 w-5" aria-hidden="true" />
                 </motion.a>
               ))}
             </div>
@@ -68,7 +69,7 @@ export default function Footer() {
                     className="group flex items-center text-slate-400 hover:text-secondary transition-colors duration-300 font-light"
                   >
                     <span>{link.name}</span>
-                    <ArrowUpRight className="h-3 w-3 ml-2 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-y-1 translate-x-1" />
+                    <ArrowUpRight className="h-3 w-3 ml-2 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-y-1 translate-x-1" aria-hidden="true" />
                   </Link>
                 </li>
               ))}
@@ -80,7 +81,7 @@ export default function Footer() {
             <div className="space-y-8">
               <div className="flex items-start space-x-4 group cursor-pointer">
                 <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-all duration-500">
-                  <Mail className="h-5 w-5" />
+                  <Mail className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
                   <span className="block text-xs text-slate-500 uppercase tracking-widest mb-1">Email Inquiry</span>
@@ -89,7 +90,7 @@ export default function Footer() {
               </div>
               <div className="flex items-start space-x-4 group cursor-pointer">
                 <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-all duration-500">
-                  <Globe className="h-5 w-5" />
+                  <Globe className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
                   <span className="block text-xs text-slate-500 uppercase tracking-widest mb-1">Global Office</span>

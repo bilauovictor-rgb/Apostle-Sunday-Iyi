@@ -171,7 +171,7 @@ export default function ChatAssistant() {
                 >
                   <div className="bg-white p-6 rounded-2xl shadow-xl max-w-[280px] text-center mx-4">
                     <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Mic className="w-6 h-6 text-red-600" />
+                      <Mic className="w-6 h-6 text-red-600" aria-hidden="true" />
                     </div>
                     <h4 className="font-semibold text-gray-900 mb-2">Microphone Access Needed</h4>
                     <p className="text-sm text-gray-600 mb-6">
@@ -202,10 +202,10 @@ export default function ChatAssistant() {
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-white hover:bg-white/20 p-2 rounded-full transition-colors -mr-2"
+                className="text-white hover:bg-white/20 p-2 rounded-full transition-colors -mr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 aria-label="Close chat"
               >
-                <X size={20} />
+                <X size={20} aria-hidden="true" />
               </button>
             </div>
 
@@ -238,7 +238,7 @@ export default function ChatAssistant() {
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="bg-white p-3 rounded-2xl rounded-bl-none shadow-sm border border-gray-100">
-                    <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+                    <Loader2 className="w-5 h-5 animate-spin text-gray-400" aria-hidden="true" />
                   </div>
                 </div>
               )}
@@ -261,23 +261,23 @@ export default function ChatAssistant() {
                   type="button"
                   onClick={toggleListening}
                   disabled={isLoading}
-                  className={`flex-shrink-0 p-2.5 rounded-full transition-colors ${
+                  className={`flex-shrink-0 p-2.5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 ${
                     isListening 
                       ? 'bg-red-50 text-red-600 hover:bg-red-100 animate-pulse' 
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   } disabled:opacity-50`}
                   aria-label={isListening ? "Stop listening" : "Start voice input"}
                 >
-                  {isListening ? <Square size={18} className="fill-current" /> : <Mic size={18} />}
+                  {isListening ? <Square size={18} className="fill-current" aria-hidden="true" /> : <Mic size={18} aria-hidden="true" />}
                 </button>
 
                 <button
                   type="submit"
                   disabled={!input.trim() || isLoading}
-                  className="flex-shrink-0 bg-primary text-white p-2.5 rounded-full hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-shrink-0 bg-primary text-white p-2.5 rounded-full hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
                   aria-label="Send message"
                 >
-                  <Send size={18} />
+                  <Send size={18} aria-hidden="true" />
                 </button>
               </form>
             </div>
@@ -290,10 +290,10 @@ export default function ChatAssistant() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-24 right-4 sm:right-8 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-xl z-50 hover:bg-primary/90 transition-colors"
+        className="fixed bottom-24 right-4 sm:right-8 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-xl z-50 hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         aria-label="Toggle chat assistant"
       >
-        {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
+        {isOpen ? <X size={24} aria-hidden="true" /> : <MessageCircle size={24} aria-hidden="true" />}
       </motion.button>
     </>
   );

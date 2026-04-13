@@ -86,7 +86,7 @@ export default function Teachings() {
           >
             <Link 
               to="/admin" 
-              className="premium-button px-8 py-4 flex items-center"
+              className="premium-button px-8 py-4 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
             >
               Open Admin Dashboard
             </Link>

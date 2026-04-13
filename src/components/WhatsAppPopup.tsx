@@ -55,9 +55,10 @@ export default function WhatsAppPopup() {
           >
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700 transition-colors z-10"
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700 transition-colors z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+              aria-label="Close popup"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5" aria-hidden="true" />
             </button>
             
             <div className="bg-[#25D366]/10 p-8 text-center relative overflow-hidden">
@@ -65,7 +66,7 @@ export default function WhatsAppPopup() {
               <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-[#25D366]/20 rounded-full blur-2xl"></div>
               
               <div className="w-16 h-16 bg-[#25D366] text-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#25D366]/30 relative z-10">
-                <WhatsAppIcon className="w-8 h-8" />
+                <WhatsAppIcon className="w-8 h-8" aria-hidden="true" />
               </div>
               
               <h3 className="text-2xl font-serif text-slate-900 mb-3 relative z-10">Stay Connected!</h3>
@@ -80,14 +81,14 @@ export default function WhatsAppPopup() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setIsOpen(false)}
-                className="inline-flex items-center justify-center w-full py-4 px-8 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl font-medium transition-all duration-300 shadow-lg shadow-[#25D366]/20 hover:shadow-[#25D366]/40 hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center w-full py-4 px-8 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl font-medium transition-all duration-300 shadow-lg shadow-[#25D366]/20 hover:shadow-[#25D366]/40 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
               >
-                <WhatsAppIcon className="w-5 h-5 mr-2" />
+                <WhatsAppIcon className="w-5 h-5 mr-2" aria-hidden="true" />
                 Join Channel
               </a>
               <button 
                 onClick={() => setIsOpen(false)}
-                className="mt-4 text-sm text-slate-400 hover:text-slate-600 font-light transition-colors"
+                className="mt-4 text-sm text-slate-400 hover:text-slate-600 font-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 rounded-md px-2 py-1"
               >
                 Maybe later
               </button>

@@ -87,7 +87,7 @@ export default function SpeakingInvitations() {
                 />
               </div>
               <div className="absolute -bottom-6 -right-6 bg-secondary p-8 rounded-2xl text-primary shadow-xl hidden sm:block">
-                <Mic2 className="h-8 w-8" />
+                <Mic2 className="h-8 w-8" aria-hidden="true" />
               </div>
             </motion.div>
           </div>
@@ -148,37 +148,37 @@ export default function SpeakingInvitations() {
           <form className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Organization Name</label>
-                <input type="text" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="Church or Organization Name" />
+                <label htmlFor="invite-org" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Organization Name</label>
+                <input id="invite-org" type="text" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="Church or Organization Name" />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Contact Person</label>
-                <input type="text" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="Full Name" />
+                <label htmlFor="invite-contact" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Contact Person</label>
+                <input id="invite-contact" type="text" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="Full Name" />
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Email Address</label>
-                <input type="email" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="email@example.com" />
+                <label htmlFor="invite-email" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Email Address</label>
+                <input id="invite-email" type="email" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="email@example.com" />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Event Date</label>
-                <input type="date" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" />
+                <label htmlFor="invite-date" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Event Date</label>
+                <input id="invite-date" type="date" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" />
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Event Location</label>
+              <label htmlFor="invite-location" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Event Location</label>
               <div className="relative">
-                <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 h-5 w-5" />
-                <input type="text" className="w-full pl-14 pr-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="City, Country" />
+                <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 h-5 w-5" aria-hidden="true" />
+                <input id="invite-location" type="text" className="w-full pl-14 pr-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light" placeholder="City, Country" />
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Event Description</label>
-              <textarea rows={6} className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light resize-none" placeholder="Tell us more about the event and the expected audience..."></textarea>
+              <label htmlFor="invite-desc" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Event Description</label>
+              <textarea id="invite-desc" rows={6} className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light resize-none" placeholder="Tell us more about the event and the expected audience..."></textarea>
             </div>
-            <button className="premium-button w-full py-6 flex items-center justify-center group">
-              Send Invitation Request <Send className="ml-3 h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            <button type="submit" className="premium-button w-full py-6 flex items-center justify-center group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2">
+              Send Invitation Request <Send className="ml-3 h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" aria-hidden="true" />
             </button>
           </form>
         </div>

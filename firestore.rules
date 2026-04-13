@@ -44,9 +44,9 @@ service cloud.firestore {
     }
 
     match /sermons/{sermonId} {
-      // Allow read for everyone (if you want public to see published sermons later)
-      // For now, only admins can read and write
-      allow read: if isAdmin();
+      // Allow read for everyone if the sermon is published or scheduled
+      // Admins can read everything
+      allow read: if isAdmin() || resource.data.status in ['published', 'scheduled'];
       allow create: if isAdmin() && isValidSermon(request.resource.data);
       allow update: if isAdmin() && isValidSermon(request.resource.data);
       allow delete: if isAdmin();

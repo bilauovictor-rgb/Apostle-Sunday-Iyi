@@ -94,16 +94,18 @@ export default function Contact() {
               <form className="space-y-8 sm:space-y-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Full Name</label>
+                    <label htmlFor="contact-name" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Full Name</label>
                     <input 
+                      id="contact-name"
                       type="text" 
                       className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all text-base font-light" 
                       placeholder="John Doe" 
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Email Address</label>
+                    <label htmlFor="contact-email" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Email Address</label>
                     <input 
+                      id="contact-email"
                       type="email" 
                       className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all text-base font-light" 
                       placeholder="john@example.com" 
@@ -111,31 +113,32 @@ export default function Contact() {
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Inquiry Type</label>
+                  <label htmlFor="contact-type" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Inquiry Type</label>
                   <div className="relative">
-                    <select className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all appearance-none text-base font-light">
+                    <select id="contact-type" className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all appearance-none text-base font-light">
                       <option>Speaking Invitation</option>
                       <option>Ministry Partnership</option>
                       <option>GSOM Inquiry</option>
                       <option>Media Request</option>
                     </select>
                     <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                      <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                       </svg>
                     </div>
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Message / Request Details</label>
+                  <label htmlFor="contact-message" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Message / Request Details</label>
                   <textarea 
+                    id="contact-message"
                     rows={6} 
                     className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all text-base font-light resize-none" 
                     placeholder="How can we partner together?"
                   ></textarea>
                 </div>
-                <button className="premium-button px-12 py-5 flex items-center justify-center group w-full sm:w-auto">
-                  Submit Inquiry <Send className="ml-3 h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                <button type="submit" className="premium-button px-12 py-5 flex items-center justify-center group w-full sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2">
+                  Submit Inquiry <Send className="ml-3 h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" aria-hidden="true" />
                 </button>
               </form>
             </motion.div>
@@ -157,7 +160,7 @@ export default function Contact() {
                     <Link 
                       key={item.title}
                       to={item.path}
-                      className="block"
+                      className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 rounded-[2.5rem]"
                     >
                       <motion.div 
                         initial={{ opacity: 0, y: 20 }}
@@ -168,14 +171,14 @@ export default function Contact() {
                         className="bg-slate-50 p-8 sm:p-12 rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start space-y-8 sm:space-y-0 sm:space-x-10 group hover:bg-white hover:shadow-premium transition-all duration-500 relative overflow-hidden"
                       >
                         <div className="bg-white p-5 rounded-2xl text-secondary shadow-sm group-hover:bg-secondary group-hover:text-white transition-all duration-500 flex-shrink-0 border border-slate-100">
-                          <item.icon className="h-8 w-8" />
+                          <item.icon className="h-8 w-8" aria-hidden="true" />
                         </div>
                         <div className="flex-grow pr-8">
                           <h3 className="text-2xl sm:text-3xl font-serif text-primary mb-4 group-hover:text-secondary transition-colors duration-300">{item.title}</h3>
                           <p className="text-slate-500 leading-relaxed text-base sm:text-lg font-light">{item.desc}</p>
                         </div>
                         <div className="absolute right-8 top-1/2 -translate-y-1/2 text-secondary opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-500 hidden sm:block">
-                          <ArrowRight className="h-8 w-8" />
+                          <ArrowRight className="h-8 w-8" aria-hidden="true" />
                         </div>
                       </motion.div>
                     </Link>
@@ -191,16 +194,16 @@ export default function Contact() {
                     className="flex items-center text-primary group cursor-pointer"
                   >
                     <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center mr-6 group-hover:bg-secondary/10 transition-colors">
-                      <Mail className="h-5 w-5 text-secondary" />
+                      <Mail className="h-5 w-5 text-secondary" aria-hidden="true" />
                     </div>
-                    <span className="text-xl sm:text-2xl font-serif">office@sundayiyi.org</span>
+                    <span className="text-xl sm:text-2xl font-serif">Trachurch@yahoo.co.uk</span>
                   </motion.div>
                   <motion.div 
                     whileHover={{ x: 10 }}
                     className="flex items-center text-primary group cursor-pointer"
                   >
                     <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center mr-6 group-hover:bg-secondary/10 transition-colors">
-                      <Globe className="h-5 w-5 text-secondary" />
+                      <Globe className="h-5 w-5 text-secondary" aria-hidden="true" />
                     </div>
                     <span className="text-xl sm:text-2xl font-serif">London, United Kingdom</span>
                   </motion.div>

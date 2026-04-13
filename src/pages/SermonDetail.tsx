@@ -63,7 +63,7 @@ export default function SermonDetail() {
   if (loading) {
     return (
       <div className="min-h-screen pt-32 pb-20 flex justify-center items-center bg-slate-50">
-        <Loader2 className="w-12 h-12 animate-spin text-secondary" />
+        <Loader2 className="w-12 h-12 animate-spin text-secondary" aria-hidden="true" />
       </div>
     );
   }
@@ -73,8 +73,8 @@ export default function SermonDetail() {
       <div className="min-h-screen pt-32 pb-20 flex flex-col justify-center items-center bg-slate-50 text-center px-4">
         <h2 className="text-3xl font-serif text-primary mb-4">Teaching Unavailable</h2>
         <p className="text-slate-500 font-light mb-8">{error || 'The requested teaching could not be found.'}</p>
-        <Link to="/teachings" className="premium-button inline-flex items-center px-8 py-4">
-          <ArrowLeft className="w-5 h-5 mr-2" /> Back to Teachings
+        <Link to="/teachings" className="premium-button inline-flex items-center px-8 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2">
+          <ArrowLeft className="w-5 h-5 mr-2" aria-hidden="true" /> Back to Teachings
         </Link>
       </div>
     );
@@ -101,8 +101,8 @@ export default function SermonDetail() {
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Link to="/teachings" className="inline-flex items-center text-secondary hover:text-white transition-colors mb-8 text-sm font-medium uppercase tracking-wider">
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Teachings
+          <Link to="/teachings" className="inline-flex items-center text-secondary hover:text-white transition-colors mb-8 text-sm font-medium uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 rounded-md">
+            <ArrowLeft className="w-4 h-4 mr-2" aria-hidden="true" /> Back to Teachings
           </Link>
           
           <motion.div
@@ -136,7 +136,7 @@ export default function SermonDetail() {
             className="flex items-center justify-center text-slate-300 font-light space-x-6"
           >
             <span className="flex items-center">
-              <Calendar className="w-4 h-4 mr-2 text-secondary" />
+              <Calendar className="w-4 h-4 mr-2 text-secondary" aria-hidden="true" />
               {displayDate}
             </span>
           </motion.div>
@@ -166,7 +166,7 @@ export default function SermonDetail() {
             {/* Share Section */}
             <div className="mt-20 p-8 sm:p-10 bg-[#C5A059]/[0.03] rounded-3xl border border-[#C5A059]/10 flex flex-col sm:flex-row items-center justify-between gap-6">
               <div className="flex items-center text-slate-500 font-sans text-xs uppercase tracking-[0.2em]">
-                <Share2 className="w-4 h-4 mr-3 text-[#C5A059]" /> Share this teaching
+                <Share2 className="w-4 h-4 mr-3 text-[#C5A059]" aria-hidden="true" /> Share this teaching
               </div>
               <div className="flex justify-center sm:justify-end items-center gap-4 w-full sm:w-auto">
                 <button 
@@ -176,10 +176,11 @@ export default function SermonDetail() {
                     const url = window.location.href;
                     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`, '_blank');
                   }}
-                  className="w-[44px] h-[44px] rounded-full bg-white border border-[#000000] shadow-[0_4px_6px_rgba(0,0,0,0.05)] flex items-center justify-center text-[#000000] hover:scale-110 transition-all duration-300"
+                  className="w-[44px] h-[44px] rounded-full bg-white border border-[#000000] shadow-[0_4px_6px_rgba(0,0,0,0.05)] flex items-center justify-center text-[#000000] hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
                   title="Share on X (Twitter)"
+                  aria-label="Share on X (Twitter)"
                 >
-                  <Twitter className="w-4 h-4" />
+                  <Twitter className="w-4 h-4" aria-hidden="true" />
                 </button>
                 <button 
                   onClick={(e) => {
@@ -187,10 +188,11 @@ export default function SermonDetail() {
                     const url = window.location.href;
                     window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
                   }}
-                  className="w-[44px] h-[44px] rounded-full bg-white border border-[#1877F2] shadow-[0_4px_6px_rgba(0,0,0,0.05)] flex items-center justify-center text-[#1877F2] hover:scale-110 transition-all duration-300"
+                  className="w-[44px] h-[44px] rounded-full bg-white border border-[#1877F2] shadow-[0_4px_6px_rgba(0,0,0,0.05)] flex items-center justify-center text-[#1877F2] hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
                   title="Share on Facebook"
+                  aria-label="Share on Facebook"
                 >
-                  <Facebook className="w-4 h-4" />
+                  <Facebook className="w-4 h-4" aria-hidden="true" />
                 </button>
                 <WhatsAppShare title={sermon.seoTitle || sermon.title} variant="inline" />
               </div>
