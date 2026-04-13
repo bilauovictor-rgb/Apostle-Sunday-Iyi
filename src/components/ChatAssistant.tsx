@@ -1,6 +1,30 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageCircle, X, Send, Loader2, Mic, Square } from 'lucide-react';
+import { MessageCircle, X, Send, Mic, Square } from 'lucide-react';
+
+const TypingIndicator = () => (
+  <div className="flex items-center gap-2 px-1">
+    <div className="flex gap-1">
+      {[0, 1, 2].map((i) => (
+        <motion.div
+          key={i}
+          animate={{
+            y: [0, -3, 0],
+            opacity: [0.4, 1, 0.4]
+          }}
+          transition={{
+            duration: 1,
+            repeat: Infinity,
+            delay: i * 0.2,
+            ease: "easeInOut",
+          }}
+          className="w-1 h-1 bg-gray-400 rounded-full"
+        />
+      ))}
+    </div>
+    <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">Typing...</span>
+  </div>
+);
 
 interface Message {
   id: string;
@@ -115,7 +139,7 @@ export default function ChatAssistant() {
       console.error('Chat error:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'Sorry, I am having trouble connecting right now. Please try again later or contact the Apostle directly at https://Apostlesundayiyi.netlify.app/contact.',
+        text: 'Sorry, I am having trouble connecting right now. Please try again later or contact the Apostle directly at https://yourdomain.com/contact.',
         role: 'model',
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -237,8 +261,8 @@ export default function ChatAssistant() {
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-white p-3 rounded-2xl rounded-bl-none shadow-sm border border-gray-100">
-                    <Loader2 className="w-5 h-5 animate-spin text-gray-400" aria-hidden="true" />
+                  <div className="bg-white px-4 py-3 rounded-2xl rounded-bl-none shadow-sm border border-gray-100">
+                    <TypingIndicator />
                   </div>
                 </div>
               )}
