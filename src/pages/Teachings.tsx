@@ -11,6 +11,25 @@ const STATES = [
   'Ekiti', 'Delta', 'Ore', 'Sabo', 'Akoko', 'Shagamu'
 ];
 
+const cleanTitle = (title: string) => {
+  if (!title) return "";
+  // Remove file extensions
+  let cleaned = title.replace(/\.[^/.]+$/, "");
+  // Remove common patterns like "photo_2026-04-13_20-29-54"
+  cleaned = cleaned.replace(/photo_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/g, "");
+  // Remove trailing numbers in parentheses like "(2)"
+  cleaned = cleaned.replace(/\s*\(\d+\)$/, "");
+  // Replace underscores and hyphens with spaces
+  cleaned = cleaned.replace(/[_-]/g, " ");
+  // Trim
+  cleaned = cleaned.trim();
+  
+  // If it's still empty or looks like a random string, return a fallback
+  if (!cleaned || cleaned.length < 2) return "";
+  
+  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+};
+
 export default function Teachings() {
   const [selectedCity, setSelectedCity] = useState('Enugu');
   const [galleryImages, setGalleryImages] = useState<any[]>([]);
@@ -161,7 +180,7 @@ export default function Teachings() {
           </div>
 
           {/* State Selection - Refined */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 sm:mb-20">
             <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
               {STATES.map((city, idx) => (
                 <motion.button 
@@ -210,7 +229,7 @@ export default function Teachings() {
             ) : (
               <div className="w-full relative px-4 sm:px-0 overflow-visible">
                 {/* Carousel Container */}
-                <div className="relative h-[400px] sm:h-[500px] md:h-[600px] w-full flex items-center justify-center overflow-visible">
+                <div className="relative h-[380px] sm:h-[500px] md:h-[600px] w-full flex items-center justify-center overflow-visible">
                   <AnimatePresence initial={false}>
                     {galleryImages.map((image, idx) => {
                       const offset = (idx - activeIndex + galleryImages.length) % galleryImages.length;
@@ -219,6 +238,8 @@ export default function Teachings() {
                       const isNext = offset === 1;
                       
                       if (!isCenter && !isPrev && !isNext) return null;
+
+                      const displayTitle = cleanTitle(image.title);
 
                       return (
                         <motion.div
@@ -254,7 +275,7 @@ export default function Teachings() {
                             else if (info.offset.x < -100) nextSlide();
                           }}
                           onClick={() => isCenter ? setSelectedImage(image) : setActiveIndex(idx)}
-                          className={`absolute w-[85%] sm:w-[70%] md:w-[60%] lg:w-[50%] aspect-[16/9] rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border cursor-pointer transition-colors duration-500 ${
+                          className={`absolute w-[88%] sm:w-[70%] md:w-[60%] lg:w-[50%] aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border cursor-pointer transition-colors duration-500 ${
                             isCenter ? 'border-secondary/30 ring-1 ring-secondary/20' : 'border-white/5'
                           }`}
                         >
@@ -270,32 +291,35 @@ export default function Teachings() {
                             <motion.div 
                               initial={{ opacity: 0, x: 20 }}
                               animate={{ opacity: 1, x: 0 }}
-                              className="absolute top-8 right-8 bg-secondary text-primary px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center shadow-2xl z-30"
+                              className="absolute top-4 right-4 sm:top-8 sm:right-8 bg-secondary text-primary px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-widest flex items-center shadow-2xl z-30"
                             >
-                              <Star className="w-3.5 h-3.5 mr-2 fill-current" />
-                              Featured Moment
+                              <Star className="w-3 sm:w-3.5 h-3 sm:h-3.5 mr-1.5 sm:mr-2 fill-current" />
+                              <span className="hidden xs:inline">Featured Moment</span>
+                              <span className="xs:hidden">Featured</span>
                             </motion.div>
                           )}
 
                           {/* Overlay Gradient */}
-                          <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent transition-opacity duration-700 ${isCenter ? 'opacity-100' : 'opacity-0'}`} />
+                          <div className={`absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent transition-opacity duration-700 ${isCenter ? 'opacity-100' : 'opacity-0'}`} />
                           
                           {/* Center Content */}
                           {isCenter && (
                             <motion.div 
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
-                              className="absolute bottom-0 left-0 w-full p-8 sm:p-12 z-20"
+                              className="absolute bottom-0 left-0 w-full p-5 sm:p-12 z-20"
                             >
-                              <div className="flex items-end justify-between gap-6">
-                                <div className="flex-grow">
-                                  <span className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] mb-3 block">{selectedCity}</span>
-                                  <h4 className="text-white font-serif text-2xl sm:text-4xl mb-3 tracking-tight">{image.title}</h4>
+                              <div className="flex items-end justify-between gap-4 sm:gap-6">
+                                <div className="flex-grow min-w-0">
+                                  <span className="text-secondary font-bold tracking-[0.3em] sm:tracking-[0.4em] uppercase text-[9px] sm:text-[10px] mb-2 sm:mb-3 block">{selectedCity}</span>
+                                  <h4 className="text-white font-serif text-lg sm:text-4xl mb-2 sm:mb-3 tracking-tight line-clamp-1 sm:line-clamp-2">
+                                    {displayTitle || "Ministry Moment"}
+                                  </h4>
                                   {image.caption && (
-                                    <p className="text-slate-300 text-sm sm:text-base font-light max-w-xl line-clamp-2 leading-relaxed">{image.caption}</p>
+                                    <p className="text-slate-300 text-xs sm:text-base font-light max-w-xl line-clamp-2 leading-relaxed opacity-80 sm:opacity-100">{image.caption}</p>
                                   )}
                                 </div>
-                                <div className="hidden sm:flex w-14 h-14 rounded-full bg-secondary/90 items-center justify-center text-primary shadow-xl hover:scale-110 transition-transform">
+                                <div className="hidden sm:flex w-14 h-14 rounded-full bg-secondary/90 items-center justify-center text-primary shadow-xl hover:scale-110 transition-transform flex-shrink-0">
                                   <Maximize2 className="w-6 h-6" />
                                 </div>
                               </div>
@@ -308,38 +332,38 @@ export default function Teachings() {
                 </div>
 
                 {/* Navigation Controls */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-20 flex flex-col sm:flex-row items-center justify-between gap-8 sm:gap-0">
+                  <div className="flex items-center gap-6 order-2 sm:order-1">
                     <button 
                       onClick={prevSlide}
-                      className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-xl"
+                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-xl"
                     >
-                      <ChevronLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
+                      <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-x-1 transition-transform" />
                     </button>
                     <button 
                       onClick={nextSlide}
-                      className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-xl"
+                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-xl"
                     >
-                      <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                      <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </div>
 
                   {/* Pagination Dots */}
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 order-1 sm:order-2">
                     {galleryImages.map((_, idx) => (
                       <button
                         key={idx}
                         onClick={() => setActiveIndex(idx)}
                         className={`transition-all duration-500 rounded-full ${
                           activeIndex === idx 
-                            ? 'w-10 h-2 bg-secondary shadow-[0_0_10px_rgba(192,160,96,0.5)]' 
-                            : 'w-2 h-2 bg-white/20 hover:bg-white/40'
+                            ? 'w-8 sm:w-10 h-1.5 sm:h-2 bg-secondary shadow-[0_0_10px_rgba(192,160,96,0.5)]' 
+                            : 'w-1.5 sm:w-2 h-1.5 sm:h-2 bg-white/20 hover:bg-white/40'
                         }`}
                       />
                     ))}
                   </div>
 
-                  <div className="hidden sm:block text-slate-500 font-bold tracking-[0.3em] uppercase text-[10px]">
+                  <div className="hidden sm:block text-slate-500 font-bold tracking-[0.3em] uppercase text-[10px] order-3">
                     {activeIndex + 1} <span className="mx-2 text-white/20">/</span> {galleryImages.length}
                   </div>
                 </div>
@@ -402,7 +426,7 @@ export default function Teachings() {
                   transition={{ delay: 0.3 }}
                   className="text-3xl sm:text-5xl font-serif text-white mb-6 tracking-tight"
                 >
-                  {selectedImage.title}
+                  {cleanTitle(selectedImage.title) || "Ministry Moment"}
                 </motion.h3>
                 {selectedImage.caption && (
                   <motion.p 
