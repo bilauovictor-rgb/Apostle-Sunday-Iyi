@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import PublicSermonsList from '../components/PublicSermonsList';
-import { ImageIcon, Loader2, X, Maximize2, Star } from 'lucide-react';
+import { ImageIcon, Loader2, X, Maximize2, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const STATES = [
   'Enugu', 'Ebonyi', 'Anambra', 'Benin', 'Akure', 'Ogun', 
@@ -16,9 +16,11 @@ export default function Teachings() {
   const [galleryImages, setGalleryImages] = useState<any[]>([]);
   const [loadingGallery, setLoadingGallery] = useState(true);
   const [selectedImage, setSelectedImage] = useState<any | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     setLoadingGallery(true);
+    setActiveIndex(0);
     // Safest query: filter by state only
     const q = query(
       collection(db, 'state_galleries'),
@@ -45,6 +47,26 @@ export default function Teachings() {
 
     return () => unsubscribe();
   }, [selectedCity]);
+
+  const nextSlide = useCallback(() => {
+    if (galleryImages.length === 0) return;
+    setActiveIndex((prev) => (prev + 1) % galleryImages.length);
+  }, [galleryImages.length]);
+
+  const prevSlide = useCallback(() => {
+    if (galleryImages.length === 0) return;
+    setActiveIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+  }, [galleryImages.length]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === 'ArrowRight') nextSlide();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [nextSlide, prevSlide]);
 
   return (
     <div className="pt-20 bg-primary">
@@ -102,19 +124,19 @@ export default function Teachings() {
       <PublicSermonsList />
 
       {/* State Gallery Section */}
-      <section className="py-20 sm:py-24 bg-primary relative overflow-hidden">
+      <section className="py-24 sm:py-32 bg-primary relative overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(192,160,96,0.05),transparent_70%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(192,160,96,0.03),transparent_70%)]" />
         </div>
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
+        <div className="max-w-[100vw] mx-auto relative z-10 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-20">
             <motion.span 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-secondary font-bold tracking-[0.3em] uppercase text-[10px] sm:text-xs mb-4 block"
+              className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] sm:text-xs mb-6 block"
             >
               Visual Testimony
             </motion.span>
@@ -123,7 +145,7 @@ export default function Teachings() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-4xl sm:text-5xl font-serif text-white mb-6"
+              className="text-5xl sm:text-6xl md:text-7xl font-serif text-white mb-8 tracking-tight"
             >
               Ministry Moments <span className="gold-gradient-text italic">Across States</span>
             </motion.h2>
@@ -132,128 +154,215 @@ export default function Teachings() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-slate-400 max-w-2xl mx-auto text-lg font-light leading-relaxed"
+              className="text-slate-400 max-w-2xl mx-auto text-lg sm:text-xl font-light leading-relaxed"
             >
               Witness the impact of the apostolic mandate as we traverse the nations, bringing the reality of heaven to every soul.
             </motion.p>
           </div>
 
-          {/* Gallery Display */}
-          <div className="mb-16 min-h-[400px] flex flex-col items-center justify-center">
+          {/* State Selection - Refined */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+              {STATES.map((city, idx) => (
+                <motion.button 
+                  key={city}
+                  onClick={() => setSelectedCity(city)}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.03 }}
+                  className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-500 border ${
+                    selectedCity === city 
+                      ? 'bg-secondary text-primary border-secondary shadow-[0_0_20px_rgba(192,160,96,0.3)] scale-105' 
+                      : 'bg-white/5 text-slate-400 border-white/10 hover:border-secondary/50 hover:text-secondary'
+                  }`}
+                >
+                  {city}
+                </motion.button>
+              ))}
+            </div>
+          </div>
+
+          {/* Cinematic Carousel Display */}
+          <div className="relative min-h-[500px] flex flex-col items-center justify-center">
             {loadingGallery ? (
-              <div className="flex flex-col items-center gap-4">
-                <Loader2 className="w-10 h-10 animate-spin text-secondary" />
-                <span className="text-slate-400 font-light tracking-widest text-xs uppercase">Loading Gallery...</span>
+              <div className="flex flex-col items-center gap-6">
+                <div className="relative">
+                  <div className="w-16 h-16 border-2 border-secondary/20 rounded-full animate-ping absolute inset-0" />
+                  <Loader2 className="w-16 h-16 animate-spin text-secondary relative z-10" />
+                </div>
+                <span className="text-secondary font-bold tracking-[0.3em] uppercase text-[10px]">Loading Cinematic Gallery...</span>
               </div>
             ) : galleryImages.length === 0 ? (
               <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center py-20 px-8 rounded-[3rem] bg-white/[0.02] border border-white/5 backdrop-blur-sm max-w-md"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center py-24 px-12 rounded-[4rem] bg-white/[0.02] border border-white/5 backdrop-blur-md max-w-xl mx-auto"
               >
-                <ImageIcon className="w-12 h-12 text-slate-700 mx-auto mb-6 opacity-50" />
-                <h3 className="text-xl font-serif text-white mb-3">Moments Coming Soon</h3>
-                <p className="text-slate-400 font-light text-sm leading-relaxed">
-                  Images for <span className="text-secondary font-medium">{selectedCity}</span> will be added soon. Stay tuned for visual testimonies from this region.
+                <div className="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-8">
+                  <ImageIcon className="w-10 h-10 text-secondary/50" />
+                </div>
+                <h3 className="text-3xl font-serif text-white mb-4 italic">Moments Coming Soon</h3>
+                <p className="text-slate-400 font-light text-lg leading-relaxed">
+                  Images for <span className="text-secondary font-medium">{selectedCity}</span> are being curated. Stay tuned for visual testimonies from this region.
                 </p>
               </motion.div>
             ) : (
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={selectedCity}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full"
-                >
-                  {galleryImages.map((image, idx) => (
-                    <motion.div
-                      key={image.id}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: idx * 0.1 }}
-                      onClick={() => setSelectedImage(image)}
-                      className={`group relative aspect-[4/3] rounded-[2rem] overflow-hidden shadow-2xl border transition-all duration-500 cursor-pointer
-                        ${image.featured ? 'border-secondary/30 ring-1 ring-secondary/20' : 'border-white/5'}
-                      `}
+              <div className="w-full relative px-4 sm:px-0 overflow-visible">
+                {/* Carousel Container */}
+                <div className="relative h-[400px] sm:h-[500px] md:h-[600px] w-full flex items-center justify-center overflow-visible">
+                  <AnimatePresence initial={false}>
+                    {galleryImages.map((image, idx) => {
+                      const offset = (idx - activeIndex + galleryImages.length) % galleryImages.length;
+                      const isCenter = offset === 0;
+                      const isPrev = offset === galleryImages.length - 1;
+                      const isNext = offset === 1;
+                      
+                      if (!isCenter && !isPrev && !isNext) return null;
+
+                      return (
+                        <motion.div
+                          key={image.id}
+                          initial={{ 
+                            opacity: 0, 
+                            scale: 0.8,
+                            x: isNext ? '50%' : isPrev ? '-50%' : 0,
+                            zIndex: 0
+                          }}
+                          animate={{ 
+                            opacity: isCenter ? 1 : 0.4,
+                            scale: isCenter ? 1 : 0.85,
+                            x: isCenter ? '0%' : isNext ? '60%' : '-60%',
+                            zIndex: isCenter ? 20 : 10,
+                            filter: isCenter ? 'blur(0px)' : 'blur(4px)'
+                          }}
+                          exit={{ 
+                            opacity: 0, 
+                            scale: 0.8,
+                            x: isNext ? '50%' : isPrev ? '-50%' : 0,
+                            zIndex: 0
+                          }}
+                          transition={{ 
+                            type: 'spring', 
+                            stiffness: 300, 
+                            damping: 30 
+                          }}
+                          drag="x"
+                          dragConstraints={{ left: 0, right: 0 }}
+                          onDragEnd={(_, info) => {
+                            if (info.offset.x > 100) prevSlide();
+                            else if (info.offset.x < -100) nextSlide();
+                          }}
+                          onClick={() => isCenter ? setSelectedImage(image) : setActiveIndex(idx)}
+                          className={`absolute w-[85%] sm:w-[70%] md:w-[60%] lg:w-[50%] aspect-[16/9] rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border cursor-pointer transition-colors duration-500 ${
+                            isCenter ? 'border-secondary/30 ring-1 ring-secondary/20' : 'border-white/5'
+                          }`}
+                        >
+                          <img 
+                            src={image.imageUrl} 
+                            alt={image.title}
+                            className="w-full h-full object-cover"
+                            referrerPolicy="no-referrer"
+                          />
+                          
+                          {/* Featured Badge */}
+                          {image.featured && isCenter && (
+                            <motion.div 
+                              initial={{ opacity: 0, x: 20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              className="absolute top-8 right-8 bg-secondary text-primary px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center shadow-2xl z-30"
+                            >
+                              <Star className="w-3.5 h-3.5 mr-2 fill-current" />
+                              Featured Moment
+                            </motion.div>
+                          )}
+
+                          {/* Overlay Gradient */}
+                          <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent transition-opacity duration-700 ${isCenter ? 'opacity-100' : 'opacity-0'}`} />
+                          
+                          {/* Center Content */}
+                          {isCenter && (
+                            <motion.div 
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="absolute bottom-0 left-0 w-full p-8 sm:p-12 z-20"
+                            >
+                              <div className="flex items-end justify-between gap-6">
+                                <div className="flex-grow">
+                                  <span className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] mb-3 block">{selectedCity}</span>
+                                  <h4 className="text-white font-serif text-2xl sm:text-4xl mb-3 tracking-tight">{image.title}</h4>
+                                  {image.caption && (
+                                    <p className="text-slate-300 text-sm sm:text-base font-light max-w-xl line-clamp-2 leading-relaxed">{image.caption}</p>
+                                  )}
+                                </div>
+                                <div className="hidden sm:flex w-14 h-14 rounded-full bg-secondary/90 items-center justify-center text-primary shadow-xl hover:scale-110 transition-transform">
+                                  <Maximize2 className="w-6 h-6" />
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </motion.div>
+                      );
+                    })}
+                  </AnimatePresence>
+                </div>
+
+                {/* Navigation Controls */}
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <button 
+                      onClick={prevSlide}
+                      className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-xl"
                     >
-                      <img 
-                        src={image.imageUrl} 
-                        alt={image.title}
-                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                        referrerPolicy="no-referrer"
-                        loading="lazy"
+                      <ChevronLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
+                    </button>
+                    <button 
+                      onClick={nextSlide}
+                      className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-xl"
+                    >
+                      <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+
+                  {/* Pagination Dots */}
+                  <div className="flex items-center gap-3">
+                    {galleryImages.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setActiveIndex(idx)}
+                        className={`transition-all duration-500 rounded-full ${
+                          activeIndex === idx 
+                            ? 'w-10 h-2 bg-secondary shadow-[0_0_10px_rgba(192,160,96,0.5)]' 
+                            : 'w-2 h-2 bg-white/20 hover:bg-white/40'
+                        }`}
                       />
-                      
-                      {/* Featured Badge */}
-                      {image.featured && (
-                        <div className="absolute top-6 right-6 bg-secondary text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center shadow-lg z-20">
-                          <Star className="w-3 h-3 mr-1 fill-current" />
-                          Featured
-                        </div>
-                      )}
+                    ))}
+                  </div>
 
-                      <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
-                      
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <div className="w-12 h-12 rounded-full bg-secondary/90 flex items-center justify-center text-primary transform scale-50 group-hover:scale-100 transition-transform duration-500">
-                          <Maximize2 className="w-5 h-5" />
-                        </div>
-                      </div>
-
-                      <div className="absolute bottom-0 left-0 w-full p-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                        <span className="text-secondary font-bold tracking-widest text-[10px] uppercase mb-2 block">{selectedCity}</span>
-                        <h4 className="text-white font-serif text-xl">{image.title}</h4>
-                        {image.caption && (
-                          <p className="text-slate-300 text-xs font-light mt-2 line-clamp-2">{image.caption}</p>
-                        )}
-                      </div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </AnimatePresence>
+                  <div className="hidden sm:block text-slate-500 font-bold tracking-[0.3em] uppercase text-[10px]">
+                    {activeIndex + 1} <span className="mx-2 text-white/20">/</span> {galleryImages.length}
+                  </div>
+                </div>
+              </div>
             )}
-          </div>
-
-          {/* State Selection Buttons */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
-            {STATES.map((city, idx) => (
-              <motion.button 
-                key={city}
-                onClick={() => setSelectedCity(city)}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.05 }}
-                whileHover={{ y: -5 }}
-                className={`p-6 sm:p-8 rounded-3xl text-center border font-serif text-lg sm:text-xl transition-all duration-300 shadow-sm hover:shadow-premium ${
-                  selectedCity === city 
-                    ? 'bg-secondary text-primary border-secondary shadow-premium' 
-                    : 'bg-white/5 text-slate-300 border-white/10 hover:border-secondary hover:text-secondary'
-                }`}
-              >
-                <span className={selectedCity === city ? 'italic font-bold' : ''}>{city}</span>
-              </motion.button>
-            ))}
           </div>
         </div>
       </section>
 
-      {/* Lightbox Modal */}
+      {/* Lightbox Modal - Enhanced */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-primary/95 backdrop-blur-xl"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-primary/98 backdrop-blur-2xl"
             onClick={() => setSelectedImage(null)}
           >
             <motion.button
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="absolute top-8 right-8 p-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-colors z-[110]"
+              className="absolute top-8 right-8 p-4 bg-white/5 text-white rounded-full hover:bg-secondary hover:text-primary transition-all duration-500 z-[110] border border-white/10"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedImage(null);
@@ -263,30 +372,47 @@ export default function Teachings() {
             </motion.button>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center"
+              exit={{ opacity: 0, scale: 0.9, y: 30 }}
+              className="relative max-w-6xl w-full max-h-[90vh] flex flex-col items-center"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative w-full aspect-video sm:aspect-auto sm:h-[70vh] rounded-[2rem] overflow-hidden shadow-2xl border border-white/10">
+              <div className="relative w-full aspect-video sm:aspect-auto sm:h-[75vh] rounded-[3rem] overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.8)] border border-white/10 bg-black/40">
                 <img 
                   src={selectedImage.imageUrl} 
                   alt={selectedImage.title}
-                  className="w-full h-full object-contain bg-black/20"
+                  className="w-full h-full object-contain"
                   referrerPolicy="no-referrer"
                 />
               </div>
               
-              <div className="mt-8 text-center max-w-2xl">
-                <span className="text-secondary font-bold tracking-[0.3em] uppercase text-[10px] mb-4 block">
-                  {selectedImage.state} • {new Date(selectedImage.createdAt?.toDate()).toLocaleDateString()}
-                </span>
-                <h3 className="text-3xl sm:text-4xl font-serif text-white mb-4">{selectedImage.title}</h3>
+              <div className="mt-10 text-center max-w-3xl px-6">
+                <motion.span 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] mb-4 block"
+                >
+                  {selectedImage.state} • {selectedImage.createdAt ? new Date(selectedImage.createdAt.toDate()).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recent Moment'}
+                </motion.span>
+                <motion.h3 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-3xl sm:text-5xl font-serif text-white mb-6 tracking-tight"
+                >
+                  {selectedImage.title}
+                </motion.h3>
                 {selectedImage.caption && (
-                  <p className="text-slate-400 font-light text-lg leading-relaxed">
-                    {selectedImage.caption}
-                  </p>
+                  <motion.p 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="text-slate-400 font-light text-lg sm:text-xl leading-relaxed italic"
+                  >
+                    "{selectedImage.caption}"
+                  </motion.p>
                 )}
               </div>
             </motion.div>
@@ -295,7 +421,7 @@ export default function Teachings() {
       </AnimatePresence>
 
       {/* Global Outreach Tour */}
-      <section className="py-20 sm:py-24 bg-slate-50 relative overflow-hidden">
+      <section className="py-24 sm:py-32 bg-slate-50 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -320,7 +446,7 @@ export default function Teachings() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-4xl sm:text-7xl font-serif text-primary mb-8"
+              className="text-5xl sm:text-8xl font-serif text-primary mb-10 tracking-tighter"
             >
               Global <span className="gold-gradient-text italic">Teaching Tour</span>
             </motion.h2>
@@ -328,7 +454,7 @@ export default function Teachings() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-slate-500 max-w-2xl mx-auto text-lg sm:text-xl font-light leading-relaxed"
+              className="text-slate-500 max-w-3xl mx-auto text-xl sm:text-2xl font-light leading-relaxed"
             >
               Equipping regional religious leaders and mobilizing the body of Christ across the nations.
             </motion.p>
@@ -337,17 +463,17 @@ export default function Teachings() {
       </section>
 
       {/* Admin Access Portal Section */}
-      <section className="py-20 bg-primary border-t border-white/5 relative overflow-hidden">
+      <section className="py-24 bg-primary border-t border-white/5 relative overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(192,160,96,0.05),transparent_70%)]" />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="max-w-2xl mx-auto p-12 rounded-[3rem] bg-white/[0.02] border border-white/10 backdrop-blur-sm">
+          <div className="max-w-3xl mx-auto p-16 rounded-[4rem] bg-white/[0.02] border border-white/10 backdrop-blur-md">
             <motion.span 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-secondary font-bold tracking-[0.3em] uppercase text-[10px] mb-4 block"
+              className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] mb-6 block"
             >
               Internal Access
             </motion.span>
@@ -356,7 +482,7 @@ export default function Teachings() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-2xl sm:text-3xl font-serif text-white mb-6"
+              className="text-3xl sm:text-4xl font-serif text-white mb-8"
             >
               Ministry <span className="gold-gradient-text italic">Management</span>
             </motion.h3>
@@ -365,7 +491,7 @@ export default function Teachings() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-slate-400 font-light mb-10 text-sm sm:text-base"
+              className="text-slate-400 font-light mb-12 text-lg leading-relaxed"
             >
               Authorized personnel can access the sermon management dashboard and AI content generation tools here.
             </motion.p>
@@ -377,7 +503,7 @@ export default function Teachings() {
             >
               <Link 
                 to="/admin" 
-                className="premium-button inline-flex items-center"
+                className="premium-button inline-flex items-center px-10 py-5"
               >
                 Open Admin Dashboard
               </Link>
