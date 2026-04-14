@@ -7,9 +7,7 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      // For now, any authenticated user is considered an admin since this is an admin-only system
-      // In a real app, you would check a custom claim or a users collection
-      return isAuthenticated();
+      return isAuthenticated() && request.auth.token.email == 'officialgiganticcomputers@gmail.com';
     }
 
     function hasRequiredFields(fields) {
@@ -44,10 +42,10 @@ service cloud.firestore {
     }
 
     function isValidGalleryImage(data) {
-      return hasOnlyAllowedFields(['state', 'title', 'caption', 'imageUrl', 'storagePath', 'order', 'featured', 'status', 'createdAt', 'updatedAt']) &&
+      return hasOnlyAllowedFields(['state', 'title', 'caption', 'imageUrl', 'public_id', 'order', 'featured', 'status', 'createdAt', 'updatedAt']) &&
              data.state is string && data.state.size() > 0 && data.state.size() < 100 &&
              data.imageUrl is string && data.imageUrl.size() > 0 && data.imageUrl.size() < 2000 &&
-             data.storagePath is string && data.storagePath.size() > 0 && data.storagePath.size() < 1000 &&
+             data.public_id is string && data.public_id.size() > 0 && data.public_id.size() < 1000 &&
              data.createdAt is timestamp &&
              (!('title' in data) || (data.title is string && data.title.size() < 200)) &&
              (!('caption' in data) || (data.caption is string && data.caption.size() < 1000)) &&

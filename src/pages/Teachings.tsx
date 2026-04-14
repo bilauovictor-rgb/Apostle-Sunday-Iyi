@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import PublicSermonsList from '../components/PublicSermonsList';
-import { ImageIcon, Loader2 } from 'lucide-react';
+import { ImageIcon, Loader2, X, Maximize2, Star } from 'lucide-react';
 
 const STATES = [
   'Enugu', 'Ebonyi', 'Anambra', 'Benin', 'Akure', 'Ogun', 
@@ -15,21 +15,27 @@ export default function Teachings() {
   const [selectedCity, setSelectedCity] = useState('Enugu');
   const [galleryImages, setGalleryImages] = useState<any[]>([]);
   const [loadingGallery, setLoadingGallery] = useState(true);
+  const [selectedImage, setSelectedImage] = useState<any | null>(null);
 
   useEffect(() => {
     setLoadingGallery(true);
+    // Safest query: filter by state only
     const q = query(
       collection(db, 'state_galleries'),
-      where('state', '==', selectedCity),
-      where('status', '==', 'active'),
-      orderBy('order', 'asc')
+      where('state', '==', selectedCity)
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const images = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      const images = snapshot.docs
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        // Filter in memory for safety
+        .filter((img: any) => img.status === 'active')
+        // Sort in memory for safety
+        .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+        
       setGalleryImages(images);
       setLoadingGallery(false);
     }, (error) => {
@@ -167,7 +173,10 @@ export default function Teachings() {
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: idx * 0.1 }}
-                      className="group relative aspect-[4/3] rounded-[2rem] overflow-hidden shadow-2xl border border-white/5 transition-all duration-500"
+                      onClick={() => setSelectedImage(image)}
+                      className={`group relative aspect-[4/3] rounded-[2rem] overflow-hidden shadow-2xl border transition-all duration-500 cursor-pointer
+                        ${image.featured ? 'border-secondary/30 ring-1 ring-secondary/20' : 'border-white/5'}
+                      `}
                     >
                       <img 
                         src={image.imageUrl} 
@@ -176,7 +185,23 @@ export default function Teachings() {
                         referrerPolicy="no-referrer"
                         loading="lazy"
                       />
+                      
+                      {/* Featured Badge */}
+                      {image.featured && (
+                        <div className="absolute top-6 right-6 bg-secondary text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center shadow-lg z-20">
+                          <Star className="w-3 h-3 mr-1 fill-current" />
+                          Featured
+                        </div>
+                      )}
+
                       <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <div className="w-12 h-12 rounded-full bg-secondary/90 flex items-center justify-center text-primary transform scale-50 group-hover:scale-100 transition-transform duration-500">
+                          <Maximize2 className="w-5 h-5" />
+                        </div>
+                      </div>
+
                       <div className="absolute bottom-0 left-0 w-full p-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
                         <span className="text-secondary font-bold tracking-widest text-[10px] uppercase mb-2 block">{selectedCity}</span>
                         <h4 className="text-white font-serif text-xl">{image.title}</h4>
@@ -215,7 +240,61 @@ export default function Teachings() {
         </div>
       </section>
 
-      {/* Global Outreach Tour - Keeping the header but it's now integrated with the gallery above */}
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-primary/95 backdrop-blur-xl"
+            onClick={() => setSelectedImage(null)}
+          >
+            <motion.button
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="absolute top-8 right-8 p-3 bg-white/10 text-white rounded-full hover:bg-white/20 transition-colors z-[110]"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedImage(null);
+              }}
+            >
+              <X className="w-6 h-6" />
+            </motion.button>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="relative w-full aspect-video sm:aspect-auto sm:h-[70vh] rounded-[2rem] overflow-hidden shadow-2xl border border-white/10">
+                <img 
+                  src={selectedImage.imageUrl} 
+                  alt={selectedImage.title}
+                  className="w-full h-full object-contain bg-black/20"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              
+              <div className="mt-8 text-center max-w-2xl">
+                <span className="text-secondary font-bold tracking-[0.3em] uppercase text-[10px] mb-4 block">
+                  {selectedImage.state} • {new Date(selectedImage.createdAt?.toDate()).toLocaleDateString()}
+                </span>
+                <h3 className="text-3xl sm:text-4xl font-serif text-white mb-4">{selectedImage.title}</h3>
+                {selectedImage.caption && (
+                  <p className="text-slate-400 font-light text-lg leading-relaxed">
+                    {selectedImage.caption}
+                  </p>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Global Outreach Tour */}
       <section className="py-20 sm:py-24 bg-slate-50 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
