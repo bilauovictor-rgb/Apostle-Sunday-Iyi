@@ -1,13 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
-import { ImageIcon, Loader2, X, Maximize2, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ImageIcon, X, Maximize2, Star, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 
 const STATES = [
   'Enugu', 'Ebonyi', 'Anambra', 'Benin', 'Akure', 'Ogun', 
   'Ekiti', 'Delta', 'Ore', 'Sabo', 'Akoko', 'Shagamu'
 ];
+
+const INITIAL_GRID_SIZE = 9;
 
 const cleanTitle = (title: string) => {
   if (!title) return "";
@@ -20,9 +22,16 @@ const cleanTitle = (title: string) => {
   return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
 };
 
-const optimizeCloudinaryUrl = (url: string, width = 1200) => {
+const optimizeCloudinaryUrl = (url: string, options: { width?: number; height?: number; crop?: string; blur?: number } = {}) => {
   if (!url || !url.includes('cloudinary.com')) return url;
-  return url.replace('/upload/', `/upload/f_auto,q_auto,w_${width}/`);
+  
+  const transforms = ['f_auto', 'q_auto'];
+  if (options.width) transforms.push(`w_${options.width}`);
+  if (options.height) transforms.push(`h_${options.height}`);
+  if (options.crop) transforms.push(`c_${options.crop},g_auto`);
+  if (options.blur) transforms.push(`e_blur:${options.blur}`);
+  
+  return url.replace('/upload/', `/upload/${transforms.join(',')}/`);
 };
 
 export default function Gallery() {
@@ -31,26 +40,49 @@ export default function Gallery() {
   const [loadingGallery, setLoadingGallery] = useState(true);
   const [selectedImage, setSelectedImage] = useState<any | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [gridLimit, setGridLimit] = useState(INITIAL_GRID_SIZE);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile for performance optimizations
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const sortedImages = useMemo(() => {
+    return [...galleryImages].sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+  }, [galleryImages]);
+
+  const gridImages = useMemo(() => {
+    return sortedImages.slice(0, gridLimit);
+  }, [sortedImages, gridLimit]);
+
+  const hasMoreImages = sortedImages.length > gridLimit;
+
+  const loadMore = () => setGridLimit(prev => prev + 9);
 
   const nextLightbox = useCallback((e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    if (galleryImages.length === 0) return;
-    const currentIndex = galleryImages.findIndex(img => img.id === selectedImage?.id);
-    const nextIndex = (currentIndex + 1) % galleryImages.length;
-    setSelectedImage(galleryImages[nextIndex]);
-  }, [galleryImages, selectedImage]);
+    if (sortedImages.length === 0) return;
+    const currentIndex = sortedImages.findIndex(img => img.id === selectedImage?.id);
+    const nextIndex = (currentIndex + 1) % sortedImages.length;
+    setSelectedImage(sortedImages[nextIndex]);
+  }, [sortedImages, selectedImage]);
 
   const prevLightbox = useCallback((e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    if (galleryImages.length === 0) return;
-    const currentIndex = galleryImages.findIndex(img => img.id === selectedImage?.id);
-    const prevIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-    setSelectedImage(galleryImages[prevIndex]);
-  }, [galleryImages, selectedImage]);
+    if (sortedImages.length === 0) return;
+    const currentIndex = sortedImages.findIndex(img => img.id === selectedImage?.id);
+    const prevIndex = (currentIndex - 1 + sortedImages.length) % sortedImages.length;
+    setSelectedImage(sortedImages[prevIndex]);
+  }, [sortedImages, selectedImage]);
 
   useEffect(() => {
     setLoadingGallery(true);
     setActiveIndex(0);
+    setGridLimit(INITIAL_GRID_SIZE);
     const q = query(
       collection(db, 'state_galleries'),
       where('state', '==', selectedCity)
@@ -62,8 +94,7 @@ export default function Gallery() {
           id: doc.id,
           ...doc.data()
         }))
-        .filter((img: any) => img.status === 'active')
-        .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+        .filter((img: any) => img.status === 'active');
         
       setGalleryImages(images);
       setLoadingGallery(false);
@@ -76,14 +107,14 @@ export default function Gallery() {
   }, [selectedCity]);
 
   const nextSlide = useCallback(() => {
-    if (galleryImages.length === 0) return;
-    setActiveIndex((prev) => (prev + 1) % galleryImages.length);
-  }, [galleryImages.length]);
+    if (sortedImages.length === 0) return;
+    setActiveIndex((prev) => (prev + 1) % sortedImages.length);
+  }, [sortedImages.length]);
 
   const prevSlide = useCallback(() => {
-    if (galleryImages.length === 0) return;
-    setActiveIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
-  }, [galleryImages.length]);
+    if (sortedImages.length === 0) return;
+    setActiveIndex((prev) => (prev - 1 + sortedImages.length) % sortedImages.length);
+  }, [sortedImages.length]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -178,19 +209,16 @@ export default function Gallery() {
             {loadingGallery ? (
               <div className="w-full relative px-4 sm:px-0 overflow-visible">
                 <div className="relative h-[400px] sm:h-[550px] md:h-[650px] w-full flex items-center justify-center overflow-visible">
-                  <div className="absolute w-[90%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[16/9] rounded-[3rem] bg-white/[0.02] border border-white/5 -translate-x-[60%] scale-85 opacity-40 blur-[4px]" />
-                  <div className="absolute w-[90%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[16/9] rounded-[3rem] bg-white/[0.02] border border-white/5 translate-x-[60%] scale-85 opacity-40 blur-[4px]" />
                   <div className="absolute w-[90%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[16/9] rounded-[3rem] bg-white/[0.05] border border-secondary/20 shadow-2xl z-20 flex flex-col justify-end p-8 sm:p-16 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                     <div className="relative z-10 space-y-6">
                       <div className="h-4 w-32 bg-secondary/20 rounded-full animate-pulse" />
                       <div className="h-12 w-3/4 bg-white/10 rounded-2xl animate-pulse" />
-                      <div className="h-6 w-1/2 bg-white/5 rounded-xl animate-pulse" />
                     </div>
                   </div>
                 </div>
               </div>
-            ) : galleryImages.length === 0 ? (
+            ) : sortedImages.length === 0 ? (
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -206,30 +234,35 @@ export default function Gallery() {
               </motion.div>
             ) : (
               <div className="w-full relative px-4 sm:px-0 overflow-visible">
-                {/* Background Dynamic Blur */}
-                <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-                  <AnimatePresence mode="wait">
-                    <motion.img
-                      key={galleryImages[activeIndex]?.id}
-                      src={optimizeCloudinaryUrl(galleryImages[activeIndex]?.imageUrl, 100)}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.15 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 1 }}
-                      className="w-full h-full object-cover blur-[100px] scale-150"
-                    />
-                  </AnimatePresence>
-                </div>
+                {/* Background Dynamic Blur - Optimized with Cloudinary Blur & Disabled on Mobile */}
+                {!isMobile && (
+                  <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+                    <AnimatePresence mode="wait">
+                      <motion.img
+                        key={sortedImages[activeIndex]?.id}
+                        src={optimizeCloudinaryUrl(sortedImages[activeIndex]?.imageUrl, { width: 100, blur: 1000 })}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.2 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 1.5 }}
+                        className="w-full h-full object-cover scale-150"
+                      />
+                    </AnimatePresence>
+                  </div>
+                )}
 
                 <div className="relative h-[400px] sm:h-[550px] md:h-[650px] w-full flex items-center justify-center overflow-visible z-10">
                   <AnimatePresence initial={false}>
-                    {galleryImages.map((image, idx) => {
-                      const offset = (idx - activeIndex + galleryImages.length) % galleryImages.length;
+                    {sortedImages.map((image, idx) => {
+                      const offset = (idx - activeIndex + sortedImages.length) % sortedImages.length;
                       const isCenter = offset === 0;
-                      const isPrev = offset === galleryImages.length - 1;
+                      const isPrev = offset === sortedImages.length - 1;
                       const isNext = offset === 1;
                       
-                      if (!isCenter && !isPrev && !isNext) return null;
+                      // On mobile, only render the center image for performance
+                      if (isMobile && !isCenter) return null;
+                      // On desktop, render center and neighbors
+                      if (!isMobile && !isCenter && !isPrev && !isNext) return null;
 
                       const displayTitle = cleanTitle(image.title);
 
@@ -274,11 +307,11 @@ export default function Gallery() {
                           }`}
                         >
                           <img 
-                            src={optimizeCloudinaryUrl(image.imageUrl, isCenter ? 1200 : 600)} 
+                            src={optimizeCloudinaryUrl(image.imageUrl, { width: isCenter ? 1000 : 600 })} 
                             alt={image.title}
                             className={`w-full h-full object-cover transition-all duration-1000 ${isCenter ? 'opacity-100 scale-100' : 'opacity-40 scale-110'}`}
                             referrerPolicy="no-referrer"
-                            loading="lazy"
+                            loading={isCenter ? "eager" : "lazy"}
                           />
                           
                           {image.featured && isCenter && (
@@ -343,7 +376,7 @@ export default function Gallery() {
                   </div>
 
                   <div className="flex items-center gap-4 order-1 sm:order-2">
-                    {galleryImages.map((_, idx) => (
+                    {sortedImages.map((_, idx) => (
                       <button
                         key={idx}
                         onClick={() => setActiveIndex(idx)}
@@ -358,7 +391,7 @@ export default function Gallery() {
                   </div>
 
                   <div className="hidden sm:block text-slate-500 font-black tracking-[0.4em] uppercase text-[11px] order-3 bg-white/5 px-6 py-3 rounded-full border border-white/10">
-                    {activeIndex + 1} <span className="mx-3 text-white/20">/</span> {galleryImages.length}
+                    {activeIndex + 1} <span className="mx-3 text-white/20">/</span> {sortedImages.length}
                   </div>
                 </div>
               </div>
@@ -368,7 +401,7 @@ export default function Gallery() {
       </section>
 
       {/* Structured Browsing Area - Grid Section */}
-      {!loadingGallery && galleryImages.length > 0 && (
+      {!loadingGallery && sortedImages.length > 0 && (
         <section className="py-24 sm:py-32 bg-slate-50 relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
@@ -384,7 +417,7 @@ export default function Gallery() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
-              {galleryImages.map((image, idx) => (
+              {gridImages.map((image, idx) => (
                 <motion.div
                   key={image.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -395,7 +428,7 @@ export default function Gallery() {
                   className="group relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-slate-200 cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500"
                 >
                   <img 
-                    src={optimizeCloudinaryUrl(image.imageUrl, 800)} 
+                    src={optimizeCloudinaryUrl(image.imageUrl, { width: 600, height: 750, crop: 'fill' })} 
                     alt={image.title}
                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                     referrerPolicy="no-referrer"
@@ -413,6 +446,19 @@ export default function Gallery() {
                 </motion.div>
               ))}
             </div>
+
+            {/* Load More Button */}
+            {hasMoreImages && (
+              <div className="mt-20 text-center">
+                <button 
+                  onClick={loadMore}
+                  className="inline-flex items-center gap-3 px-10 py-5 rounded-full bg-white border border-slate-200 text-primary font-bold tracking-[0.2em] uppercase text-xs hover:border-secondary hover:text-secondary transition-all duration-300 shadow-sm hover:shadow-xl group"
+                >
+                  <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform" />
+                  Load More Moments
+                </button>
+              </div>
+            )}
           </div>
         </section>
       )}
@@ -470,7 +516,7 @@ export default function Gallery() {
             >
               <div className="relative w-full aspect-video sm:aspect-auto sm:h-[70vh] rounded-[3rem] overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,0.9)] border border-white/10 bg-black/40 group">
                 <img 
-                  src={optimizeCloudinaryUrl(selectedImage.imageUrl, 2000)} 
+                  src={optimizeCloudinaryUrl(selectedImage.imageUrl, { width: 2000 })} 
                   alt={selectedImage.title}
                   className="w-full h-full object-contain transition-transform duration-700 hover:scale-105"
                   referrerPolicy="no-referrer"
