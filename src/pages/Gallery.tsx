@@ -9,7 +9,7 @@ const STATES = [
   'Ekiti', 'Delta', 'Ore', 'Sabo', 'Akoko', 'Shagamu'
 ];
 
-const INITIAL_GRID_SIZE = 9;
+const INITIAL_GRID_SIZE = 6;
 
 const cleanTitle = (title: string) => {
   if (!title) return "";
@@ -22,10 +22,10 @@ const cleanTitle = (title: string) => {
   return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
 };
 
-const optimizeCloudinaryUrl = (url: string, options: { width?: number; height?: number; crop?: string; blur?: number } = {}) => {
+const optimizeCloudinaryUrl = (url: string, options: { width?: number; height?: number; crop?: string; blur?: number; quality?: number | 'auto' } = {}) => {
   if (!url || !url.includes('cloudinary.com')) return url;
   
-  const transforms = ['f_auto', 'q_auto'];
+  const transforms = ['f_auto', `q_${options.quality || 'auto'}`];
   if (options.width) transforms.push(`w_${options.width}`);
   if (options.height) transforms.push(`h_${options.height}`);
   if (options.crop) transforms.push(`c_${options.crop},g_auto`);
@@ -141,10 +141,12 @@ export default function Gallery() {
           />
           <div className="absolute inset-0 bg-primary/60 backdrop-blur-[2px]" />
           <img 
-            src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2070&auto=format&fit=crop" 
+            src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=60&w=1600&fit=crop" 
             alt="Gallery Background" 
             className="w-full h-full object-cover opacity-20 grayscale"
             referrerPolicy="no-referrer"
+            loading="eager"
+            fetchPriority="high"
           />
         </div>
 
@@ -302,16 +304,20 @@ export default function Gallery() {
                             else if (info.offset.x < -50) nextSlide();
                           }}
                           onClick={() => isCenter ? setSelectedImage(image) : setActiveIndex(idx)}
-                          className={`absolute w-[90%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[16/9] rounded-[3rem] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.7)] border cursor-pointer transition-all duration-700 ${
-                            isCenter ? 'border-secondary/40 ring-2 ring-secondary/10' : 'border-white/5'
+                          className={`absolute w-[90%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[16/9] rounded-[3rem] overflow-hidden border cursor-pointer transition-all duration-700 ${
+                            isCenter 
+                              ? 'border-secondary/40 ring-2 ring-secondary/10 shadow-[0_40px_100px_rgba(0,0,0,0.7)]' 
+                              : 'border-white/5 shadow-none'
                           }`}
                         >
                           <img 
-                            src={optimizeCloudinaryUrl(image.imageUrl, { width: isCenter ? 1000 : 600 })} 
+                            src={optimizeCloudinaryUrl(image.imageUrl, { width: isCenter ? (isMobile ? 600 : 1000) : 400, quality: isCenter ? 70 : 50 })} 
                             alt={image.title}
                             className={`w-full h-full object-cover transition-all duration-1000 ${isCenter ? 'opacity-100 scale-100' : 'opacity-40 scale-110'}`}
                             referrerPolicy="no-referrer"
                             loading={isCenter ? "eager" : "lazy"}
+                            decoding={isCenter ? "sync" : "async"}
+                            {...(isCenter ? { fetchPriority: "high" } : {})}
                           />
                           
                           {image.featured && isCenter && (
@@ -425,14 +431,15 @@ export default function Gallery() {
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.05 }}
                   onClick={() => setSelectedImage(image)}
-                  className="group relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-slate-200 cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500"
+                  className={`group relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-slate-200 cursor-pointer shadow-lg transition-all duration-500 ${!isMobile ? 'hover:shadow-2xl' : ''}`}
                 >
                   <img 
-                    src={optimizeCloudinaryUrl(image.imageUrl, { width: 600, height: 750, crop: 'fill' })} 
+                    src={optimizeCloudinaryUrl(image.imageUrl, { width: 400, height: 500, crop: 'fill', quality: 70 })} 
                     alt={image.title}
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                    className={`w-full h-full object-cover transition-transform duration-1000 ${!isMobile ? 'group-hover:scale-110' : ''}`}
                     referrerPolicy="no-referrer"
                     loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="absolute bottom-0 left-0 w-full p-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">

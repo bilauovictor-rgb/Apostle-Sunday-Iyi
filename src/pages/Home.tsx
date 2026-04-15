@@ -1,13 +1,44 @@
-import { motion } from 'motion/react';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useInView, animate } from 'motion/react';
 import { ArrowRight, Heart, Globe, BookOpen, Award, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+function StatCounter({ value, suffix, decimals = 0 }: { value: number; suffix: string; decimals?: number }) {
+  const [displayValue, setDisplayValue] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+  useEffect(() => {
+    if (isInView) {
+      const controls = animate(0, value, {
+        duration: 2,
+        ease: "easeOut",
+        onUpdate: (latest) => setDisplayValue(latest),
+      });
+      return () => controls.stop();
+    }
+  }, [isInView, value]);
+
+  return (
+    <span ref={ref}>
+      {displayValue.toFixed(decimals)}
+      {suffix}
+    </span>
+  );
+}
+
+const optimizeUnsplashUrl = (url: string, options: { width?: number; quality?: number } = {}) => {
+  if (!url || !url.includes('unsplash.com')) return url;
+  const baseUrl = url.split('?')[0];
+  return `${baseUrl}?auto=format,compress&q=${options.quality || 60}&w=${options.width || 1200}&fit=crop`;
+};
+
 export default function Home() {
   const stats = [
-    { label: 'Global Impact', value: '1.2M+', icon: Heart },
-    { label: 'Nations Reached', value: '15+', icon: Globe },
-    { label: 'Leaders Trained', value: '5k+', icon: BookOpen },
-    { label: 'Years of Ministry', value: '30+', icon: Award },
+    { label: 'Global Impact', value: 1.2, suffix: 'M+', decimals: 1, icon: Heart },
+    { label: 'Nations Reached', value: 15, suffix: '+', decimals: 0, icon: Globe },
+    { label: 'Leaders Trained', value: 5, suffix: 'k+', decimals: 0, icon: BookOpen },
+    { label: 'Years of Ministry', value: 30, suffix: '+', decimals: 0, icon: Award },
   ];
 
   return (
@@ -16,14 +47,15 @@ export default function Home() {
       <section className="relative min-h-[75vh] flex items-center bg-primary pt-24 pb-8 overflow-hidden">
         {/* Background Video / Fallback */}
         <div className="absolute inset-0 z-0">
-          {/* Static Fallback for Mobile & Initial Load */}
-          <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ 
-              backgroundImage: 'url("https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2073&auto=format&fit=crop")',
-              filter: 'brightness(0.3) contrast(1.2)'
-            }}
-          ></div>
+          {/* Optimized Hero Image for LCP */}
+          <img 
+            src={optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 1600, quality: 70 })}
+            alt="Hero Background"
+            className="absolute inset-0 w-full h-full object-cover grayscale contrast-125"
+            fetchPriority="high"
+            loading="eager"
+            decoding="sync"
+          />
 
           {/* Cinematic Background Video (Hidden on Mobile) */}
           <div className="absolute inset-0 hidden md:block overflow-hidden">
@@ -38,23 +70,23 @@ export default function Home() {
             </video>
           </div>
 
-          {/* Deep Cinematic Overlays */}
+          {/* Deep Cinematic Overlays - Reduced on Mobile for Performance */}
           <div className="absolute inset-0 bg-primary/70 z-10"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/40 via-transparent to-primary/95 z-10"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,rgba(2,12,27,0.6)_100%)] z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/40 via-transparent to-primary/95 z-10 hidden sm:block"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,rgba(2,12,27,0.6)_100%)] z-10 hidden sm:block"></div>
           
-          {/* Subtle Texture Overlay */}
-          <div className="absolute inset-0 opacity-[0.03] z-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+          {/* Subtle Texture Overlay - Hidden on Mobile */}
+          <div className="absolute inset-0 opacity-[0.03] z-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] hidden sm:block"></div>
         </div>
         
-        {/* Animated Light Beams */}
-        <div className="absolute inset-0 z-20 opacity-10 pointer-events-none">
+        {/* Animated Light Beams - Hidden on Mobile */}
+        <div className="absolute inset-0 z-20 opacity-10 pointer-events-none hidden sm:block">
           <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-secondary to-transparent blur-sm"></div>
           <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-transparent via-secondary/50 to-transparent blur-sm"></div>
         </div>
 
-        {/* Radial Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-secondary/[0.02] rounded-full blur-[150px] pointer-events-none z-20"></div>
+        {/* Radial Glow - Hidden on Mobile */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-secondary/[0.02] rounded-full blur-[150px] pointer-events-none z-20 hidden sm:block"></div>
 
         <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
@@ -111,6 +143,8 @@ export default function Home() {
                   alt="Apostle Sunday Iyi" 
                   className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100"
                   referrerPolicy="no-referrer"
+                  loading="eager"
+                  fetchPriority="high"
                 />
                 
                 {/* Decorative Frame */}
@@ -207,7 +241,9 @@ export default function Home() {
                     transition={{ duration: 0.5, delay: 0.4 + (idx * 0.1) }}
                     className="bg-slate-50/50 p-6 sm:p-8 rounded-3xl border border-slate-100 group hover:border-secondary/30 hover:bg-white hover:shadow-xl transition-all duration-500"
                   >
-                    <div className="text-3xl sm:text-5xl font-serif text-primary mb-3 group-hover:text-secondary transition-colors">{stat.value}</div>
+                    <div className="text-3xl sm:text-5xl font-serif text-primary mb-3 group-hover:text-secondary transition-colors">
+                      <StatCounter value={stat.value} suffix={stat.suffix} decimals={stat.decimals} />
+                    </div>
                     <div className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">{stat.label}</div>
                   </motion.div>
                 ))}
