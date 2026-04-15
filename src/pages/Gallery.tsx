@@ -32,6 +32,22 @@ export default function Gallery() {
   const [selectedImage, setSelectedImage] = useState<any | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const nextLightbox = useCallback((e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (galleryImages.length === 0) return;
+    const currentIndex = galleryImages.findIndex(img => img.id === selectedImage?.id);
+    const nextIndex = (currentIndex + 1) % galleryImages.length;
+    setSelectedImage(galleryImages[nextIndex]);
+  }, [galleryImages, selectedImage]);
+
+  const prevLightbox = useCallback((e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (galleryImages.length === 0) return;
+    const currentIndex = galleryImages.findIndex(img => img.id === selectedImage?.id);
+    const prevIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+    setSelectedImage(galleryImages[prevIndex]);
+  }, [galleryImages, selectedImage]);
+
   useEffect(() => {
     setLoadingGallery(true);
     setActiveIndex(0);
@@ -129,14 +145,14 @@ export default function Gallery() {
         </div>
       </section>
 
-      {/* State Gallery Section */}
+      {/* State Gallery Section - Cinematic Carousel */}
       <section className="py-24 sm:py-32 bg-primary relative overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(192,160,96,0.03),transparent_70%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(192,160,96,0.05),transparent_70%)]" />
         </div>
         
         <div className="max-w-[100vw] mx-auto relative z-10 overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 sm:mb-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 sm:mb-24">
             <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
               {STATES.map((city, idx) => (
                 <motion.button 
@@ -146,9 +162,9 @@ export default function Gallery() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.03 }}
-                  className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-500 border ${
+                  className={`px-8 py-3 rounded-full text-sm font-bold tracking-widest uppercase transition-all duration-500 border ${
                     selectedCity === city 
-                      ? 'bg-secondary text-primary border-secondary shadow-[0_0_20px_rgba(192,160,96,0.3)] scale-105' 
+                      ? 'bg-secondary text-primary border-secondary shadow-[0_0_30px_rgba(192,160,96,0.4)] scale-110' 
                       : 'bg-white/5 text-slate-400 border-white/10 hover:border-secondary/50 hover:text-secondary'
                   }`}
                 >
@@ -158,52 +174,54 @@ export default function Gallery() {
             </div>
           </div>
 
-          <div className="relative min-h-[500px] flex flex-col items-center justify-center">
+          <div className="relative min-h-[600px] flex flex-col items-center justify-center">
             {loadingGallery ? (
               <div className="w-full relative px-4 sm:px-0 overflow-visible">
-                <div className="relative h-[380px] sm:h-[500px] md:h-[600px] w-full flex items-center justify-center overflow-visible">
-                  <div className="absolute w-[88%] sm:w-[70%] md:w-[60%] lg:w-[50%] aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[2.5rem] bg-white/[0.02] border border-white/5 -translate-x-[60%] scale-85 opacity-40 blur-[4px]" />
-                  <div className="absolute w-[88%] sm:w-[70%] md:w-[60%] lg:w-[50%] aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[2.5rem] bg-white/[0.02] border border-white/5 translate-x-[60%] scale-85 opacity-40 blur-[4px]" />
-                  <div className="absolute w-[88%] sm:w-[70%] md:w-[60%] lg:w-[50%] aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[2.5rem] bg-white/[0.05] border border-secondary/20 shadow-2xl z-20 flex flex-col justify-end p-5 sm:p-12 overflow-hidden">
+                <div className="relative h-[400px] sm:h-[550px] md:h-[650px] w-full flex items-center justify-center overflow-visible">
+                  <div className="absolute w-[90%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[16/9] rounded-[3rem] bg-white/[0.02] border border-white/5 -translate-x-[60%] scale-85 opacity-40 blur-[4px]" />
+                  <div className="absolute w-[90%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[16/9] rounded-[3rem] bg-white/[0.02] border border-white/5 translate-x-[60%] scale-85 opacity-40 blur-[4px]" />
+                  <div className="absolute w-[90%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[16/9] rounded-[3rem] bg-white/[0.05] border border-secondary/20 shadow-2xl z-20 flex flex-col justify-end p-8 sm:p-16 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                    <div className="relative z-10 space-y-4">
-                      <div className="h-3 w-24 bg-secondary/20 rounded-full animate-pulse" />
-                      <div className="h-10 w-3/4 bg-white/10 rounded-xl animate-pulse" />
-                      <div className="h-4 w-1/2 bg-white/5 rounded-lg animate-pulse" />
+                    <div className="relative z-10 space-y-6">
+                      <div className="h-4 w-32 bg-secondary/20 rounded-full animate-pulse" />
+                      <div className="h-12 w-3/4 bg-white/10 rounded-2xl animate-pulse" />
+                      <div className="h-6 w-1/2 bg-white/5 rounded-xl animate-pulse" />
                     </div>
-                    <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/[0.05] to-transparent" />
                   </div>
-                </div>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-20 flex flex-col sm:flex-row items-center justify-between gap-8 sm:gap-0 opacity-50">
-                  <div className="flex items-center gap-6">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 animate-pulse" />
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 animate-pulse" />
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {[1, 2, 3, 4, 5].map(i => (
-                      <div key={i} className="w-2 h-2 rounded-full bg-white/10 animate-pulse" />
-                    ))}
-                  </div>
-                  <div className="h-4 w-16 bg-white/5 rounded animate-pulse hidden sm:block" />
                 </div>
               </div>
             ) : galleryImages.length === 0 ? (
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-24 px-12 rounded-[4rem] bg-white/[0.02] border border-white/5 backdrop-blur-md max-w-xl mx-auto"
+                className="text-center py-32 px-16 rounded-[4rem] bg-white/[0.02] border border-white/5 backdrop-blur-md max-w-2xl mx-auto"
               >
-                <div className="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-8">
-                  <ImageIcon className="w-10 h-10 text-secondary/50" />
+                <div className="w-24 h-24 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-10">
+                  <ImageIcon className="w-12 h-12 text-secondary/50" />
                 </div>
-                <h3 className="text-3xl font-serif text-white mb-4 italic">Moments Coming Soon</h3>
-                <p className="text-slate-400 font-light text-lg leading-relaxed">
+                <h3 className="text-4xl font-serif text-white mb-6 italic tracking-tight">Moments Coming Soon</h3>
+                <p className="text-slate-400 font-light text-xl leading-relaxed">
                   Images for <span className="text-secondary font-medium">{selectedCity}</span> are being curated. Stay tuned for visual testimonies from this region.
                 </p>
               </motion.div>
             ) : (
               <div className="w-full relative px-4 sm:px-0 overflow-visible">
-                <div className="relative h-[380px] sm:h-[500px] md:h-[600px] w-full flex items-center justify-center overflow-visible">
+                {/* Background Dynamic Blur */}
+                <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={galleryImages[activeIndex]?.id}
+                      src={optimizeCloudinaryUrl(galleryImages[activeIndex]?.imageUrl, 100)}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 0.15 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 1 }}
+                      className="w-full h-full object-cover blur-[100px] scale-150"
+                    />
+                  </AnimatePresence>
+                </div>
+
+                <div className="relative h-[400px] sm:h-[550px] md:h-[650px] w-full flex items-center justify-center overflow-visible z-10">
                   <AnimatePresence initial={false}>
                     {galleryImages.map((image, idx) => {
                       const offset = (idx - activeIndex + galleryImages.length) % galleryImages.length;
@@ -226,10 +244,10 @@ export default function Gallery() {
                           }}
                           animate={{ 
                             opacity: isCenter ? 1 : 0.4,
-                            scale: isCenter ? 1 : 0.85,
-                            x: isCenter ? '0%' : isNext ? '60%' : '-60%',
-                            zIndex: isCenter ? 20 : 10,
-                            filter: isCenter ? 'blur(0px)' : 'blur(4px)'
+                            scale: isCenter ? 1.05 : 0.85,
+                            x: isCenter ? '0%' : isNext ? '65%' : '-65%',
+                            zIndex: isCenter ? 30 : 10,
+                            filter: isCenter ? 'blur(0px)' : 'blur(8px)'
                           }}
                           exit={{ 
                             opacity: 0, 
@@ -239,8 +257,8 @@ export default function Gallery() {
                           }}
                           transition={{ 
                             type: 'spring', 
-                            stiffness: 300, 
-                            damping: 30 
+                            stiffness: 260, 
+                            damping: 26 
                           }}
                           drag="x"
                           dragElastic={0.2}
@@ -251,14 +269,14 @@ export default function Gallery() {
                             else if (info.offset.x < -50) nextSlide();
                           }}
                           onClick={() => isCenter ? setSelectedImage(image) : setActiveIndex(idx)}
-                          className={`absolute w-[88%] sm:w-[70%] md:w-[60%] lg:w-[50%] aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border cursor-pointer transition-colors duration-500 ${
-                            isCenter ? 'border-secondary/30 ring-1 ring-secondary/20' : 'border-white/5'
+                          className={`absolute w-[90%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[16/9] rounded-[3rem] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.7)] border cursor-pointer transition-all duration-700 ${
+                            isCenter ? 'border-secondary/40 ring-2 ring-secondary/10' : 'border-white/5'
                           }`}
                         >
                           <img 
                             src={optimizeCloudinaryUrl(image.imageUrl, isCenter ? 1200 : 600)} 
                             alt={image.title}
-                            className={`w-full h-full object-cover transition-opacity duration-700 ${isCenter ? 'opacity-100' : 'opacity-40'}`}
+                            className={`w-full h-full object-cover transition-all duration-1000 ${isCenter ? 'opacity-100 scale-100' : 'opacity-40 scale-110'}`}
                             referrerPolicy="no-referrer"
                             loading="lazy"
                           />
@@ -267,34 +285,35 @@ export default function Gallery() {
                             <motion.div 
                               initial={{ opacity: 0, x: 20 }}
                               animate={{ opacity: 1, x: 0 }}
-                              className="absolute top-4 right-4 sm:top-8 sm:right-8 bg-secondary text-primary px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-widest flex items-center shadow-2xl z-30"
+                              className="absolute top-6 right-6 sm:top-10 sm:right-10 bg-secondary text-primary px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] flex items-center shadow-2xl z-30"
                             >
-                              <Star className="w-3 sm:w-3.5 h-3 sm:h-3.5 mr-1.5 sm:mr-2 fill-current" />
-                              <span className="hidden xs:inline">Featured Moment</span>
-                              <span className="xs:hidden">Featured</span>
+                              <Star className="w-4 h-4 mr-2 fill-current" />
+                              <span>Featured Moment</span>
                             </motion.div>
                           )}
 
-                          <div className={`absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent transition-opacity duration-700 ${isCenter ? 'opacity-100' : 'opacity-0'}`} />
+                          <div className={`absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent transition-opacity duration-700 ${isCenter ? 'opacity-100' : 'opacity-0'}`} />
                           
                           {isCenter && (
                             <motion.div 
-                              initial={{ opacity: 0, y: 20 }}
+                              initial={{ opacity: 0, y: 30 }}
                               animate={{ opacity: 1, y: 0 }}
-                              className="absolute bottom-0 left-0 w-full p-5 sm:p-12 z-20 backdrop-blur-[2px]"
+                              className="absolute bottom-0 left-0 w-full p-8 sm:p-16 z-20"
                             >
-                              <div className="flex items-end justify-between gap-4 sm:gap-6">
+                              <div className="flex items-end justify-between gap-8">
                                 <div className="flex-grow min-w-0">
-                                  <span className="text-secondary font-bold shadow-black drop-shadow-md tracking-[0.3em] sm:tracking-[0.4em] uppercase text-[9px] sm:text-[10px] mb-2 sm:mb-3 block">{selectedCity}</span>
-                                  <h4 className="text-white font-serif text-lg sm:text-4xl mb-2 sm:mb-3 tracking-tight line-clamp-1 sm:line-clamp-2 drop-shadow-lg">
+                                  <span className="text-secondary font-black tracking-[0.5em] uppercase text-[10px] mb-4 block drop-shadow-lg">{selectedCity}</span>
+                                  <h4 className="text-white font-serif text-2xl sm:text-5xl mb-4 tracking-tight line-clamp-2 drop-shadow-2xl leading-tight">
                                     {displayTitle || "Ministry Moment"}
                                   </h4>
                                   {image.caption && (
-                                    <p className="text-slate-300 text-xs sm:text-base font-light max-w-xl line-clamp-2 leading-relaxed opacity-90 sm:opacity-100 drop-shadow-md">{image.caption}</p>
+                                    <p className="text-slate-300 text-sm sm:text-lg font-light max-w-2xl line-clamp-2 leading-relaxed opacity-90 drop-shadow-xl italic">
+                                      "{image.caption}"
+                                    </p>
                                   )}
                                 </div>
-                                <div className="hidden sm:flex w-14 h-14 rounded-full bg-secondary/90 items-center justify-center text-primary shadow-xl hover:scale-110 transition-transform flex-shrink-0">
-                                  <Maximize2 className="w-6 h-6" />
+                                <div className="hidden lg:flex w-20 h-20 rounded-full bg-secondary/90 items-center justify-center text-primary shadow-2xl hover:scale-110 hover:bg-secondary transition-all duration-500 flex-shrink-0 group/expand">
+                                  <Maximize2 className="w-8 h-8 group-hover/expand:scale-110 transition-transform" />
                                 </div>
                               </div>
                             </motion.div>
@@ -305,38 +324,41 @@ export default function Gallery() {
                   </AnimatePresence>
                 </div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-20 flex flex-col sm:flex-row items-center justify-between gap-8 sm:gap-0">
-                  <div className="flex items-center gap-6 order-2 sm:order-1">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 sm:mt-28 flex flex-col sm:flex-row items-center justify-between gap-12 sm:gap-0">
+                  <div className="flex items-center gap-8 order-2 sm:order-1">
                     <button 
                       onClick={prevSlide}
-                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-xl"
+                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-2xl"
+                      aria-label="Previous Slide"
                     >
-                      <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-x-1 transition-transform" />
+                      <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8 group-hover:-translate-x-2 transition-transform" />
                     </button>
                     <button 
                       onClick={nextSlide}
-                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-xl"
+                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-2xl"
+                      aria-label="Next Slide"
                     >
-                      <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
+                      <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8 group-hover:translate-x-2 transition-transform" />
                     </button>
                   </div>
 
-                  <div className="flex items-center gap-3 order-1 sm:order-2">
+                  <div className="flex items-center gap-4 order-1 sm:order-2">
                     {galleryImages.map((_, idx) => (
                       <button
                         key={idx}
                         onClick={() => setActiveIndex(idx)}
-                        className={`transition-all duration-500 rounded-full ${
+                        className={`transition-all duration-700 rounded-full ${
                           activeIndex === idx 
-                            ? 'w-8 sm:w-10 h-1.5 sm:h-2 bg-secondary shadow-[0_0_10px_rgba(192,160,96,0.5)]' 
-                            : 'w-1.5 sm:w-2 h-1.5 sm:h-2 bg-white/20 hover:bg-white/40'
+                            ? 'w-12 sm:w-16 h-2 bg-secondary shadow-[0_0_20px_rgba(192,160,96,0.6)]' 
+                            : 'w-2 h-2 bg-white/10 hover:bg-white/30'
                         }`}
+                        aria-label={`Go to slide ${idx + 1}`}
                       />
                     ))}
                   </div>
 
-                  <div className="hidden sm:block text-slate-500 font-bold tracking-[0.3em] uppercase text-[10px] order-3">
-                    {activeIndex + 1} <span className="mx-2 text-white/20">/</span> {galleryImages.length}
+                  <div className="hidden sm:block text-slate-500 font-black tracking-[0.4em] uppercase text-[11px] order-3 bg-white/5 px-6 py-3 rounded-full border border-white/10">
+                    {activeIndex + 1} <span className="mx-3 text-white/20">/</span> {galleryImages.length}
                   </div>
                 </div>
               </div>
@@ -345,6 +367,56 @@ export default function Gallery() {
         </div>
       </section>
 
+      {/* Structured Browsing Area - Grid Section */}
+      {!loadingGallery && galleryImages.length > 0 && (
+        <section className="py-24 sm:py-32 bg-slate-50 relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+              <div>
+                <span className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] mb-4 block">Archive</span>
+                <h2 className="text-4xl sm:text-6xl font-serif text-primary tracking-tight">
+                  Explore <span className="text-secondary italic">{selectedCity}</span>
+                </h2>
+              </div>
+              <p className="text-slate-500 max-w-md font-light text-lg">
+                Browse the complete visual record of our ministry engagements in {selectedCity}.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+              {galleryImages.map((image, idx) => (
+                <motion.div
+                  key={image.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.05 }}
+                  onClick={() => setSelectedImage(image)}
+                  className="group relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-slate-200 cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500"
+                >
+                  <img 
+                    src={optimizeCloudinaryUrl(image.imageUrl, 800)} 
+                    alt={image.title}
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                    referrerPolicy="no-referrer"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute bottom-0 left-0 w-full p-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                    <span className="text-secondary font-bold tracking-[0.3em] uppercase text-[9px] mb-2 block">{image.state}</span>
+                    <h4 className="text-white font-serif text-xl mb-2 line-clamp-1">{cleanTitle(image.title) || "Ministry Moment"}</h4>
+                    <div className="flex items-center text-white/60 text-xs font-medium uppercase tracking-widest">
+                      <Maximize2 className="w-3 h-3 mr-2" />
+                      View Full
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Lightbox Modal */}
       <AnimatePresence>
         {selectedImage && (
@@ -352,13 +424,33 @@ export default function Gallery() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-primary/98 backdrop-blur-2xl"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-primary/98 backdrop-blur-3xl"
             onClick={() => setSelectedImage(null)}
           >
+            {/* Navigation Arrows for Lightbox */}
+            <div className="absolute inset-x-4 sm:inset-x-12 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none z-[120]">
+              <motion.button
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                onClick={prevLightbox}
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 pointer-events-auto shadow-2xl group"
+              >
+                <ChevronLeft className="w-8 h-8 group-hover:-translate-x-1 transition-transform" />
+              </motion.button>
+              <motion.button
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                onClick={nextLightbox}
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 pointer-events-auto shadow-2xl group"
+              >
+                <ChevronRight className="w-8 h-8 group-hover:translate-x-1 transition-transform" />
+              </motion.button>
+            </div>
+
             <motion.button
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="absolute top-8 right-8 p-4 bg-white/5 text-white rounded-full hover:bg-secondary hover:text-primary transition-all duration-500 z-[110] border border-white/10"
+              className="absolute top-8 right-8 p-4 bg-white/5 text-white rounded-full hover:bg-secondary hover:text-primary transition-all duration-500 z-[130] border border-white/10 shadow-2xl"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedImage(null);
@@ -368,35 +460,43 @@ export default function Gallery() {
             </motion.button>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 30 }}
+              key={selectedImage.id}
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 30 }}
-              className="relative max-w-6xl w-full max-h-[90vh] flex flex-col items-center"
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="relative max-w-6xl w-full max-h-[90vh] flex flex-col items-center z-[110]"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative w-full aspect-video sm:aspect-auto sm:h-[75vh] rounded-[3rem] overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.8)] border border-white/10 bg-black/40">
+              <div className="relative w-full aspect-video sm:aspect-auto sm:h-[70vh] rounded-[3rem] overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,0.9)] border border-white/10 bg-black/40 group">
                 <img 
                   src={optimizeCloudinaryUrl(selectedImage.imageUrl, 2000)} 
                   alt={selectedImage.title}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain transition-transform duration-700 hover:scale-105"
                   referrerPolicy="no-referrer"
                 />
               </div>
               
-              <div className="mt-10 text-center max-w-3xl px-6">
-                <motion.span 
+              <div className="mt-12 text-center max-w-4xl px-8">
+                <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] mb-4 block"
+                  className="flex items-center justify-center gap-4 mb-6"
                 >
-                  {selectedImage.state} • {selectedImage.createdAt ? new Date(selectedImage.createdAt.toDate()).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recent Moment'}
-                </motion.span>
+                  <span className="text-secondary font-black tracking-[0.5em] uppercase text-[10px] bg-secondary/10 px-4 py-1.5 rounded-full border border-secondary/20">
+                    {selectedImage.state}
+                  </span>
+                  <span className="w-1 h-1 rounded-full bg-white/20" />
+                  <span className="text-slate-500 font-bold tracking-[0.2em] uppercase text-[10px]">
+                    {selectedImage.createdAt ? new Date(selectedImage.createdAt.toDate()).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recent Moment'}
+                  </span>
+                </motion.div>
                 <motion.h3 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="text-3xl sm:text-5xl font-serif text-white mb-6 tracking-tight"
+                  className="text-3xl sm:text-6xl font-serif text-white mb-8 tracking-tight leading-tight"
                 >
                   {cleanTitle(selectedImage.title) || "Ministry Moment"}
                 </motion.h3>
@@ -405,7 +505,7 @@ export default function Gallery() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
-                    className="text-slate-400 font-light text-lg sm:text-xl leading-relaxed italic"
+                    className="text-slate-400 font-light text-xl sm:text-2xl leading-relaxed italic max-w-3xl mx-auto"
                   >
                     "{selectedImage.caption}"
                   </motion.p>
