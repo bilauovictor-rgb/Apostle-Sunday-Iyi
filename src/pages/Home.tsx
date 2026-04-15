@@ -47,9 +47,16 @@ export default function Home() {
       <section className="relative min-h-[75vh] flex items-center bg-primary pt-24 pb-8 overflow-hidden">
         {/* Background Video / Fallback */}
         <div className="absolute inset-0 z-0">
-          {/* Optimized Hero Image for LCP */}
+          {/* Optimized Hero Image for LCP with Responsive Sizing */}
           <img 
-            src={optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 1600, quality: 70 })}
+            src={optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 400, quality: 50 })}
+            srcSet={`
+              ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 400, quality: 50 })} 400w,
+              ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 800, quality: 60 })} 800w,
+              ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 1200, quality: 70 })} 1200w,
+              ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 1600, quality: 70 })} 1600w
+            `}
+            sizes="100vw"
             alt="Hero Background"
             className="absolute inset-0 w-full h-full object-cover grayscale contrast-125"
             fetchPriority="high"
@@ -71,7 +78,7 @@ export default function Home() {
           </div>
 
           {/* Deep Cinematic Overlays - Reduced on Mobile for Performance */}
-          <div className="absolute inset-0 bg-primary/70 z-10"></div>
+          <div className="absolute inset-0 bg-primary/80 z-10 sm:bg-primary/70"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-primary/40 via-transparent to-primary/95 z-10 hidden sm:block"></div>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,rgba(2,12,27,0.6)_100%)] z-10 hidden sm:block"></div>
           
@@ -129,12 +136,12 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right Side: Portrait Card */}
+            {/* Right Side: Portrait Card - Hidden on Mobile for LCP Optimization */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, ease: "easeOut" }}
-              className="relative flex justify-center lg:justify-end mt-8 lg:mt-0 lg:col-span-5"
+              className="relative hidden lg:flex justify-center lg:justify-end mt-8 lg:mt-0 lg:col-span-5"
             >
               <div className="relative w-full max-w-[400px] aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/5 shadow-2xl group">
                 <div className="absolute inset-0 z-10 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent opacity-80"></div>
@@ -143,8 +150,7 @@ export default function Home() {
                   alt="Apostle Sunday Iyi" 
                   className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100"
                   referrerPolicy="no-referrer"
-                  loading="eager"
-                  fetchPriority="high"
+                  loading="lazy"
                 />
                 
                 {/* Decorative Frame */}

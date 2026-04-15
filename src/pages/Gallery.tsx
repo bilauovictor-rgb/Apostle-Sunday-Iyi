@@ -42,6 +42,7 @@ export default function Gallery() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [gridLimit, setGridLimit] = useState(INITIAL_GRID_SIZE);
   const [isMobile, setIsMobile] = useState(false);
+  const [interacted, setInteracted] = useState(false);
 
   // Detect mobile for performance optimizations
   useEffect(() => {
@@ -50,6 +51,10 @@ export default function Gallery() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  const handleInteraction = () => {
+    if (!interacted) setInteracted(true);
+  };
 
   const sortedImages = useMemo(() => {
     return [...galleryImages].sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
@@ -137,16 +142,19 @@ export default function Gallery() {
               scale: [1, 1.1, 1],
             }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-[120px]" 
+            className="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-[120px] hidden sm:block" 
           />
-          <div className="absolute inset-0 bg-primary/60 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-primary/60 backdrop-blur-[2px] sm:backdrop-blur-none" />
           <img 
-            src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=60&w=1600&fit=crop" 
+            src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=50&w=400&fit=crop" 
+            srcSet="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=50&w=400&fit=crop 400w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=60&w=800&fit=crop 800w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=70&w=1200&fit=crop 1200w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=70&w=1600&fit=crop 1600w"
+            sizes="100vw"
             alt="Gallery Background" 
             className="w-full h-full object-cover opacity-20 grayscale"
             referrerPolicy="no-referrer"
             loading="eager"
             fetchPriority="high"
+            decoding="sync"
           />
         </div>
 
@@ -235,8 +243,31 @@ export default function Gallery() {
                 </p>
               </motion.div>
             ) : (
-              <div className="w-full relative px-4 sm:px-0 overflow-visible">
-                {/* Background Dynamic Blur - Optimized with Cloudinary Blur & Disabled on Mobile */}
+              <div 
+                className="w-full relative px-4 sm:px-0 overflow-visible"
+                onTouchStart={handleInteraction}
+                onClick={handleInteraction}
+                onMouseEnter={handleInteraction}
+              >
+                {isMobile && !interacted ? (
+                  <div className="relative h-[400px] w-full flex items-center justify-center">
+                    <div className="w-[90%] aspect-[16/9] rounded-[3rem] overflow-hidden border border-secondary/20 shadow-2xl bg-white/5">
+                      <img 
+                        src={optimizeCloudinaryUrl(sortedImages[0].imageUrl, { width: 400, quality: 50 })}
+                        alt="Gallery Preview"
+                        className="w-full h-full object-cover opacity-60"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="bg-secondary text-primary px-6 py-3 rounded-full text-xs font-bold tracking-widest uppercase shadow-glow">
+                          Tap to Explore
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {/* Background Dynamic Blur - Optimized with Cloudinary Blur & Disabled on Mobile */}
                 {!isMobile && (
                   <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
                     <AnimatePresence mode="wait">
@@ -400,6 +431,8 @@ export default function Gallery() {
                     {activeIndex + 1} <span className="mx-3 text-white/20">/</span> {sortedImages.length}
                   </div>
                 </div>
+                  </>
+                )}
               </div>
             )}
           </div>
