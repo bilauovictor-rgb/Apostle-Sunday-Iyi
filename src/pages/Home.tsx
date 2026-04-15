@@ -57,7 +57,7 @@ export default function Home() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-secondary/[0.02] rounded-full blur-[150px] pointer-events-none z-20"></div>
 
         <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
             {/* Left Side: Content */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
@@ -65,32 +65,32 @@ export default function Home() {
               transition={{ duration: 1, ease: "easeOut" }}
               className="text-center lg:text-left lg:col-span-7"
             >
-              <div className="inline-flex items-center space-x-4 mb-6">
-                <div className="h-px w-10 bg-secondary/60"></div>
-                <span className="text-secondary font-medium tracking-[0.5em] uppercase text-[10px] sm:text-xs">The Apostolic Mandate</span>
+              <div className="inline-flex items-center space-x-4 mb-8">
+                <div className="h-px w-12 bg-secondary"></div>
+                <span className="text-secondary font-bold tracking-[0.5em] uppercase text-[10px] sm:text-xs drop-shadow-sm">The Apostolic Mandate</span>
               </div>
               
-              <h1 className="flex flex-col font-serif text-white leading-[0.85] mb-8 uppercase tracking-tighter">
-                <span className="text-xl sm:text-2xl tracking-[0.4em] text-secondary/80 mb-4 font-serif italic">Apostle</span>
-                <span className="text-6xl sm:text-8xl md:text-[9rem]">Sunday</span>
-                <span className="gold-gradient-text italic font-normal text-5xl sm:text-7xl md:text-[7.5rem] sm:ml-4 -mt-4">Iyi</span>
+              <h1 className="flex flex-col font-serif text-white leading-[0.85] mb-10 uppercase tracking-tighter">
+                <span className="text-xl sm:text-3xl tracking-[0.4em] text-secondary/90 mb-6 font-serif italic drop-shadow-md">Apostle</span>
+                <span className="text-6xl sm:text-8xl md:text-[10rem] drop-shadow-2xl">Sunday</span>
+                <span className="gold-gradient-text italic font-normal text-5xl sm:text-7xl md:text-[8.5rem] sm:ml-6 -mt-6 drop-shadow-2xl">Iyi</span>
               </h1>
               
-              <p className="text-base sm:text-lg text-slate-400 mb-10 leading-relaxed max-w-lg mx-auto lg:mx-0 border-l-2 border-secondary/20 pl-8 italic">
+              <p className="text-lg sm:text-xl text-slate-300/90 mb-12 leading-relaxed max-w-xl mx-auto lg:mx-0 border-l-4 border-secondary/40 pl-10 italic font-light drop-shadow-lg">
                 "Reconciling humanity back to God and manifesting the reality of heaven on earth through power, truth, and systemic compassion."
               </p>
               
-              <div className="flex flex-wrap justify-center lg:justify-start gap-6">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-8">
                 <Link 
                   to="/connect" 
-                  className="premium-button bg-secondary text-primary px-10 py-5 rounded-full font-bold hover:bg-white flex items-center group text-sm sm:text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+                  className="premium-button flex items-center group"
                 >
                   Partner With Me
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                  <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform" aria-hidden="true" />
                 </Link>
                 <Link 
                   to="/about" 
-                  className="premium-button border border-secondary/30 text-secondary px-10 py-5 rounded-full font-bold hover:bg-secondary/10 transition-all backdrop-blur-sm text-sm sm:text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+                  className="secondary-button flex items-center group"
                 >
                   The Journey
                 </Link>
@@ -269,17 +269,16 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              whileHover={{ y: -10 }}
-              className="bg-white/5 p-10 sm:p-12 rounded-[2.5rem] border border-white/10 shadow-2xl hover:bg-white/10 transition-all duration-500 group"
+              className="bg-white/5 p-10 sm:p-12 rounded-[2.5rem] border border-white/10 shadow-2xl hover:bg-white/10 transition-all duration-500 group hover:-translate-y-3 hover:shadow-secondary/10"
             >
-              <div className="w-14 h-14 bg-secondary/10 border border-secondary/20 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-secondary transition-colors duration-500">
-                <pillar.icon className="h-6 w-6 text-secondary group-hover:text-primary transition-colors duration-500" aria-hidden="true" />
+              <div className="w-16 h-16 bg-secondary/10 border border-secondary/20 rounded-2xl flex items-center justify-center mb-10 group-hover:bg-secondary transition-all duration-500 group-hover:scale-110 group-hover:shadow-glow">
+                <pillar.icon className="h-7 w-7 text-secondary group-hover:text-primary transition-colors duration-500" aria-hidden="true" />
               </div>
-              <h3 className="text-2xl sm:text-3xl font-serif text-white mb-6 group-hover:text-secondary transition-colors duration-300">{pillar.title}</h3>
-              <p className="text-slate-400 leading-relaxed mb-10 text-base font-light">{pillar.desc}</p>
-              <Link to="/mission" className="text-secondary font-bold flex items-center group/link text-xs tracking-[0.2em] uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary rounded-sm">
+              <h3 className="text-2xl sm:text-3xl font-serif text-white mb-6 group-hover:text-secondary transition-colors duration-300 tracking-tight">{pillar.title}</h3>
+              <p className="text-slate-400 leading-relaxed mb-12 text-base font-light group-hover:text-slate-300 transition-colors">{pillar.desc}</p>
+              <Link to="/mission" className="text-secondary font-bold flex items-center group/link text-[10px] tracking-[0.3em] uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary rounded-sm">
                 Explore Expression 
-                <ArrowRight className="ml-3 h-4 w-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true" />
+                <ArrowRight className="ml-4 h-4 w-4 group-hover/link:translate-x-3 transition-transform" aria-hidden="true" />
               </Link>
             </motion.div>
           ))}
@@ -287,13 +286,13 @@ export default function Home() {
       </section>
 
       {/* Join the Mission (New Section) */}
-      <section className="py-20 sm:py-28 bg-white relative">
+      <section className="py-24 sm:py-32 bg-white relative">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.span 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] sm:text-xs mb-6 block"
+            className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] sm:text-xs mb-8 block"
           >
             Take Action
           </motion.span>
@@ -301,7 +300,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl sm:text-6xl font-serif text-primary mb-8"
+            className="text-4xl sm:text-7xl font-serif text-primary mb-10 tracking-tighter"
           >
             Join the <span className="gold-gradient-text italic">Mission</span>
           </motion.h2>
@@ -309,7 +308,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-lg sm:text-xl text-slate-600 font-light leading-relaxed mb-12 max-w-2xl mx-auto"
+            className="text-xl sm:text-2xl text-slate-600 font-light leading-relaxed mb-16 max-w-3xl mx-auto"
           >
             Partner with us to manifest the reality of heaven on earth. Whether through strategic partnership or immersing yourself in the teachings, your journey of transformation starts here.
           </motion.p>
@@ -317,19 +316,19 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
+            className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8"
           >
             <Link 
               to="/ministry-partnership" 
-              className="premium-button w-full sm:w-auto px-10 py-5 flex items-center justify-center group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
+              className="premium-button w-full sm:w-auto flex items-center justify-center group"
             >
-              Partner With the Mission <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+              Partner With the Mission <ArrowRight className="ml-4 h-5 w-5 group-hover:translate-x-2 transition-transform" aria-hidden="true" />
             </Link>
             <Link 
               to="/teachings" 
-              className="w-full sm:w-auto px-10 py-5 rounded-full border border-slate-200 text-primary font-bold tracking-[0.2em] uppercase text-xs hover:border-secondary hover:text-secondary hover:bg-white transition-all duration-300 flex items-center justify-center group shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
+              className="w-full sm:w-auto px-12 py-5 rounded-xl border-2 border-slate-200 text-primary font-bold tracking-[0.2em] uppercase text-xs hover:border-secondary hover:text-secondary hover:bg-white transition-all duration-500 flex items-center justify-center group shadow-sm hover:shadow-xl hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
             >
-              Explore Teachings <BookOpen className="ml-3 h-4 w-4" aria-hidden="true" />
+              Explore Teachings <BookOpen className="ml-4 h-4 w-4 group-hover:scale-110 transition-transform" aria-hidden="true" />
             </Link>
           </motion.div>
         </div>

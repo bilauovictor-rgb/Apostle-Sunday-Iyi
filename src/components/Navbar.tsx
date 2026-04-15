@@ -70,7 +70,7 @@ export default function Navbar() {
                   aria-haspopup={item.dropdown ? "true" : undefined}
                   aria-expanded={item.dropdown ? "false" : undefined}
                   className={({ isActive }) =>
-                    `flex items-center text-[10px] font-bold uppercase tracking-[0.3em] transition-all hover:text-secondary focus-visible:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-4 focus-visible:ring-offset-primary rounded-sm relative py-2 ${
+                    `flex items-center text-[10px] font-bold uppercase tracking-[0.3em] transition-all hover:text-secondary focus-visible:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-4 focus-visible:ring-offset-primary rounded-sm relative py-2 group-hover:scale-105 ${
                       isActive ? 'text-secondary' : 'text-slate-300'
                     }`
                   }
@@ -78,11 +78,11 @@ export default function Navbar() {
                   {({ isActive }) => (
                     <>
                       {item.name}
-                      {item.dropdown && <ChevronDown className="ml-1 w-3 h-3 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" aria-hidden="true" />}
+                      {item.dropdown && <ChevronDown className="ml-2 w-3 h-3 transition-transform group-hover:rotate-180 group-focus-within:rotate-180 text-secondary/50 group-hover:text-secondary" aria-hidden="true" />}
                       {isActive && (
                         <motion.div 
                           layoutId="nav-underline"
-                          className="absolute -bottom-1 left-0 w-full h-px bg-secondary"
+                          className="absolute -bottom-1 left-0 w-full h-0.5 bg-secondary shadow-[0_0_10px_rgba(192,160,96,0.5)]"
                           transition={{ type: "spring", stiffness: 380, damping: 30 }}
                         />
                       )}
@@ -91,15 +91,15 @@ export default function Navbar() {
                 </NavLink>
                 
                 {item.dropdown && (
-                  <div className="absolute top-full left-0 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 group-focus-within:translate-y-0">
-                    <div className="bg-primary/95 backdrop-blur-lg border border-white/10 rounded-xl shadow-2xl py-3 min-w-[240px] flex flex-col">
+                  <div className="absolute top-full left-0 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 group-focus-within:translate-y-0 z-50">
+                    <div className="bg-primary/98 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_30px_60px_rgba(0,0,0,0.8)] py-4 min-w-[280px] flex flex-col overflow-hidden">
                       {item.dropdown.map((dropItem) => (
                         <NavLink
                           key={dropItem.name}
                           to={dropItem.path}
                           className={({ isActive }) =>
-                            `px-5 py-3 text-[10px] font-bold uppercase tracking-[0.2em] transition-colors hover:bg-white/5 hover:text-secondary focus-visible:bg-white/5 focus-visible:text-secondary focus-visible:outline-none ${
-                              isActive ? 'text-secondary bg-white/5' : 'text-slate-300'
+                            `px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-white/5 hover:text-secondary hover:pl-8 focus-visible:bg-white/5 focus-visible:text-secondary focus-visible:outline-none ${
+                              isActive ? 'text-secondary bg-white/5 border-l-2 border-secondary' : 'text-slate-300'
                             }`
                           }
                         >
