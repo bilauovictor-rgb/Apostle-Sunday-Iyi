@@ -24,8 +24,8 @@ export default function Navbar() {
       name: 'Resources', 
       path: '/teachings',
       dropdown: [
-        { name: 'Teachings', path: '/teachings#teachings' },
-        { name: 'Gallery', path: '/teachings#gallery' },
+        { name: 'Teachings', path: '/teachings' },
+        { name: 'Gallery', path: '/gallery' },
       ]
     },
     { 
