@@ -118,47 +118,74 @@ export default function Admin() {
 
   return (
     <div className="pt-20 bg-primary min-h-screen">
-      <section className="relative py-12 sm:py-20 bg-primary overflow-hidden border-b border-white/10">
+      {/* Dashboard Header */}
+      <section className="relative py-12 sm:py-16 bg-primary overflow-hidden border-b border-white/5">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(192,160,96,0.1),transparent_70%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(192,160,96,0.1),transparent_70%)]" />
         </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.span 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-secondary font-bold tracking-[0.3em] uppercase text-[10px] sm:text-xs mb-4 block"
-          >
-            Management Portal
-          </motion.span>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-6"
-          >
-            Admin <span className="gold-gradient-text italic">Dashboard</span>
-          </motion.h1>
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="flex items-center justify-center text-slate-300 font-light space-x-4"
-          >
-            <span>Logged in as {user.email}</span>
-            <button 
-              onClick={() => auth.signOut()}
-              className="text-secondary hover:text-white transition-colors text-sm underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary rounded-sm"
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="text-left">
+              <motion.span 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] mb-4 block"
+              >
+                Apostolic Management
+              </motion.span>
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="text-4xl sm:text-6xl font-serif text-white tracking-tight"
+              >
+                Admin <span className="gold-gradient-text italic">Dashboard</span>
+              </motion.h1>
+            </div>
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+              className="flex items-center bg-white/[0.03] border border-white/10 rounded-2xl p-4 backdrop-blur-md"
             >
-              Sign Out
-            </button>
-          </motion.div>
+              <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary mr-4 border border-secondary/30">
+                {user.email?.charAt(0).toUpperCase()}
+              </div>
+              <div className="text-left mr-8">
+                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-0.5">Authorized Admin</p>
+                <p className="text-sm text-slate-200 font-medium truncate max-w-[200px]">{user.email}</p>
+              </div>
+              <button 
+                onClick={() => auth.signOut()}
+                className="p-2 text-slate-400 hover:text-secondary transition-colors"
+                title="Sign Out"
+              >
+                <LogIn className="w-5 h-5 rotate-180" />
+              </button>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
-        <SermonInput />
-        <StateGalleryManager />
-        <AdminSermonDashboard />
+      {/* Dashboard Content Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column: Sermon Input (Main Action) */}
+          <div className="lg:col-span-7 space-y-8">
+            <SermonInput />
+          </div>
+
+          {/* Right Column: Quick Stats or Secondary Actions (Placeholder for now, or just move one of the components) */}
+          <div className="lg:col-span-5 space-y-8">
+            <StateGalleryManager />
+          </div>
+
+          {/* Bottom Row: Full Width Content Dashboard */}
+          <div className="lg:col-span-12">
+            <AdminSermonDashboard />
+          </div>
+        </div>
       </div>
     </div>
   );

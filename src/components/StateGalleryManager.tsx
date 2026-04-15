@@ -292,134 +292,140 @@ export default function StateGalleryManager() {
   ].sort((a, b) => (a.order || 0) - (b.order || 0));
 
   return (
-    <div className="bg-white rounded-[2rem] p-8 sm:p-12 shadow-sm border border-slate-100">
-      <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div className="bg-white/[0.02] rounded-[2.5rem] p-8 sm:p-10 shadow-2xl border border-white/5 backdrop-blur-md">
+      <div className="mb-10 flex flex-col xl:flex-row xl:items-center justify-between gap-8">
         <div>
-          <h2 className="text-3xl font-serif text-primary mb-2">State Gallery Manager</h2>
-          <p className="text-slate-500 font-light">Upload and manage ministry moments for each state.</p>
+          <h2 className="text-2xl font-serif text-white mb-1">Gallery <span className="gold-gradient-text italic">Manager</span></h2>
+          <p className="text-slate-400 font-light text-sm">Curate and organize ministry moments across states.</p>
         </div>
         
-        <div className="flex items-center space-x-4">
-          <label htmlFor="state-select" className="text-sm font-medium text-slate-700">Select State:</label>
-          <select 
-            id="state-select"
-            value={selectedState}
-            onChange={(e) => setSelectedState(e.target.value)}
-            className="px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-secondary outline-none text-slate-800 bg-white"
-          >
-            {STATES.map(state => (
-              <option key={state} value={state}>{state}</option>
-            ))}
-          </select>
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="relative group">
+            <select 
+              id="state-select"
+              value={selectedState}
+              onChange={(e) => setSelectedState(e.target.value)}
+              className="appearance-none pl-5 pr-12 py-3 rounded-2xl bg-white/[0.03] border border-white/10 focus:border-secondary/50 focus:ring-1 focus:ring-secondary/20 outline-none text-slate-200 text-sm font-medium transition-all cursor-pointer"
+            >
+              {STATES.map(state => (
+                <option key={state} value={state} className="bg-primary text-white">{state}</option>
+              ))}
+            </select>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500 group-hover:text-secondary transition-colors">
+              <ChevronDown className="w-4 h-4" />
+            </div>
+          </div>
         </div>
       </div>
 
       {error && (
-        <div className="mb-8 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start text-red-600">
+        <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-start text-red-400">
           <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0 mt-0.5" aria-hidden="true" />
           <p className="text-sm">{error}</p>
         </div>
       )}
 
       {success && (
-        <div className="mb-8 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center text-emerald-700">
+        <div className="mb-8 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center text-emerald-400">
           <Check className="w-5 h-5 mr-3 flex-shrink-0" aria-hidden="true" />
           <p className="text-sm font-medium">{success}</p>
         </div>
       )}
 
-      {/* Upload Area */}
+      {/* Upload Area - Redesigned */}
       <div className="space-y-6 mb-12">
         <div 
           {...getRootProps()} 
-          className={`border-2 border-dashed rounded-[2rem] p-12 text-center transition-all cursor-pointer
-            ${isDragActive ? 'border-secondary bg-secondary/5' : 'border-slate-200 hover:border-secondary/50 hover:bg-slate-50'}
+          className={`group relative border-2 border-dashed rounded-[2rem] p-10 text-center transition-all cursor-pointer overflow-hidden
+            ${isDragActive ? 'border-secondary bg-secondary/5' : 'border-white/10 hover:border-secondary/30 hover:bg-white/[0.02]'}
             ${isUploading ? 'opacity-50 pointer-events-none' : ''}
           `}
         >
           <input {...getInputProps()} />
-          <div className="flex flex-col items-center">
-            <div className="w-16 h-16 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary mb-4">
+          <div className="relative z-10 flex flex-col items-center">
+            <div className="w-16 h-16 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary mb-4 border border-secondary/20 group-hover:scale-110 transition-transform duration-500">
               <Upload className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-serif text-primary mb-2">
-              Click or drag images to upload
+            <h3 className="text-lg font-serif text-white mb-1">
+              {isDragActive ? 'Release to upload moments' : 'Upload Ministry Moments'}
             </h3>
-            <p className="text-slate-500 font-light">Support JPG, PNG, WEBP. Max 10MB per image.</p>
+            <p className="text-slate-500 font-light text-sm max-w-xs mx-auto">
+              Drag and drop images here, or click to browse. <span className="text-secondary/60">JPG, PNG, WEBP (Max 10MB)</span>
+            </p>
           </div>
+          {/* Subtle background glow */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(192,160,96,0.03),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
         </div>
 
-        {/* Pending Uploads List */}
+        {/* Pending Uploads List - Redesigned */}
         <AnimatePresence>
           {pendingUploads.length > 0 && (
             <motion.div 
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="bg-slate-50 rounded-3xl p-6 border border-slate-100"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white/[0.03] rounded-[2rem] p-6 border border-white/10 backdrop-blur-sm"
             >
               <div className="flex items-center justify-between mb-6">
-                <h4 className="text-sm font-bold text-primary uppercase tracking-widest">Pending Uploads ({pendingUploads.length})</h4>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-secondary/20 flex items-center justify-center text-secondary">
+                    <ImageIcon className="w-4 h-4" />
+                  </div>
+                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Queue: {pendingUploads.length} Assets</h4>
+                </div>
+                <div className="flex items-center space-x-4">
                   <button 
                     onClick={() => setPendingUploads([])}
                     disabled={isUploading}
-                    className="text-xs text-slate-400 hover:text-red-500 transition-colors disabled:opacity-50"
+                    className="text-[10px] font-bold text-slate-500 hover:text-red-400 uppercase tracking-widest transition-colors disabled:opacity-50"
                   >
-                    Clear All
+                    Discard
                   </button>
                   <button 
                     onClick={startBulkUpload}
                     disabled={isUploading}
-                    className="px-6 py-2 bg-secondary text-primary rounded-xl text-sm font-bold shadow-sm hover:shadow-md transition-all disabled:opacity-50 flex items-center"
+                    className="px-6 py-2.5 bg-secondary text-primary rounded-xl text-xs font-bold shadow-xl hover:shadow-secondary/20 transition-all disabled:opacity-50 flex items-center"
                   >
                     {isUploading ? (
                       <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
                         Uploading...
                       </>
                     ) : (
-                      'Start Upload'
+                      'Deploy to Gallery'
                     )}
                   </button>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
                 {pendingUploads.map((upload, idx) => (
                   <motion.div 
                     key={idx}
                     layout
-                    className="relative aspect-square rounded-2xl overflow-hidden border border-slate-200 group bg-white"
+                    className="relative aspect-square rounded-xl overflow-hidden border border-white/10 group bg-primary/40"
                   >
                     <img src={upload.preview} alt="Preview" className="w-full h-full object-cover" />
                     
-                    {/* Overlay */}
                     <div className={`absolute inset-0 flex items-center justify-center transition-all ${
-                      upload.status === 'uploading' ? 'bg-black/40' : 
+                      upload.status === 'uploading' ? 'bg-black/60' : 
                       upload.status === 'success' ? 'bg-emerald-500/40' : 
                       upload.status === 'error' ? 'bg-red-500/40' : 
-                      'bg-black/0 group-hover:bg-black/20'
+                      'bg-black/0 group-hover:bg-black/40'
                     }`}>
-                      {upload.status === 'uploading' && <Loader2 className="w-6 h-6 text-white animate-spin" />}
-                      {upload.status === 'success' && <Check className="w-8 h-8 text-white" />}
-                      {upload.status === 'error' && <AlertCircle className="w-8 h-8 text-white" />}
+                      {upload.status === 'uploading' && <Loader2 className="w-5 h-5 text-secondary animate-spin" />}
+                      {upload.status === 'success' && <Check className="w-6 h-6 text-emerald-400" />}
+                      {upload.status === 'error' && <AlertCircle className="w-6 h-6 text-red-400" />}
                       
                       {upload.status === 'pending' && (
                         <button 
                           onClick={() => removePendingUpload(idx)}
-                          className="opacity-0 group-hover:opacity-100 p-2 bg-white/90 text-red-500 rounded-full shadow-lg transition-all transform hover:scale-110"
+                          className="opacity-0 group-hover:opacity-100 p-1.5 bg-red-500 text-white rounded-lg shadow-xl transition-all transform hover:scale-110"
                         >
-                          <X className="w-4 h-4" />
+                          <X className="w-3.5 h-3.5" />
                         </button>
                       )}
                     </div>
-
-                    {upload.status === 'error' && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-red-500 text-[10px] text-white p-1 text-center truncate">
-                        {upload.error}
-                      </div>
-                    )}
                   </motion.div>
                 ))}
               </div>
@@ -428,155 +434,166 @@ export default function StateGalleryManager() {
         </AnimatePresence>
       </div>
 
-      {/* Image Grid */}
+      {/* Image Grid - Redesigned into Compact Media Cards */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between mb-4">
-          <h4 className="text-lg font-serif text-primary">{displayImages.length} Images in {selectedState}</h4>
-          <div className="text-xs text-slate-400 uppercase tracking-widest font-bold">Manage Gallery</div>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
+            <h4 className="text-sm font-bold text-slate-300 uppercase tracking-widest">{displayImages.length} Assets in {selectedState}</h4>
+          </div>
+          <div className="flex items-center gap-2 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+            <Eye className="w-3 h-3" />
+            Live Preview
+          </div>
         </div>
 
         {loading && images.length === 0 ? (
-          <div className="py-20 flex justify-center">
-            <Loader2 className="w-8 h-8 animate-spin text-secondary" />
+          <div className="py-24 flex flex-col items-center gap-4">
+            <Loader2 className="w-10 h-10 animate-spin text-secondary/40" />
+            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Synchronizing...</span>
           </div>
         ) : displayImages.length === 0 ? (
-          <div className="py-20 text-center border border-slate-100 rounded-[2rem] bg-slate-50">
-            <ImageIcon className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <p className="text-slate-500 font-light">No images uploaded for {selectedState} yet.</p>
+          <div className="py-20 text-center border border-white/5 rounded-[2.5rem] bg-white/[0.01]">
+            <ImageIcon className="w-12 h-12 text-slate-700 mx-auto mb-4 opacity-20" />
+            <p className="text-slate-500 font-light text-sm italic">The gallery for {selectedState} is currently empty.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6">
-            <AnimatePresence>
+          <div className="grid grid-cols-1 gap-4">
+            <AnimatePresence mode="popLayout">
               {displayImages.map((image, index) => (
                 <motion.div
                   key={image.id}
                   layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className={`group bg-white border rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center gap-6 transition-all ${
-                    image.isOptimistic ? 'border-secondary/30 bg-secondary/5' : 'border-slate-100 hover:shadow-md'
+                  className={`group relative bg-white/[0.02] border rounded-2xl p-3 flex flex-col sm:flex-row items-center gap-5 transition-all duration-500 ${
+                    image.isOptimistic ? 'border-secondary/30 bg-secondary/5' : 'border-white/5 hover:border-white/10 hover:bg-white/[0.04] hover:shadow-2xl'
                   }`}
                 >
-                  {/* Thumbnail */}
-                  <div className="relative w-full md:w-40 aspect-video md:aspect-square rounded-xl overflow-hidden flex-shrink-0 border border-slate-100">
+                  {/* Thumbnail - Compact */}
+                  <div className="relative w-full sm:w-24 aspect-video sm:aspect-square rounded-xl overflow-hidden flex-shrink-0 border border-white/5 shadow-lg">
                     <img 
                       src={image.imageUrl} 
                       alt={image.title} 
-                      className={`w-full h-full object-cover ${image.isOptimistic ? 'opacity-50' : ''}`}
+                      className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${image.isOptimistic ? 'opacity-40 blur-[2px]' : ''}`}
                     />
                     {image.isOptimistic && (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <Loader2 className="w-6 h-6 animate-spin text-secondary" />
+                        <Loader2 className="w-5 h-5 animate-spin text-secondary" />
                       </div>
                     )}
                     {image.featured && (
-                      <div className="absolute top-2 right-2 bg-secondary text-primary p-1 rounded-lg shadow-lg">
-                        <Star className="w-3 h-3 fill-current" />
+                      <div className="absolute top-1.5 right-1.5 bg-secondary text-primary p-1 rounded-md shadow-xl z-10">
+                        <Star className="w-2.5 h-2.5 fill-current" />
                       </div>
                     )}
                   </div>
 
-                  {/* Details */}
-                  <div className="flex-grow min-w-0 space-y-2">
+                  {/* Details - Compact & Refined */}
+                  <div className="flex-grow min-w-0 space-y-1 text-center sm:text-left">
                     {editingId === image.id ? (
-                      <div className="space-y-3">
+                      <div className="grid grid-cols-1 gap-2 pr-4">
                         <input 
                           type="text"
                           value={editForm.title}
                           onChange={(e) => setEditForm({...editForm, title: e.target.value})}
-                          className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-secondary outline-none text-sm"
-                          placeholder="Image Title"
+                          className="w-full bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 focus:border-secondary/50 outline-none text-xs text-white"
+                          placeholder="Title"
                         />
-                        <textarea 
+                        <input 
+                          type="text"
                           value={editForm.caption}
                           onChange={(e) => setEditForm({...editForm, caption: e.target.value})}
-                          className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-secondary outline-none text-sm resize-none"
-                          placeholder="Caption (optional)"
-                          rows={2}
+                          className="w-full bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 focus:border-secondary/50 outline-none text-xs text-slate-300"
+                          placeholder="Caption"
                         />
                       </div>
                     ) : (
                       <>
-                        <div className="flex items-center space-x-2">
-                          <h5 className="text-lg font-serif text-primary truncate">{image.title}</h5>
-                          {image.featured && <span className="text-[10px] bg-secondary/20 text-secondary px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Featured</span>}
-                          {image.isOptimistic && <span className="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider animate-pulse">Uploading...</span>}
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                          <h5 className="text-sm font-serif text-white truncate max-w-[200px]">{image.title}</h5>
+                          <div className="flex items-center justify-center sm:justify-start gap-2">
+                            {image.featured && <span className="text-[8px] bg-secondary/10 text-secondary border border-secondary/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">Featured</span>}
+                            {image.isOptimistic && <span className="text-[8px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest animate-pulse">Syncing</span>}
+                          </div>
                         </div>
-                        <p className="text-sm text-slate-500 font-light line-clamp-2">
-                          {image.caption || (image.isOptimistic ? "Preparing image for ministry gallery..." : "No caption provided.")}
+                        <p className="text-[11px] text-slate-500 font-light line-clamp-1 italic">
+                          {image.caption || "No description provided."}
                         </p>
-                        <div className="flex items-center space-x-4 text-[10px] text-slate-400 uppercase tracking-widest font-bold">
-                          <span>Order: {image.order}</span>
+                        <div className="flex items-center justify-center sm:justify-start space-x-3 text-[9px] text-slate-600 font-bold uppercase tracking-[0.15em]">
+                          <span className="flex items-center gap-1"><GripVertical className="w-2.5 h-2.5" /> Pos: {image.order}</span>
                           <span>•</span>
-                          <span>{image.createdAt ? new Date(image.createdAt.toDate()).toLocaleDateString() : (image.isOptimistic ? 'Uploading...' : 'Just now')}</span>
+                          <span>{image.createdAt ? new Date(image.createdAt.toDate()).toLocaleDateString() : 'Pending'}</span>
                         </div>
                       </>
                     )}
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex items-center space-x-2 flex-shrink-0">
+                  {/* Actions - Elegant & Compact */}
+                  <div className="flex items-center gap-1.5 flex-shrink-0 bg-white/[0.03] p-1.5 rounded-xl border border-white/5">
                     {image.isOptimistic ? (
-                      <div className="text-xs text-slate-400 font-medium italic px-4">Processing...</div>
+                      <div className="px-4 py-1.5">
+                        <Loader2 className="w-4 h-4 animate-spin text-slate-700" />
+                      </div>
                     ) : editingId === image.id ? (
                       <>
                         <button 
                           onClick={() => saveEdit(image.id)}
-                          className="p-2 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors"
-                          title="Save Changes"
+                          className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors"
+                          title="Save"
                         >
-                          <Save className="w-5 h-5" />
+                          <Save className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={() => setEditingId(null)}
-                          className="p-2 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-100 transition-colors"
+                          className="p-2 rounded-lg bg-white/5 text-slate-400 hover:bg-white/10 transition-colors"
                           title="Cancel"
                         >
-                          <X className="w-5 h-5" />
+                          <X className="w-4 h-4" />
                         </button>
                       </>
                     ) : (
                       <>
-                        <div className="flex flex-col space-y-1 mr-2">
+                        <div className="flex flex-col gap-0.5 px-1 border-r border-white/5 mr-1">
                           <button 
                             disabled={index === 0}
                             onClick={() => moveImage(index, 'up')}
-                            className="p-1 rounded-lg hover:bg-slate-100 disabled:opacity-30 text-slate-400 transition-colors"
+                            className="p-0.5 rounded hover:bg-white/5 disabled:opacity-10 text-slate-600 hover:text-secondary transition-colors"
                           >
-                            <ChevronUp className="w-4 h-4" />
+                            <ChevronUp className="w-3 h-3" />
                           </button>
                           <button 
                             disabled={index === images.length - 1}
                             onClick={() => moveImage(index, 'down')}
-                            className="p-1 rounded-lg hover:bg-slate-100 disabled:opacity-30 text-slate-400 transition-colors"
+                            className="p-0.5 rounded hover:bg-white/5 disabled:opacity-10 text-slate-600 hover:text-secondary transition-colors"
                           >
-                            <ChevronDown className="w-4 h-4" />
+                            <ChevronDown className="w-3 h-3" />
                           </button>
                         </div>
                         
                         <button 
                           onClick={() => toggleFeatured(image)}
-                          className={`p-2 rounded-xl transition-colors ${image.featured ? 'bg-secondary/20 text-secondary' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
-                          title={image.featured ? "Remove from Featured" : "Mark as Featured"}
+                          className={`p-2 rounded-lg transition-all ${image.featured ? 'bg-secondary/10 text-secondary border border-secondary/20' : 'text-slate-500 hover:text-secondary hover:bg-white/5'}`}
+                          title="Toggle Featured"
                         >
-                          <Star className={`w-5 h-5 ${image.featured ? 'fill-current' : ''}`} />
+                          <Star className={`w-4 h-4 ${image.featured ? 'fill-current' : ''}`} />
                         </button>
                         
                         <button 
                           onClick={() => startEditing(image)}
-                          className="p-2 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-100 transition-colors"
-                          title="Edit Details"
+                          className="p-2 rounded-lg text-slate-500 hover:text-white hover:bg-white/5 transition-all"
+                          title="Edit"
                         >
-                          <Edit2 className="w-5 h-5" />
+                          <Edit2 className="w-4 h-4" />
                         </button>
                         
                         <button 
                           onClick={() => handleDelete(image)}
-                          className="p-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
-                          title="Delete Image"
+                          className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                          title="Delete"
                         >
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </>
                     )}

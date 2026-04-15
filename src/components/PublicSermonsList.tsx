@@ -75,9 +75,30 @@ export default function PublicSermonsList() {
 
   if (loading) {
     return (
-      <div className="py-20 flex justify-center items-center">
-        <Loader2 className="w-8 h-8 animate-spin text-secondary" aria-hidden="true" />
-      </div>
+      <section className="py-20 sm:py-24 bg-white relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <div className="h-4 w-32 bg-slate-100 rounded-full mx-auto mb-4 animate-pulse" />
+            <div className="h-12 w-64 bg-slate-100 rounded-xl mx-auto animate-pulse" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white border border-slate-100 rounded-[2rem] overflow-hidden flex flex-col h-full">
+                <div className="h-48 bg-slate-100 animate-pulse" />
+                <div className="p-8 flex flex-col flex-grow space-y-4">
+                  <div className="h-6 w-24 bg-slate-50 rounded-lg animate-pulse" />
+                  <div className="h-8 w-full bg-slate-100 rounded-lg animate-pulse" />
+                  <div className="space-y-2">
+                    <div className="h-4 w-full bg-slate-50 rounded animate-pulse" />
+                    <div className="h-4 w-5/6 bg-slate-50 rounded animate-pulse" />
+                  </div>
+                  <div className="h-6 w-32 bg-slate-100 rounded mt-auto animate-pulse" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     );
   }
 
@@ -88,7 +109,7 @@ export default function PublicSermonsList() {
   const visibleSermons = sermons.slice(0, visibleCount);
 
   return (
-    <section className="py-20 sm:py-24 bg-white relative">
+    <section id="teachings" className="py-20 sm:py-24 bg-white relative">
       <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-slate-50 to-transparent opacity-50" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">

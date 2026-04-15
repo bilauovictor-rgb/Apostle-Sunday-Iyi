@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,7 +20,14 @@ export default function Navbar() {
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
     { name: 'Mission', path: '/mission' },
-    { name: 'Teachings', path: '/teachings' },
+    { 
+      name: 'Resources', 
+      path: '/teachings',
+      dropdown: [
+        { name: 'Teachings', path: '/teachings#teachings' },
+        { name: 'Gallery', path: '/teachings#gallery' },
+      ]
+    },
     { 
       name: 'Connect', 
       path: '/connect',
@@ -137,34 +145,60 @@ export default function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <NavLink
-                    to={item.path}
-                    onClick={() => !item.dropdown && setIsOpen(false)}
-                    className={({ isActive }) =>
-                      `flex items-center justify-between text-lg font-serif tracking-widest uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-md p-1 ${
-                        isActive ? 'text-secondary italic' : 'text-slate-300'
-                      }`
-                    }
-                  >
-                    {item.name}
-                  </NavLink>
+                  <div className="flex items-center justify-between">
+                    <NavLink
+                      to={item.path}
+                      onClick={() => {
+                        if (!item.dropdown) {
+                          setIsOpen(false);
+                        }
+                      }}
+                      className={({ isActive }) =>
+                        `flex-grow text-lg font-serif tracking-widest uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-md p-1 ${
+                          isActive && !item.dropdown ? 'text-secondary italic' : 'text-slate-300'
+                        }`
+                      }
+                    >
+                      {item.name}
+                    </NavLink>
+                    {item.dropdown && (
+                      <button
+                        onClick={() => setActiveMobileDropdown(activeMobileDropdown === item.name ? null : item.name)}
+                        className="p-2 text-secondary"
+                        aria-expanded={activeMobileDropdown === item.name}
+                        aria-label={`Toggle ${item.name} dropdown`}
+                      >
+                        <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${activeMobileDropdown === item.name ? 'rotate-180' : ''}`} />
+                      </button>
+                    )}
+                  </div>
+                  
                   {item.dropdown && (
-                    <div className="mt-4 ml-4 space-y-4 border-l border-white/10 pl-4">
-                      {item.dropdown.map((dropItem) => (
-                        <NavLink
-                          key={dropItem.name}
-                          to={dropItem.path}
-                          onClick={() => setIsOpen(false)}
-                          className={({ isActive }) =>
-                            `block text-sm font-serif tracking-widest uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-md p-1 ${
-                              isActive ? 'text-secondary italic' : 'text-slate-400'
-                            }`
-                          }
+                    <AnimatePresence>
+                      {activeMobileDropdown === item.name && (
+                        <motion.div 
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden mt-2 ml-4 space-y-4 border-l border-white/10 pl-4"
                         >
-                          {dropItem.name}
-                        </NavLink>
-                      ))}
-                    </div>
+                          {item.dropdown.map((dropItem) => (
+                            <NavLink
+                              key={dropItem.name}
+                              to={dropItem.path}
+                              onClick={() => setIsOpen(false)}
+                              className={({ isActive }) =>
+                                `block text-sm font-serif tracking-widest uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-md p-1 ${
+                                  isActive ? 'text-secondary italic' : 'text-slate-400'
+                                }`
+                              }
+                            >
+                              {dropItem.name}
+                            </NavLink>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   )}
                 </motion.div>
               ))}

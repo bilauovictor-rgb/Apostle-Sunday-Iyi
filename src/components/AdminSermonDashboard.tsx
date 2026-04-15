@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { GoogleGenAI, Type } from '@google/genai';
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, serverTimestamp, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
@@ -340,400 +340,416 @@ ${fieldPrompt}`;
   if (!user) return null;
 
   return (
-    <section className="py-16 bg-slate-100 border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-10">
-          <h2 className="text-3xl font-serif text-primary mb-2">Generated Sermons Dashboard</h2>
-          <p className="text-slate-500 font-light">Manage, preview, and publish AI-generated sermon content.</p>
+    <section className="bg-transparent">
+      <div className="mb-10">
+        <h2 className="text-2xl font-serif text-white mb-1">Content <span className="gold-gradient-text italic">Dashboard</span></h2>
+        <p className="text-slate-400 font-light text-sm">Manage, refine, and publish apostolic teachings.</p>
+      </div>
+
+      {actionSuccess && (
+        <div className="mb-8 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center text-emerald-400">
+          <CheckCircle2 className="w-5 h-5 mr-3 flex-shrink-0" aria-hidden="true" />
+          <p className="text-sm font-medium">{actionSuccess}</p>
         </div>
+      )}
 
-        {actionSuccess && (
-          <div className="mb-8 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center text-emerald-700">
-            <CheckCircle2 className="w-5 h-5 mr-3 flex-shrink-0" aria-hidden="true" />
-            <p className="text-sm font-medium">{actionSuccess}</p>
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* List Panel */}
-          <div className="lg:col-span-1 bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-[600px]">
-            <div className="p-6 border-b border-slate-100 bg-slate-50">
-              <h3 className="font-serif text-xl text-primary">All Sermons</h3>
-            </div>
-            <div className="overflow-y-auto flex-grow p-4 space-y-3">
-              {loading ? (
-                <div className="flex justify-center items-center h-32">
-                  <Loader2 className="w-6 h-6 animate-spin text-secondary" aria-hidden="true" />
-                </div>
-              ) : sermons.length === 0 ? (
-                <p className="text-slate-500 text-center py-8 font-light">No sermons found.</p>
-              ) : (
-                sermons.map(sermon => (
-                  <div 
-                    key={sermon.id}
-                    onClick={() => handleSelectSermon(sermon)}
-                    className={`p-4 rounded-2xl cursor-pointer transition-all border ${selectedSermon?.id === sermon.id ? 'bg-primary text-white border-primary' : 'bg-white border-slate-100 hover:border-secondary hover:shadow-sm text-slate-800'}`}
-                  >
-                    <h4 className={`font-medium mb-1 truncate ${selectedSermon?.id === sermon.id ? 'text-white' : 'text-primary'}`}>{sermon.title}</h4>
-                    <p className={`text-xs mb-3 truncate ${selectedSermon?.id === sermon.id ? 'text-slate-300' : 'text-slate-500'}`}>{sermon.topic}</p>
-                    <div className="flex items-center justify-between">
-                      <span className={`text-[10px] px-2 py-1 rounded-full uppercase tracking-wider font-bold ${
-                        sermon.status === 'published' ? 'bg-emerald-100 text-emerald-700' : 
-                        sermon.status === 'scheduled' ? 'bg-amber-100 text-amber-700' : 
-                        sermon.status === 'processed' ? 'bg-blue-100 text-blue-700' : 
-                        'bg-slate-200 text-slate-600'
-                      }`}>
-                        {sermon.status}
-                      </span>
-                      <span className={`flex items-center text-[10px] ${selectedSermon?.id === sermon.id ? 'text-slate-300' : 'text-slate-400'}`}>
-                        {sermon.status === 'scheduled' && <Calendar className="w-3 h-3 mr-1" aria-hidden="true" />}
-                        {sermon.status === 'scheduled' && sermon.publishAt 
-                          ? new Date(sermon.publishAt).toLocaleDateString()
-                          : sermon.createdAt?.toDate().toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* Preview Panel */}
-          <div className="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-[600px]">
-            {selectedSermon ? (
-              <>
-                <div className="p-6 border-b border-slate-100 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <h3 className="font-serif text-2xl text-primary mb-1">{selectedSermon.title}</h3>
-                    <p className="text-sm text-slate-500 font-light">Previewing generated content</p>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <button
-                      onClick={() => setShowDeleteConfirm(true)}
-                      disabled={actionLoading}
-                      className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 text-sm font-medium rounded-xl transition-colors flex items-center disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
-                    >
-                      <Trash2 className="w-4 h-4 mr-2" aria-hidden="true" />
-                      Delete
-                    </button>
-                    {selectedSermon.status === 'published' || selectedSermon.status === 'scheduled' ? (
-                      <button 
-                        onClick={() => handleStatusChange(selectedSermon.id, 'draft')}
-                        disabled={actionLoading}
-                        className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-medium rounded-xl transition-colors flex items-center disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2"
-                      >
-                        {actionLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" /> : <XCircle className="w-4 h-4 mr-2" aria-hidden="true" />}
-                        Move to Draft
-                      </button>
-                    ) : (
-                      <button 
-                        onClick={() => handleStatusChange(selectedSermon.id, 'published')}
-                        disabled={actionLoading || (!selectedSermon.blog && !selectedSermon.youtubeScript && !selectedSermon.email)}
-                        className="px-4 py-2 bg-primary hover:bg-primary/90 text-white text-sm font-medium rounded-xl transition-colors flex items-center disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                      >
-                        {actionLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" /> : <CheckCircle2 className="w-4 h-4 mr-2" aria-hidden="true" />}
-                        Publish Now
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {selectedSermon.status === 'draft' && !selectedSermon.blog ? (
-                  <div className="flex-grow flex flex-col items-center justify-center p-8 text-center">
-                    <RefreshCw className="w-12 h-12 text-slate-300 mb-4" aria-hidden="true" />
-                    <h4 className="text-lg font-medium text-slate-700 mb-2">No generated content available yet.</h4>
-                    <p className="text-slate-500 font-light max-w-md">This sermon is still a draft. Content may be generating or it was saved without AI generation.</p>
-                  </div>
-                ) : (
-                  <>
-                    <div className="flex border-b border-slate-100 overflow-x-auto">
-                      <button 
-                        onClick={() => setActiveTab('blog')}
-                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-inset ${activeTab === 'blog' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
-                      >
-                        <FileText className="w-4 h-4 mr-2" aria-hidden="true" /> Blog Post
-                      </button>
-                      <button 
-                        onClick={() => setActiveTab('youtube')}
-                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-inset ${activeTab === 'youtube' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
-                      >
-                        <Youtube className="w-4 h-4 mr-2" aria-hidden="true" /> YouTube Script
-                      </button>
-                      <button 
-                        onClick={() => setActiveTab('social')}
-                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-inset ${activeTab === 'social' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
-                      >
-                        <Share2 className="w-4 h-4 mr-2" aria-hidden="true" /> Social Posts
-                      </button>
-                      <button 
-                        onClick={() => setActiveTab('email')}
-                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-inset ${activeTab === 'email' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
-                      >
-                        <Mail className="w-4 h-4 mr-2" aria-hidden="true" /> Email
-                      </button>
-                      <button 
-                        onClick={() => setActiveTab('settings')}
-                        className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-inset ${activeTab === 'settings' ? 'border-secondary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
-                      >
-                        <Settings className="w-4 h-4 mr-2" aria-hidden="true" /> Settings
-                      </button>
-                    </div>
-
-                    <div className="flex-grow overflow-y-auto p-6 sm:p-8 bg-slate-50/50">
-                      {error && (
-                        <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm">
-                          {error}
-                        </div>
-                      )}
-                      
-                      {activeTab === 'blog' && (
-                        <div className="flex flex-col h-full">
-                          <div className="flex justify-between items-center mb-4">
-                            <h4 className="font-medium text-slate-700">Edit Blog Post</h4>
-                            <div className="flex items-center space-x-3">
-                              <button 
-                                onClick={() => setShowBlogPreview(!showBlogPreview)}
-                                className="text-xs flex items-center px-3 py-1.5 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2"
-                              >
-                                <Eye className="w-3 h-3 mr-1.5" aria-hidden="true" />
-                                {showBlogPreview ? 'Edit Mode' : 'Preview'}
-                              </button>
-                              <button 
-                                onClick={() => handleRegenerate('blog')}
-                                disabled={isRegenerating}
-                                className="text-xs flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
-                              >
-                                {isRegenerating && regeneratingField === 'blog' ? (
-                                  <>
-                                    <Loader2 className="w-3 h-3 mr-1.5 animate-spin" aria-hidden="true" />
-                                    {regeneratingStatus || 'Regenerating...'}
-                                  </>
-                                ) : (
-                                  <>
-                                    <Wand2 className="w-3 h-3 mr-1.5" aria-hidden="true" />
-                                    Regenerate Blog
-                                  </>
-                                )}
-                              </button>
-                            </div>
-                          </div>
-                          {showBlogPreview ? (
-                            <div className="flex-grow w-full p-6 rounded-xl border border-slate-200 bg-white overflow-y-auto min-h-[300px]">
-                              <div className="prose prose-slate max-w-none font-light leading-relaxed prose-headings:font-serif prose-headings:text-primary prose-headings:font-normal prose-h1:text-3xl prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-p:text-slate-600 prose-p:mb-4 prose-a:text-secondary prose-a:no-underline hover:prose-a:underline prose-strong:text-primary prose-strong:font-medium prose-blockquote:border-l-secondary prose-blockquote:bg-slate-50 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:text-slate-700 prose-blockquote:font-serif prose-blockquote:italic prose-ul:list-disc prose-ol:list-decimal prose-li:my-1">
-                                <ReactMarkdown>{editedBlog}</ReactMarkdown>
-                              </div>
-                            </div>
-                          ) : (
-                            <textarea 
-                              value={editedBlog}
-                              onChange={(e) => setEditedBlog(e.target.value)}
-                              className="flex-grow w-full p-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-secondary focus:border-transparent outline-none resize-none min-h-[300px] text-slate-700 font-light leading-relaxed"
-                              placeholder="Blog content..."
-                            />
-                          )}
-                        </div>
-                      )}
-                      {activeTab === 'youtube' && (
-                        <div className="flex flex-col h-full">
-                          <div className="flex justify-between items-center mb-4">
-                            <h4 className="font-medium text-slate-700">Edit YouTube Script</h4>
-                            <button 
-                              onClick={() => handleRegenerate('youtubeScript')}
-                              disabled={isRegenerating}
-                              className="text-xs flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
-                            >
-                              {isRegenerating && regeneratingField === 'youtubeScript' ? (
-                                <>
-                                  <Loader2 className="w-3 h-3 mr-1.5 animate-spin" aria-hidden="true" />
-                                  {regeneratingStatus || 'Regenerating...'}
-                                </>
-                              ) : (
-                                <>
-                                  <Wand2 className="w-3 h-3 mr-1.5" aria-hidden="true" />
-                                  Regenerate Script
-                                </>
-                              )}
-                            </button>
-                          </div>
-                          <textarea 
-                            value={editedYoutubeScript}
-                            onChange={(e) => setEditedYoutubeScript(e.target.value)}
-                            className="flex-grow w-full p-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-secondary focus:border-transparent outline-none resize-none min-h-[300px] text-slate-700 font-light leading-relaxed"
-                            placeholder="YouTube script..."
-                          />
-                        </div>
-                      )}
-                      {activeTab === 'social' && (
-                        <div className="flex flex-col h-full">
-                          <div className="flex justify-between items-center mb-4">
-                            <h4 className="font-medium text-slate-700">Edit Social Posts</h4>
-                            <button 
-                              onClick={() => handleRegenerate('socialPosts')}
-                              disabled={isRegenerating}
-                              className="text-xs flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
-                            >
-                              {isRegenerating && regeneratingField === 'socialPosts' ? (
-                                <>
-                                  <Loader2 className="w-3 h-3 mr-1.5 animate-spin" aria-hidden="true" />
-                                  {regeneratingStatus || 'Regenerating...'}
-                                </>
-                              ) : (
-                                <>
-                                  <Wand2 className="w-3 h-3 mr-1.5" aria-hidden="true" />
-                                  Regenerate Posts
-                                </>
-                              )}
-                            </button>
-                          </div>
-                          <div className="space-y-4 pb-6">
-                            {editedSocialPosts.length > 0 ? (
-                              editedSocialPosts.map((post: string, idx: number) => (
-                                <div key={idx} className="relative">
-                                  <span className="absolute top-3 right-3 text-xs font-bold text-slate-300 pointer-events-none">#{idx + 1}</span>
-                                  <textarea
-                                    value={post}
-                                    onChange={(e) => handleSocialPostChange(idx, e.target.value)}
-                                    className="w-full p-4 pr-10 rounded-xl border border-slate-200 focus:ring-2 focus:ring-secondary focus:border-transparent outline-none resize-y min-h-[120px] text-slate-700 font-light"
-                                  />
-                                </div>
-                              ))
-                            ) : (
-                              <p className="text-slate-500 font-light">No social posts generated.</p>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                      {activeTab === 'email' && (
-                        <div className="flex flex-col h-full">
-                          <div className="flex justify-between items-center mb-4">
-                            <h4 className="font-medium text-slate-700">Edit Email Newsletter</h4>
-                            <button 
-                              onClick={() => handleRegenerate('email')}
-                              disabled={isRegenerating}
-                              className="text-xs flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
-                            >
-                              {isRegenerating && regeneratingField === 'email' ? (
-                                <>
-                                  <Loader2 className="w-3 h-3 mr-1.5 animate-spin" aria-hidden="true" />
-                                  {regeneratingStatus || 'Regenerating...'}
-                                </>
-                              ) : (
-                                <>
-                                  <Wand2 className="w-3 h-3 mr-1.5" aria-hidden="true" />
-                                  Regenerate Email
-                                </>
-                              )}
-                            </button>
-                          </div>
-                          <textarea 
-                            value={editedEmail}
-                            onChange={(e) => setEditedEmail(e.target.value)}
-                            className="flex-grow w-full p-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-secondary focus:border-transparent outline-none resize-none min-h-[300px] text-slate-700 font-light leading-relaxed"
-                            placeholder="Email content..."
-                          />
-                        </div>
-                      )}
-                      {activeTab === 'settings' && (
-                        <div className="flex flex-col h-full space-y-6">
-                          <div>
-                            <h4 className="font-medium text-slate-700 mb-2">Featured Image URL</h4>
-                            <input 
-                              type="text"
-                              value={editedFeaturedImage}
-                              onChange={(e) => setEditedFeaturedImage(e.target.value)}
-                              className="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-secondary focus:border-transparent outline-none text-slate-700 font-light"
-                              placeholder="https://images.unsplash.com/..."
-                            />
-                            {editedFeaturedImage && (
-                              <div className="mt-3 h-48 rounded-xl overflow-hidden border border-slate-200 relative">
-                                <img src={editedFeaturedImage} alt="Featured" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                              </div>
-                            )}
-                          </div>
-                          
-                          <div>
-                            <h4 className="font-medium text-slate-700 mb-2">Excerpt (Short Summary)</h4>
-                            <textarea 
-                              value={editedExcerpt}
-                              onChange={(e) => setEditedExcerpt(e.target.value)}
-                              className="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-secondary focus:border-transparent outline-none resize-none min-h-[100px] text-slate-700 font-light"
-                              placeholder="Short summary for public cards..."
-                            />
-                          </div>
-                          
-                          <div className="pt-4 border-t border-slate-200">
-                            <h4 className="font-medium text-slate-700 mb-2">Schedule Publishing</h4>
-                            <div className="flex items-center space-x-4">
-                              <input 
-                                type="datetime-local"
-                                value={editedPublishAt}
-                                onChange={(e) => setEditedPublishAt(e.target.value)}
-                                className="p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-secondary focus:border-transparent outline-none text-slate-700 font-light"
-                              />
-                              <button
-                                onClick={() => handleSchedulePublish(selectedSermon.id)}
-                                disabled={actionLoading || !editedPublishAt}
-                                className="px-4 py-3 bg-secondary hover:bg-secondary/90 text-white text-sm font-medium rounded-xl transition-colors flex items-center disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
-                              >
-                                {actionLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" /> : <Calendar className="w-4 h-4 mr-2" aria-hidden="true" />}
-                                Schedule Publish
-                              </button>
-                            </div>
-                            <p className="text-xs text-slate-500 mt-2">Set a date and time to automatically publish this sermon.</p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="p-4 sm:p-6 border-t border-slate-100 bg-white flex justify-end shrink-0">
-                      <button
-                        onClick={handleSave}
-                        disabled={isSaving || isRegenerating}
-                        className="premium-button px-6 py-2.5 flex items-center text-sm disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                      >
-                        {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" /> : <Save className="w-4 h-4 mr-2" aria-hidden="true" />}
-                        Save Changes
-                      </button>
-                    </div>
-                  </>
-                )}
-              </>
-            ) : (
-              <div className="flex-grow flex flex-col items-center justify-center p-8 text-center text-slate-400">
-                <Eye className="w-16 h-16 mb-4 opacity-20" aria-hidden="true" />
-                <p className="text-lg font-light">Select a sermon from the list to preview its content.</p>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* List Panel - Redesigned */}
+        <div className="lg:col-span-4 bg-white/[0.02] rounded-[2.5rem] shadow-2xl border border-white/5 overflow-hidden flex flex-col h-[700px] backdrop-blur-md">
+          <div className="p-6 border-b border-white/5 bg-white/[0.02]">
+            <div className="flex items-center justify-between">
+              <h3 className="font-serif text-xl text-white">Archives</h3>
+              <div className="px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-[10px] font-bold text-secondary uppercase tracking-widest">
+                {sermons.length} Total
               </div>
+            </div>
+          </div>
+          <div className="overflow-y-auto flex-grow p-4 space-y-3 custom-scrollbar">
+            {loading ? (
+              <div className="flex flex-col items-center justify-center h-40 gap-3">
+                <Loader2 className="w-6 h-6 animate-spin text-secondary/40" aria-hidden="true" />
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Syncing Archives...</span>
+              </div>
+            ) : sermons.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-40 opacity-20">
+                <FileText className="w-10 h-10 text-slate-500 mb-2" />
+                <p className="text-slate-500 text-xs font-light">No sermons archived yet.</p>
+              </div>
+            ) : (
+              sermons.map(sermon => (
+                <motion.div 
+                  key={sermon.id}
+                  layout
+                  onClick={() => handleSelectSermon(sermon)}
+                  className={`p-4 rounded-2xl cursor-pointer transition-all border group ${
+                    selectedSermon?.id === sermon.id 
+                      ? 'bg-secondary/10 border-secondary/30 shadow-lg shadow-secondary/5' 
+                      : 'bg-white/[0.01] border-white/5 hover:border-white/10 hover:bg-white/[0.03]'
+                  }`}
+                >
+                  <h4 className={`font-medium text-sm mb-1 truncate transition-colors ${selectedSermon?.id === sermon.id ? 'text-secondary' : 'text-slate-200 group-hover:text-white'}`}>{sermon.title}</h4>
+                  <div className="flex items-center justify-between gap-4">
+                    <span className={`text-[9px] px-2 py-0.5 rounded-full uppercase tracking-widest font-bold border ${
+                      sermon.status === 'published' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
+                      sermon.status === 'scheduled' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 
+                      sermon.status === 'processed' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 
+                      'bg-slate-500/10 text-slate-400 border-slate-500/20'
+                    }`}>
+                      {sermon.status}
+                    </span>
+                    <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">
+                      {sermon.createdAt?.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                    </span>
+                  </div>
+                </motion.div>
+              ))
             )}
           </div>
         </div>
+
+        {/* Preview Panel - Redesigned */}
+        <div className="lg:col-span-8 bg-white/[0.02] rounded-[2.5rem] shadow-2xl border border-white/5 overflow-hidden flex flex-col h-[700px] backdrop-blur-md">
+          {selectedSermon ? (
+            <>
+              <div className="p-6 sm:p-8 border-b border-white/5 bg-white/[0.02] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-3 mb-1">
+                    <h3 className="font-serif text-2xl text-white truncate">{selectedSermon.title}</h3>
+                    <span className="text-[10px] bg-secondary/10 text-secondary border border-secondary/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">{selectedSermon.topic}</span>
+                  </div>
+                  <p className="text-xs text-slate-500 font-light italic">Refining apostolic content for deployment</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setShowDeleteConfirm(true)}
+                    disabled={actionLoading}
+                    className="p-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl transition-all border border-red-500/20 disabled:opacity-50"
+                    title="Delete Sermon"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                  {selectedSermon.status === 'published' || selectedSermon.status === 'scheduled' ? (
+                    <button 
+                      onClick={() => handleStatusChange(selectedSermon.id, 'draft')}
+                      disabled={actionLoading}
+                      className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold uppercase tracking-widest rounded-xl transition-all border border-white/10 disabled:opacity-50"
+                    >
+                      {actionLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Move to Draft'}
+                    </button>
+                  ) : (
+                    <button 
+                      onClick={() => handleStatusChange(selectedSermon.id, 'published')}
+                      disabled={actionLoading || (!selectedSermon.blog && !selectedSermon.youtubeScript && !selectedSermon.email)}
+                      className="px-6 py-2.5 bg-secondary text-primary text-xs font-bold uppercase tracking-widest rounded-xl shadow-xl hover:shadow-secondary/20 transition-all disabled:opacity-50 flex items-center"
+                    >
+                      {actionLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
+                      Deploy Now
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {selectedSermon.status === 'draft' && !selectedSermon.blog ? (
+                <div className="flex-grow flex flex-col items-center justify-center p-12 text-center">
+                  <div className="w-20 h-20 rounded-full bg-white/[0.02] border border-white/5 flex items-center justify-center mb-6">
+                    <RefreshCw className="w-10 h-10 text-slate-700 animate-spin-slow" />
+                  </div>
+                  <h4 className="text-xl font-serif text-white mb-2">Architecting Content...</h4>
+                  <p className="text-slate-500 font-light text-sm max-w-md mx-auto leading-relaxed">
+                    This sermon is currently in draft mode. Use the architect to generate apostolic content or manually input your manuscript.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="flex border-b border-white/5 overflow-x-auto bg-white/[0.01] px-4">
+                    {[
+                      { id: 'blog', icon: FileText, label: 'Blog' },
+                      { id: 'youtube', icon: Youtube, label: 'Script' },
+                      { id: 'social', icon: Share2, label: 'Social' },
+                      { id: 'email', icon: Mail, label: 'Email' },
+                      { id: 'settings', icon: Settings, label: 'Config' }
+                    ].map(tab => (
+                      <button 
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`flex items-center px-6 py-5 text-[10px] font-bold uppercase tracking-[0.2em] whitespace-nowrap border-b-2 transition-all ${
+                          activeTab === tab.id 
+                            ? 'border-secondary text-secondary bg-secondary/5' 
+                            : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-white/[0.02]'
+                        }`}
+                      >
+                        <tab.icon className="w-3.5 h-3.5 mr-2" /> {tab.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="flex-grow overflow-y-auto p-6 sm:p-10 custom-scrollbar">
+                    {error && (
+                      <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-xs">
+                        {error}
+                      </div>
+                    )}
+                    
+                    {activeTab === 'blog' && (
+                      <div className="flex flex-col h-full space-y-6">
+                        <div className="flex justify-between items-center">
+                          <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sermon Manuscript</h4>
+                          <div className="flex items-center gap-3">
+                            <button 
+                              onClick={() => setShowBlogPreview(!showBlogPreview)}
+                              className="text-[9px] font-bold uppercase tracking-widest flex items-center px-3 py-1.5 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-all border border-white/5"
+                            >
+                              <Eye className="w-3 h-3 mr-1.5" />
+                              {showBlogPreview ? 'Editor' : 'Preview'}
+                            </button>
+                            <button 
+                              onClick={() => handleRegenerate('blog')}
+                              disabled={isRegenerating}
+                              className="text-[9px] font-bold uppercase tracking-widest flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-all border border-secondary/20 disabled:opacity-50"
+                            >
+                              {isRegenerating && regeneratingField === 'blog' ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <>
+                                  <Wand2 className="w-3 h-3 mr-1.5" />
+                                  Regenerate
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                        {showBlogPreview ? (
+                          <div className="flex-grow w-full p-8 rounded-2xl border border-white/5 bg-white/[0.01] overflow-y-auto min-h-[400px]">
+                            <div className="prose prose-invert prose-slate max-w-none font-light leading-relaxed prose-headings:font-serif prose-headings:text-white prose-headings:font-normal prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-6 prose-h2:gold-gradient-text prose-h3:text-xl prose-p:text-slate-400 prose-blockquote:border-l-secondary prose-blockquote:bg-white/[0.02] prose-blockquote:rounded-r-2xl prose-blockquote:font-serif prose-blockquote:italic prose-strong:text-secondary">
+                              <ReactMarkdown>{editedBlog}</ReactMarkdown>
+                            </div>
+                          </div>
+                        ) : (
+                          <textarea 
+                            value={editedBlog}
+                            onChange={(e) => setEditedBlog(e.target.value)}
+                            className="flex-grow w-full p-6 rounded-2xl border border-white/5 bg-white/[0.01] focus:border-secondary/30 outline-none resize-none min-h-[400px] text-slate-300 font-light leading-relaxed text-sm custom-scrollbar"
+                            placeholder="Awaiting apostolic revelation..."
+                          />
+                        )}
+                      </div>
+                    )}
+
+                    {activeTab === 'youtube' && (
+                      <div className="flex flex-col h-full space-y-6">
+                        <div className="flex justify-between items-center">
+                          <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Teleprompter Script</h4>
+                          <button 
+                            onClick={() => handleRegenerate('youtubeScript')}
+                            disabled={isRegenerating}
+                            className="text-[9px] font-bold uppercase tracking-widest flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-all border border-secondary/20 disabled:opacity-50"
+                          >
+                            {isRegenerating && regeneratingField === 'youtubeScript' ? (
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : (
+                              <>
+                                <Wand2 className="w-3 h-3 mr-1.5" />
+                                Regenerate
+                              </>
+                            )}
+                          </button>
+                        </div>
+                        <textarea 
+                          value={editedYoutubeScript}
+                          onChange={(e) => setEditedYoutubeScript(e.target.value)}
+                          className="flex-grow w-full p-6 rounded-2xl border border-white/5 bg-white/[0.01] focus:border-secondary/30 outline-none resize-none min-h-[400px] text-slate-300 font-mono text-sm leading-relaxed custom-scrollbar"
+                          placeholder="Scripting for the digital pulpit..."
+                        />
+                      </div>
+                    )}
+
+                    {activeTab === 'social' && (
+                      <div className="flex flex-col h-full space-y-6">
+                        <div className="flex justify-between items-center">
+                          <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Apostolic Snippets</h4>
+                          <button 
+                            onClick={() => handleRegenerate('socialPosts')}
+                            disabled={isRegenerating}
+                            className="text-[9px] font-bold uppercase tracking-widest flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-all border border-secondary/20 disabled:opacity-50"
+                          >
+                            {isRegenerating && regeneratingField === 'socialPosts' ? (
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : (
+                              <>
+                                <Wand2 className="w-3 h-3 mr-1.5" />
+                                Regenerate
+                              </>
+                            )}
+                          </button>
+                        </div>
+                        <div className="space-y-4 pb-10">
+                          {editedSocialPosts.map((post: string, idx: number) => (
+                            <div key={idx} className="relative group">
+                              <span className="absolute top-4 right-4 text-[10px] font-bold text-slate-700 group-hover:text-secondary transition-colors uppercase tracking-widest">Snippet {idx + 1}</span>
+                              <textarea
+                                value={post}
+                                onChange={(e) => handleSocialPostChange(idx, e.target.value)}
+                                className="w-full p-6 rounded-2xl border border-white/5 bg-white/[0.01] focus:border-secondary/30 outline-none resize-y min-h-[120px] text-slate-300 font-light text-sm"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {activeTab === 'email' && (
+                      <div className="flex flex-col h-full space-y-6">
+                        <div className="flex justify-between items-center">
+                          <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Ministry Newsletter</h4>
+                          <button 
+                            onClick={() => handleRegenerate('email')}
+                            disabled={isRegenerating}
+                            className="text-[9px] font-bold uppercase tracking-widest flex items-center px-3 py-1.5 bg-secondary/10 text-secondary hover:bg-secondary/20 rounded-lg transition-all border border-secondary/20 disabled:opacity-50"
+                          >
+                            {isRegenerating && regeneratingField === 'email' ? (
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : (
+                              <>
+                                <Wand2 className="w-3 h-3 mr-1.5" />
+                                Regenerate
+                              </>
+                            )}
+                          </button>
+                        </div>
+                        <textarea 
+                          value={editedEmail}
+                          onChange={(e) => setEditedEmail(e.target.value)}
+                          className="flex-grow w-full p-6 rounded-2xl border border-white/5 bg-white/[0.01] focus:border-secondary/30 outline-none resize-none min-h-[400px] text-slate-300 font-light leading-relaxed text-sm custom-scrollbar"
+                          placeholder="Drafting the apostolic charge..."
+                        />
+                      </div>
+                    )}
+
+                    {activeTab === 'settings' && (
+                      <div className="flex flex-col h-full space-y-8 pb-10">
+                        <div className="space-y-3">
+                          <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Featured Visual Asset</h4>
+                          <input 
+                            type="text"
+                            value={editedFeaturedImage}
+                            onChange={(e) => setEditedFeaturedImage(e.target.value)}
+                            className="w-full bg-white/[0.03] px-5 py-4 rounded-2xl border border-white/10 focus:border-secondary/50 outline-none text-white text-sm"
+                            placeholder="Cloudinary or Unsplash URL"
+                          />
+                          {editedFeaturedImage && (
+                            <div className="relative h-56 rounded-2xl overflow-hidden border border-white/10 group">
+                              <img src={editedFeaturedImage} alt="Featured" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
+                              <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent" />
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Apostolic Excerpt</h4>
+                          <textarea 
+                            value={editedExcerpt}
+                            onChange={(e) => setEditedExcerpt(e.target.value)}
+                            className="w-full bg-white/[0.03] px-5 py-4 rounded-2xl border border-white/10 focus:border-secondary/50 outline-none resize-none min-h-[120px] text-slate-300 font-light text-sm"
+                            placeholder="A brief summary for the public archives..."
+                          />
+                        </div>
+                        
+                        <div className="pt-8 border-t border-white/5 space-y-6">
+                          <div>
+                            <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1 mb-4">Deployment Schedule</h4>
+                            <div className="flex flex-col sm:flex-row items-center gap-4">
+                              <div className="relative w-full sm:w-auto">
+                                <input 
+                                  type="datetime-local"
+                                  value={editedPublishAt}
+                                  onChange={(e) => setEditedPublishAt(e.target.value)}
+                                  className="w-full sm:w-auto bg-white/[0.03] px-5 py-3.5 rounded-2xl border border-white/10 focus:border-secondary/50 outline-none text-slate-300 text-sm"
+                                />
+                              </div>
+                              <button
+                                onClick={() => handleSchedulePublish(selectedSermon.id)}
+                                disabled={actionLoading || !editedPublishAt}
+                                className="w-full sm:w-auto px-6 py-3.5 bg-white/5 hover:bg-white/10 text-slate-300 text-[10px] font-bold uppercase tracking-widest rounded-2xl transition-all border border-white/10 disabled:opacity-50 flex items-center justify-center"
+                              >
+                                {actionLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Calendar className="w-4 h-4 mr-2" />}
+                                Schedule Deployment
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="p-6 border-t border-white/5 bg-white/[0.02] flex justify-end shrink-0">
+                    <button
+                      onClick={handleSave}
+                      disabled={isSaving || isRegenerating}
+                      className="premium-button px-10 py-3.5 flex items-center text-xs disabled:opacity-50"
+                    >
+                      {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                      Finalize Changes
+                    </button>
+                  </div>
+                </>
+              )}
+            </>
+          ) : (
+            <div className="flex-grow flex flex-col items-center justify-center p-12 text-center">
+              <div className="w-24 h-24 rounded-full bg-white/[0.01] border border-white/5 flex items-center justify-center mb-8 opacity-20">
+                <Eye className="w-12 h-12 text-slate-500" />
+              </div>
+              <h4 className="text-2xl font-serif text-white/40 mb-2">Awaiting Selection</h4>
+              <p className="text-slate-600 font-light text-sm max-w-xs mx-auto">Select a teaching from the archives to begin the refinement process.</p>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-serif text-slate-800 mb-2">Delete Sermon</h3>
-            <p className="text-slate-600 mb-6 font-light">Are you sure you want to delete this sermon? This action cannot be undone.</p>
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                disabled={isDeleting}
-                className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl transition-colors flex items-center disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
-              >
-                {isDeleting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" /> : <Trash2 className="w-4 h-4 mr-2" aria-hidden="true" />}
-                Delete
-              </button>
-            </div>
+      {/* Delete Confirmation Modal - Redesigned */}
+      <AnimatePresence>
+        {showDeleteConfirm && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowDeleteConfirm(false)}
+              className="absolute inset-0 bg-primary/90 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative bg-primary border border-white/10 rounded-[2.5rem] p-8 sm:p-10 max-w-md w-full shadow-2xl z-10"
+            >
+              <div className="w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 mb-6 mx-auto">
+                <Trash2 className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-serif text-white mb-3 text-center">Purge Archive?</h3>
+              <p className="text-slate-400 mb-8 font-light text-center leading-relaxed">
+                This action will permanently remove this teaching from the apostolic archives. This process is irreversible.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  disabled={isDeleting}
+                  className="flex-1 px-6 py-4 bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold uppercase tracking-widest rounded-2xl transition-all border border-white/10 disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="flex-1 px-6 py-4 bg-red-500 text-white text-xs font-bold uppercase tracking-widest rounded-2xl shadow-xl shadow-red-500/20 hover:bg-red-600 transition-all flex items-center justify-center disabled:opacity-50"
+                >
+                  {isDeleting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : 'Confirm Purge'}
+                </button>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </section>
   );
 }

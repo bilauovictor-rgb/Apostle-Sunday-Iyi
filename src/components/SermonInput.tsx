@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Save, Loader2, CheckCircle2, AlertCircle, LogIn } from 'lucide-react';
+import { Save, Loader2, CheckCircle2, AlertCircle, LogIn, Wand2, Sparkles, LogOut, User as UserIcon, ShieldCheck, ChevronRight, Send, History } from 'lucide-react';
 import { collection, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
 import { GoogleGenAI, Type } from '@google/genai';
@@ -217,141 +217,134 @@ Please generate the following items:
   };
 
   return (
-    <section className="py-16 bg-slate-50 border-b border-slate-100">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-[2rem] p-8 sm:p-12 shadow-sm border border-slate-100"
-        >
-          <div className="mb-10">
-            <h2 className="text-3xl font-serif text-primary mb-2">Admin Sermon Input</h2>
-            <p className="text-slate-500 font-light">Create and save new sermons using either a full manuscript or only a topic and goal.</p>
+    <section className="bg-transparent">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/[0.02] rounded-[2.5rem] p-8 sm:p-10 shadow-2xl border border-white/5 backdrop-blur-md"
+      >
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-serif text-white mb-1">Sermon <span className="gold-gradient-text italic">Architect</span></h2>
+            <p className="text-slate-400 font-light text-sm">Design and deploy apostolic teachings with AI assistance.</p>
           </div>
+          <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary border border-secondary/20">
+            <Wand2 className="w-6 h-6" />
+          </div>
+        </div>
 
-          {error && (
-            <div className="mb-8 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start text-red-600">
-              <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0 mt-0.5" aria-hidden="true" />
-              <p className="text-sm">{error}</p>
+        {error && (
+          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-start text-red-400">
+            <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0 mt-0.5" aria-hidden="true" />
+            <p className="text-sm">{error}</p>
+          </div>
+        )}
+
+        {success && (
+          <div className="mb-8 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center text-emerald-400">
+            <CheckCircle2 className="w-5 h-5 mr-3 flex-shrink-0" aria-hidden="true" />
+            <p className="text-sm font-medium">Sermon architecture finalized successfully.</p>
+          </div>
+        )}
+
+        {!user ? (
+          <div className="text-center py-12">
+            <p className="text-slate-400 mb-6 font-light">Authentication required to access the architect.</p>
+            <button
+              onClick={handleLogin}
+              disabled={isLoggingIn}
+              className="premium-button inline-flex items-center px-8 py-4 disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {isLoggingIn ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" aria-hidden="true" />
+                  Authenticating...
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-5 h-5 mr-2" aria-hidden="true" />
+                  Admin Login
+                </>
+              )}
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label htmlFor="title" className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Sermon Title</label>
+                <input
+                  type="text"
+                  id="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full bg-white/[0.03] px-5 py-4 rounded-2xl border border-white/10 focus:border-secondary/50 focus:ring-1 focus:ring-secondary/20 transition-all outline-none text-white placeholder:text-slate-600"
+                  placeholder="e.g. The Ministry of Reconciliation"
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="topic" className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Thematic Topic</label>
+                <input
+                  type="text"
+                  id="topic"
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                  className="w-full bg-white/[0.03] px-5 py-4 rounded-2xl border border-white/10 focus:border-secondary/50 focus:ring-1 focus:ring-secondary/20 transition-all outline-none text-white placeholder:text-slate-600"
+                  placeholder="e.g. Apostolic Mandate"
+                  disabled={isSubmitting}
+                />
+              </div>
             </div>
-          )}
 
-          {success && (
-            <div className="mb-8 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center text-emerald-700">
-              <CheckCircle2 className="w-5 h-5 mr-3 flex-shrink-0" aria-hidden="true" />
-              <p className="text-sm font-medium">Content generated successfully</p>
+            <div className="space-y-2">
+              <label htmlFor="goal" className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Spiritual Objective</label>
+              <textarea
+                id="goal"
+                value={goal}
+                onChange={(e) => setGoal(e.target.value)}
+                rows={2}
+                className="w-full bg-white/[0.03] px-5 py-4 rounded-2xl border border-white/10 focus:border-secondary/50 focus:ring-1 focus:ring-secondary/20 transition-all outline-none text-white placeholder:text-slate-600 resize-none"
+                placeholder="What is the primary spiritual goal of this message?"
+                disabled={isSubmitting}
+              />
             </div>
-          )}
 
-          {!user ? (
-            <div className="text-center py-12">
-              <p className="text-slate-600 mb-6 font-light">You must be logged in as an administrator to create sermons.</p>
+            <div className="space-y-2">
+              <label htmlFor="manuscript" className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Full Manuscript (Optional)</label>
+              <textarea
+                id="manuscript"
+                value={manuscript}
+                onChange={(e) => setManuscript(e.target.value)}
+                rows={10}
+                className="w-full bg-white/[0.03] px-5 py-4 rounded-2xl border border-white/10 focus:border-secondary/50 focus:ring-1 focus:ring-secondary/20 transition-all outline-none text-white placeholder:text-slate-600 resize-y font-mono text-sm"
+                placeholder="Paste full sermon manuscript here for AI refinement, or leave blank to generate from scratch."
+                disabled={isSubmitting}
+              />
+            </div>
+
+            <div className="pt-4">
               <button
-                onClick={handleLogin}
-                disabled={isLoggingIn}
-                className="premium-button inline-flex items-center px-8 py-4 disabled:opacity-70 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
+                type="submit"
+                disabled={isSubmitting}
+                className="premium-button w-full px-10 py-5 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed group"
               >
-                {isLoggingIn ? (
+                {isSubmitting ? (
                   <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" aria-hidden="true" />
-                    Signing In...
+                    <Loader2 className="w-5 h-5 mr-3 animate-spin" aria-hidden="true" />
+                    <span className="animate-pulse">{loadingText || 'Architecting...'}</span>
                   </>
                 ) : (
                   <>
-                    <LogIn className="w-5 h-5 mr-2" aria-hidden="true" />
-                    Sign In with Google
+                    <Save className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" aria-hidden="true" />
+                    Generate & Deploy Sermon
                   </>
                 )}
               </button>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="title" className="block text-sm font-medium text-slate-700 mb-2">Sermon Title</label>
-                  <input
-                    type="text"
-                    id="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-secondary focus:border-transparent transition-all outline-none text-slate-800"
-                    placeholder="e.g. The Ministry of Reconciliation"
-                    disabled={isSubmitting}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="topic" className="block text-sm font-medium text-slate-700 mb-2">Topic</label>
-                  <input
-                    type="text"
-                    id="topic"
-                    value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-secondary focus:border-transparent transition-all outline-none text-slate-800"
-                    placeholder="e.g. Evangelism"
-                    disabled={isSubmitting}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="goal" className="block text-sm font-medium text-slate-700 mb-2">Goal of the Message</label>
-                <textarea
-                  id="goal"
-                  value={goal}
-                  onChange={(e) => setGoal(e.target.value)}
-                  rows={3}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-secondary focus:border-transparent transition-all outline-none text-slate-800 resize-none"
-                  placeholder="What is the primary objective of this sermon?"
-                  disabled={isSubmitting}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="manuscript" className="block text-sm font-medium text-slate-700 mb-2">Full Manuscript (Optional)</label>
-                <textarea
-                  id="manuscript"
-                  value={manuscript}
-                  onChange={(e) => setManuscript(e.target.value)}
-                  rows={12}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-secondary focus:border-transparent transition-all outline-none text-slate-800 resize-y"
-                  placeholder="Paste full sermon manuscript here, or leave blank if generating from topic and goal only."
-                  disabled={isSubmitting}
-                />
-              </div>
-
-              <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="premium-button w-full sm:w-auto px-8 py-4 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" aria-hidden="true" />
-                      {loadingText || 'Saving...'}
-                    </>
-                  ) : (
-                    <>
-                      <Save className="w-5 h-5 mr-2" aria-hidden="true" />
-                      Generate & Save Sermon
-                    </>
-                  )}
-                </button>
-                <div className="flex items-center text-sm text-slate-500">
-                  <span className="mr-4">Logged in as {user.email}</span>
-                  <button 
-                    type="button"
-                    onClick={() => auth.signOut()}
-                    className="text-secondary hover:text-primary transition-colors underline"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              </div>
-            </form>
-          )}
-        </motion.div>
-      </div>
+          </form>
+        )}
+      </motion.div>
     </section>
   );
 }

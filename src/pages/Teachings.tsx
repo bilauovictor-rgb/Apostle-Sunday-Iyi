@@ -30,6 +30,12 @@ const cleanTitle = (title: string) => {
   return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
 };
 
+const optimizeCloudinaryUrl = (url: string, width = 1200) => {
+  if (!url || !url.includes('cloudinary.com')) return url;
+  // Insert f_auto,q_auto,w_WIDTH into the URL
+  return url.replace('/upload/', `/upload/f_auto,q_auto,w_${width}/`);
+};
+
 export default function Teachings() {
   const [selectedCity, setSelectedCity] = useState('Enugu');
   const [galleryImages, setGalleryImages] = useState<any[]>([]);
@@ -143,7 +149,7 @@ export default function Teachings() {
       <PublicSermonsList />
 
       {/* State Gallery Section */}
-      <section className="py-24 sm:py-32 bg-primary relative overflow-hidden">
+      <section id="gallery" className="py-24 sm:py-32 bg-primary relative overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(192,160,96,0.03),transparent_70%)]" />
@@ -205,12 +211,38 @@ export default function Teachings() {
           {/* Cinematic Carousel Display */}
           <div className="relative min-h-[500px] flex flex-col items-center justify-center">
             {loadingGallery ? (
-              <div className="flex flex-col items-center gap-6">
-                <div className="relative">
-                  <div className="w-16 h-16 border-2 border-secondary/20 rounded-full animate-ping absolute inset-0" />
-                  <Loader2 className="w-16 h-16 animate-spin text-secondary relative z-10" />
+              <div className="w-full relative px-4 sm:px-0 overflow-visible">
+                <div className="relative h-[380px] sm:h-[500px] md:h-[600px] w-full flex items-center justify-center overflow-visible">
+                  {/* Side Skeletons */}
+                  <div className="absolute w-[88%] sm:w-[70%] md:w-[60%] lg:w-[50%] aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[2.5rem] bg-white/[0.02] border border-white/5 -translate-x-[60%] scale-85 opacity-40 blur-[4px]" />
+                  <div className="absolute w-[88%] sm:w-[70%] md:w-[60%] lg:w-[50%] aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[2.5rem] bg-white/[0.02] border border-white/5 translate-x-[60%] scale-85 opacity-40 blur-[4px]" />
+                  
+                  {/* Center Skeleton */}
+                  <div className="absolute w-[88%] sm:w-[70%] md:w-[60%] lg:w-[50%] aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[2.5rem] bg-white/[0.05] border border-secondary/20 shadow-2xl z-20 flex flex-col justify-end p-5 sm:p-12 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                    <div className="relative z-10 space-y-4">
+                      <div className="h-3 w-24 bg-secondary/20 rounded-full animate-pulse" />
+                      <div className="h-10 w-3/4 bg-white/10 rounded-xl animate-pulse" />
+                      <div className="h-4 w-1/2 bg-white/5 rounded-lg animate-pulse" />
+                    </div>
+                    {/* Shimmer Effect */}
+                    <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/[0.05] to-transparent" />
+                  </div>
                 </div>
-                <span className="text-secondary font-bold tracking-[0.3em] uppercase text-[10px]">Loading Cinematic Gallery...</span>
+                
+                {/* Controls Skeleton */}
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-20 flex flex-col sm:flex-row items-center justify-between gap-8 sm:gap-0 opacity-50">
+                  <div className="flex items-center gap-6">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 animate-pulse" />
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 animate-pulse" />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {[1, 2, 3, 4, 5].map(i => (
+                      <div key={i} className="w-2 h-2 rounded-full bg-white/10 animate-pulse" />
+                    ))}
+                  </div>
+                  <div className="h-4 w-16 bg-white/5 rounded animate-pulse hidden sm:block" />
+                </div>
               </div>
             ) : galleryImages.length === 0 ? (
               <motion.div 
@@ -269,10 +301,12 @@ export default function Teachings() {
                             damping: 30 
                           }}
                           drag="x"
+                          dragElastic={0.2}
+                          dragMomentum={false}
                           dragConstraints={{ left: 0, right: 0 }}
                           onDragEnd={(_, info) => {
-                            if (info.offset.x > 100) prevSlide();
-                            else if (info.offset.x < -100) nextSlide();
+                            if (info.offset.x > 50) prevSlide();
+                            else if (info.offset.x < -50) nextSlide();
                           }}
                           onClick={() => isCenter ? setSelectedImage(image) : setActiveIndex(idx)}
                           className={`absolute w-[88%] sm:w-[70%] md:w-[60%] lg:w-[50%] aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border cursor-pointer transition-colors duration-500 ${
@@ -280,10 +314,11 @@ export default function Teachings() {
                           }`}
                         >
                           <img 
-                            src={image.imageUrl} 
+                            src={optimizeCloudinaryUrl(image.imageUrl, isCenter ? 1200 : 600)} 
                             alt={image.title}
-                            className="w-full h-full object-cover"
+                            className={`w-full h-full object-cover transition-opacity duration-700 ${isCenter ? 'opacity-100' : 'opacity-40'}`}
                             referrerPolicy="no-referrer"
+                            loading="lazy"
                           />
                           
                           {/* Featured Badge */}
@@ -300,23 +335,23 @@ export default function Teachings() {
                           )}
 
                           {/* Overlay Gradient */}
-                          <div className={`absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent transition-opacity duration-700 ${isCenter ? 'opacity-100' : 'opacity-0'}`} />
+                          <div className={`absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent transition-opacity duration-700 ${isCenter ? 'opacity-100' : 'opacity-0'}`} />
                           
                           {/* Center Content */}
                           {isCenter && (
                             <motion.div 
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
-                              className="absolute bottom-0 left-0 w-full p-5 sm:p-12 z-20"
+                              className="absolute bottom-0 left-0 w-full p-5 sm:p-12 z-20 backdrop-blur-[2px]"
                             >
                               <div className="flex items-end justify-between gap-4 sm:gap-6">
                                 <div className="flex-grow min-w-0">
-                                  <span className="text-secondary font-bold tracking-[0.3em] sm:tracking-[0.4em] uppercase text-[9px] sm:text-[10px] mb-2 sm:mb-3 block">{selectedCity}</span>
-                                  <h4 className="text-white font-serif text-lg sm:text-4xl mb-2 sm:mb-3 tracking-tight line-clamp-1 sm:line-clamp-2">
+                                  <span className="text-secondary font-bold shadow-black drop-shadow-md tracking-[0.3em] sm:tracking-[0.4em] uppercase text-[9px] sm:text-[10px] mb-2 sm:mb-3 block">{selectedCity}</span>
+                                  <h4 className="text-white font-serif text-lg sm:text-4xl mb-2 sm:mb-3 tracking-tight line-clamp-1 sm:line-clamp-2 drop-shadow-lg">
                                     {displayTitle || "Ministry Moment"}
                                   </h4>
                                   {image.caption && (
-                                    <p className="text-slate-300 text-xs sm:text-base font-light max-w-xl line-clamp-2 leading-relaxed opacity-80 sm:opacity-100">{image.caption}</p>
+                                    <p className="text-slate-300 text-xs sm:text-base font-light max-w-xl line-clamp-2 leading-relaxed opacity-90 sm:opacity-100 drop-shadow-md">{image.caption}</p>
                                   )}
                                 </div>
                                 <div className="hidden sm:flex w-14 h-14 rounded-full bg-secondary/90 items-center justify-center text-primary shadow-xl hover:scale-110 transition-transform flex-shrink-0">
@@ -404,7 +439,7 @@ export default function Teachings() {
             >
               <div className="relative w-full aspect-video sm:aspect-auto sm:h-[75vh] rounded-[3rem] overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.8)] border border-white/10 bg-black/40">
                 <img 
-                  src={selectedImage.imageUrl} 
+                  src={optimizeCloudinaryUrl(selectedImage.imageUrl, 2000)} 
                   alt={selectedImage.title}
                   className="w-full h-full object-contain"
                   referrerPolicy="no-referrer"
