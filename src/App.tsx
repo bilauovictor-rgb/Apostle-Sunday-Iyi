@@ -10,6 +10,7 @@ import About from './pages/About';
 import Mission from './pages/Mission';
 import Teachings from './pages/Teachings';
 import Gallery from './pages/Gallery';
+import SundaySchoolManual from './pages/SundaySchoolManual';
 import SermonDetail from './pages/SermonDetail';
 import Contact from './pages/Contact';
 import SpeakingInvitations from './pages/SpeakingInvitations';
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/mission" element={<Mission />} />
             <Route path="/teachings" element={<Teachings />} />
             <Route path="/gallery" element={<Gallery />} />
+            <Route path="/resources/sunday-school-manual" element={<SundaySchoolManual />} />
             <Route path="/teachings/:sermonId" element={<SermonDetail />} />
             <Route path="/connect" element={<Contact />} />
             <Route path="/speaking-invitations" element={<SpeakingInvitations />} />

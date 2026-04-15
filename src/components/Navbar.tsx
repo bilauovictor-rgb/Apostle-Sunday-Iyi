@@ -26,6 +26,7 @@ export default function Navbar() {
       dropdown: [
         { name: 'Teachings', path: '/teachings' },
         { name: 'Gallery', path: '/gallery' },
+        { name: 'Sunday School Manual', path: '/resources/sunday-school-manual' },
       ]
     },
     { 
