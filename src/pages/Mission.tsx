@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { ShoppingCart, Droplets, GraduationCap, ShieldCheck, Users, Church, Globe, ArrowRight } from 'lucide-react';
 
 export default function Mission() {
+  const [heroLoaded, setHeroLoaded] = useState(false);
   const expressions = [
     {
       title: 'The Redeemed Assemblies',
@@ -46,14 +48,23 @@ export default function Mission() {
       {/* Hero Section */}
       <section className="relative min-h-[70vh] flex items-center bg-primary pt-32 pb-20 overflow-hidden">
         {/* Background Elements */}
-        <div className="absolute inset-0 z-0">
+        <div className={`absolute inset-0 z-0 ${!heroLoaded ? 'shimmer' : ''}`}>
+          {/* Lightweight Gradient Placeholder */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#0a192f] to-primary opacity-100"></div>
+
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(192,160,96,0.15),transparent_70%)] z-10" />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/60 via-transparent to-primary/95 z-10" />
-          <img 
+          <motion.img 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: heroLoaded ? 0.3 : 0 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            onLoad={() => setHeroLoaded(true)}
             src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" 
             alt="Global Mission" 
-            className="w-full h-full object-cover opacity-30 grayscale contrast-125"
+            className="w-full h-full object-cover grayscale contrast-125"
             referrerPolicy="no-referrer"
+            loading="lazy"
+            decoding="async"
           />
         </div>
 

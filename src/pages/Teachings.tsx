@@ -1,29 +1,45 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import PublicSermonsList from '../components/PublicSermonsList';
 
 export default function Teachings() {
+  const [heroLoaded, setHeroLoaded] = useState(false);
   return (
     <div className="pt-20 bg-primary">
       {/* Hero Section */}
-      <section className="relative min-h-[65vh] flex items-center justify-center overflow-hidden pt-32 pb-20">
+      <section className="relative min-h-[65vh] flex items-center justify-center overflow-hidden pt-32 pb-20 bg-primary">
         {/* Background Elements */}
-        <div className="absolute inset-0 z-0">
+        <div className={`absolute inset-0 z-0 ${!heroLoaded ? 'shimmer' : ''}`}>
+          {/* Lightweight Gradient Placeholder */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#0a192f] to-primary opacity-100"></div>
+
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(192,160,96,0.1),transparent_70%)]" />
-          <motion.div 
-            animate={{ 
-              opacity: [0.1, 0.3, 0.1],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-[120px]" 
-          />
+          
+          {heroLoaded && (
+            <motion.div 
+              animate={{ 
+                opacity: [0.1, 0.3, 0.1],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-[120px]" 
+            />
+          )}
+          
           <div className="absolute inset-0 bg-primary/60 backdrop-blur-[2px]" />
-          <img 
+          
+          <motion.img 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: heroLoaded ? 0.2 : 0 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            onLoad={() => setHeroLoaded(true)}
             src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=2070&auto=format&fit=crop" 
             alt="Teachings Background" 
-            className="w-full h-full object-cover opacity-20 grayscale"
+            className="w-full h-full object-cover grayscale"
             referrerPolicy="no-referrer"
+            loading="lazy"
+            decoding="async"
           />
         </div>
 

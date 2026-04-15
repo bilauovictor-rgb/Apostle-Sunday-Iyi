@@ -67,12 +67,13 @@ export default function MinistryPartnership() {
                 <div className="absolute inset-0 border border-secondary/10 rounded-[3rem] -z-10 transition-transform group-hover:scale-105 duration-700"></div>
                 <div className="absolute -inset-4 border border-secondary/5 rounded-[3.5rem] -z-10 transition-transform group-hover:scale-110 duration-1000"></div>
                 
-                <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl grayscale hover:grayscale-0 transition-all duration-1000">
+                <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl grayscale hover:grayscale-0 transition-all duration-1000 shimmer">
                   <img 
                     src="https://i.ibb.co/1JRg4jsL/mama-iyi.jpg" 
                     alt="Pastor Gladys Iyi" 
                     className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-1000"
                     referrerPolicy="no-referrer"
+                    onLoad={(e) => (e.currentTarget.parentElement?.classList.remove('shimmer'))}
                   />
                 </div>
               </div>

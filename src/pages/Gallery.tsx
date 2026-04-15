@@ -135,7 +135,7 @@ export default function Gallery() {
     <div className="pt-20 bg-primary">
       {/* Hero Section */}
       <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden pt-32 pb-20 bg-primary">
-        <div className="absolute inset-0 z-0">
+        <div className={`absolute inset-0 z-0 ${!heroLoaded ? 'shimmer' : ''}`}>
           {/* Lightweight Gradient Placeholder */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#0a192f] to-primary opacity-100"></div>
 
@@ -476,7 +476,7 @@ export default function Gallery() {
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.05 }}
                   onClick={() => setSelectedImage(image)}
-                  className={`group relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-slate-200 cursor-pointer shadow-lg transition-all duration-500 ${!isMobile ? 'hover:shadow-2xl' : ''}`}
+                  className={`group relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-slate-200 cursor-pointer shadow-lg transition-all duration-500 shimmer ${!isMobile ? 'hover:shadow-2xl' : ''}`}
                 >
                   <img 
                     src={optimizeCloudinaryUrl(image.imageUrl, { width: 400, height: 500, crop: 'fill', quality: 70 })} 
@@ -485,6 +485,7 @@ export default function Gallery() {
                     referrerPolicy="no-referrer"
                     loading="lazy"
                     decoding="async"
+                    onLoad={(e) => (e.currentTarget.parentElement?.classList.remove('shimmer'))}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="absolute bottom-0 left-0 w-full p-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">

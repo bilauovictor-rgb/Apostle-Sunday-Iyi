@@ -47,7 +47,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative min-h-[75vh] flex items-center bg-primary pt-24 pb-8 overflow-hidden">
         {/* Background Placeholder & Image */}
-        <div className="absolute inset-0 z-0 bg-primary">
+        <div className={`absolute inset-0 z-0 bg-primary ${!heroLoaded ? 'shimmer' : ''}`}>
           {/* Lightweight Gradient Placeholder */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#0a192f] to-primary opacity-100"></div>
 
@@ -197,12 +197,13 @@ export default function Home() {
                 transition={{ duration: 0.8 }}
                 className="relative w-full max-w-md lg:max-w-none"
               >
-                <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-premium grayscale hover:grayscale-0 transition-all duration-1000">
+                <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-premium grayscale hover:grayscale-0 transition-all duration-1000 shimmer">
                   <img 
                     src="https://i.ibb.co/HRNgSzR/papa-mama-iyi-3.jpg" 
                     alt="Apostle Sunday Iyi and Pastor Gladys Iyi" 
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
+                    onLoad={(e) => (e.currentTarget.parentElement?.classList.remove('shimmer'))}
                   />
                 </div>
                 

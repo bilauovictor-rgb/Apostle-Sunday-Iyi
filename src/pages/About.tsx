@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 
 export default function About() {
+  const [heroLoaded, setHeroLoaded] = useState(false);
   return (
     <div className="overflow-hidden">
       {/* Page Header */}
@@ -57,12 +59,13 @@ export default function About() {
                 {/* Decorative Frame */}
                 <div className="absolute -inset-4 border border-secondary/10 rounded-[3rem] -z-10 transition-transform group-hover:scale-105 duration-700"></div>
                 
-                <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-premium grayscale hover:grayscale-0 transition-all duration-1000">
+                <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-premium grayscale hover:grayscale-0 transition-all duration-1000 shimmer">
                   <img 
                     src="https://i.ibb.co/PzmYRgM6/Apostle-4.jpg" 
                     alt="Apostle Sunday Iyi" 
                     className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-1000"
                     referrerPolicy="no-referrer"
+                    onLoad={(e) => (e.currentTarget.parentElement?.classList.remove('shimmer'))}
                   />
                 </div>
               </div>
