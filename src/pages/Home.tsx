@@ -34,6 +34,7 @@ const optimizeUnsplashUrl = (url: string, options: { width?: number; quality?: n
 };
 
 export default function Home() {
+  const [heroLoaded, setHeroLoaded] = useState(false);
   const stats = [
     { label: 'Global Impact', value: 1.2, suffix: 'M+', decimals: 1, icon: Heart },
     { label: 'Nations Reached', value: 15, suffix: '+', decimals: 0, icon: Globe },
@@ -45,10 +46,17 @@ export default function Home() {
     <div className="overflow-hidden">
       {/* Hero Section */}
       <section className="relative min-h-[75vh] flex items-center bg-primary pt-24 pb-8 overflow-hidden">
-        {/* Background Video / Fallback */}
-        <div className="absolute inset-0 z-0">
-          {/* Optimized Hero Image for LCP with Responsive Sizing */}
-          <img 
+        {/* Background Placeholder & Image */}
+        <div className="absolute inset-0 z-0 bg-primary">
+          {/* Lightweight Gradient Placeholder */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#0a192f] to-primary opacity-100"></div>
+
+          {/* Optimized Hero Image - Loaded progressively */}
+          <motion.img 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: heroLoaded ? 1 : 0 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            onLoad={() => setHeroLoaded(true)}
             src={optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 400, quality: 50 })}
             srcSet={`
               ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 400, quality: 50 })} 400w,
@@ -59,41 +67,46 @@ export default function Home() {
             sizes="100vw"
             alt="Hero Background"
             className="absolute inset-0 w-full h-full object-cover grayscale contrast-125"
-            fetchPriority="high"
-            loading="eager"
-            decoding="sync"
+            loading="lazy"
+            decoding="async"
           />
 
-          {/* Cinematic Background Video (Hidden on Mobile) */}
-          <div className="absolute inset-0 hidden md:block overflow-hidden">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover opacity-50 grayscale contrast-125"
-            >
-              <source src="/videos/Hero - Background.mp4" type="video/mp4" />
-            </video>
-          </div>
+          {/* Cinematic Background Video (Hidden on Mobile & Deferred) */}
+          {heroLoaded && (
+            <div className="absolute inset-0 hidden md:block overflow-hidden">
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover opacity-50 grayscale contrast-125"
+              >
+                <source src="/videos/Hero - Background.mp4" type="video/mp4" />
+              </video>
+            </div>
+          )}
 
-          {/* Deep Cinematic Overlays - Reduced on Mobile for Performance */}
+          {/* Deep Cinematic Overlays - Simplified for FCP */}
           <div className="absolute inset-0 bg-primary/80 z-10 sm:bg-primary/70"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/40 via-transparent to-primary/95 z-10 hidden sm:block"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,rgba(2,12,27,0.6)_100%)] z-10 hidden sm:block"></div>
           
-          {/* Subtle Texture Overlay - Hidden on Mobile */}
-          <div className="absolute inset-0 opacity-[0.03] z-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] hidden sm:block"></div>
+          {/* Subtle Texture Overlay - Hidden on Mobile & Deferred */}
+          {heroLoaded && (
+            <div className="absolute inset-0 opacity-[0.03] z-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] hidden sm:block"></div>
+          )}
         </div>
         
-        {/* Animated Light Beams - Hidden on Mobile */}
-        <div className="absolute inset-0 z-20 opacity-10 pointer-events-none hidden sm:block">
-          <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-secondary to-transparent blur-sm"></div>
-          <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-transparent via-secondary/50 to-transparent blur-sm"></div>
-        </div>
+        {/* Animated Light Beams - Hidden on Mobile & Deferred */}
+        {heroLoaded && (
+          <div className="absolute inset-0 z-20 opacity-10 pointer-events-none hidden sm:block">
+            <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-secondary to-transparent blur-sm"></div>
+            <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-transparent via-secondary/50 to-transparent blur-sm"></div>
+          </div>
+        )}
 
-        {/* Radial Glow - Hidden on Mobile */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-secondary/[0.02] rounded-full blur-[150px] pointer-events-none z-20 hidden sm:block"></div>
+        {/* Radial Glow - Hidden on Mobile & Deferred */}
+        {heroLoaded && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-secondary/[0.02] rounded-full blur-[150px] pointer-events-none z-20 hidden sm:block"></div>
+        )}
 
         <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">

@@ -35,6 +35,7 @@ const optimizeCloudinaryUrl = (url: string, options: { width?: number; height?: 
 };
 
 export default function Gallery() {
+  const [heroLoaded, setHeroLoaded] = useState(false);
   const [selectedCity, setSelectedCity] = useState('Enugu');
   const [galleryImages, setGalleryImages] = useState<any[]>([]);
   const [loadingGallery, setLoadingGallery] = useState(true);
@@ -133,28 +134,39 @@ export default function Gallery() {
   return (
     <div className="pt-20 bg-primary">
       {/* Hero Section */}
-      <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden pt-32 pb-20">
+      <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden pt-32 pb-20 bg-primary">
         <div className="absolute inset-0 z-0">
+          {/* Lightweight Gradient Placeholder */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#0a192f] to-primary opacity-100"></div>
+
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(192,160,96,0.1),transparent_70%)]" />
-          <motion.div 
-            animate={{ 
-              opacity: [0.1, 0.3, 0.1],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-[120px] hidden sm:block" 
-          />
+          
+          {heroLoaded && (
+            <motion.div 
+              animate={{ 
+                opacity: [0.1, 0.3, 0.1],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-[120px] hidden sm:block" 
+            />
+          )}
+          
           <div className="absolute inset-0 bg-primary/60 backdrop-blur-[2px] sm:backdrop-blur-none" />
-          <img 
+          
+          <motion.img 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: heroLoaded ? 0.2 : 0 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            onLoad={() => setHeroLoaded(true)}
             src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=50&w=400&fit=crop" 
             srcSet="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=50&w=400&fit=crop 400w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=60&w=800&fit=crop 800w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=70&w=1200&fit=crop 1200w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=70&w=1600&fit=crop 1600w"
             sizes="100vw"
             alt="Gallery Background" 
-            className="w-full h-full object-cover opacity-20 grayscale"
+            className="w-full h-full object-cover grayscale"
             referrerPolicy="no-referrer"
-            loading="eager"
-            fetchPriority="high"
-            decoding="sync"
+            loading="lazy"
+            decoding="async"
           />
         </div>
 
