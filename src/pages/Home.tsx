@@ -30,14 +30,6 @@ function StatCounter({ value, suffix, decimals = 0 }: { value: number; suffix: s
 
 export default function Home() {
   const [heroLoaded, setHeroLoaded] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const stats = [
     { label: 'Global Impact', value: 1.2, suffix: 'M+', decimals: 1, icon: Heart },
@@ -72,22 +64,6 @@ export default function Home() {
             fetchPriority="high"
             decoding="async"
           />
-
-          {/* Cinematic Background Video (Disabled on Mobile & Deferred) */}
-          {heroLoaded && !isMobile && (
-            <div className="absolute inset-0 hidden md:block overflow-hidden">
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                poster={optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 1200, quality: 70 })}
-                className="absolute inset-0 w-full h-full object-cover opacity-50 grayscale contrast-125"
-              >
-                <source src="/videos/Hero - Background.mp4" type="video/mp4" />
-              </video>
-            </div>
-          )}
 
           {/* Deep Cinematic Overlays - Simplified for FCP */}
           <div className="absolute inset-0 bg-primary/80 z-10 sm:bg-primary/70"></div>
