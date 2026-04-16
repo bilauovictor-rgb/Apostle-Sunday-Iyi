@@ -10,7 +10,7 @@ export default function Teachings() {
       {/* Hero Section */}
       <section className="relative min-h-[65vh] flex items-center justify-center overflow-hidden pt-32 pb-20 bg-primary">
         {/* Background Elements */}
-        <div className={`absolute inset-0 z-0 ${!heroLoaded ? 'shimmer' : ''}`}>
+        <div className="absolute inset-0 z-0">
           {/* Lightweight Gradient Placeholder */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#0a192f] to-primary opacity-100"></div>
 
@@ -29,16 +29,16 @@ export default function Teachings() {
           
           <div className="absolute inset-0 bg-primary/60 backdrop-blur-[2px]" />
           
-          <motion.img 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: heroLoaded ? 0.2 : 0 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+          <img 
             onLoad={() => setHeroLoaded(true)}
-            src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=2070&auto=format&fit=crop" 
+            src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=400&auto=format&fit=crop" 
+            srcSet="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=400&auto=format&fit=crop 400w, https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=800&auto=format&fit=crop 800w, https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1200&auto=format&fit=crop 1200w, https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=2070&auto=format&fit=crop 2070w"
+            sizes="100vw"
             alt="Teachings Background" 
-            className="w-full h-full object-cover grayscale"
+            className="w-full h-full object-cover grayscale opacity-20"
             referrerPolicy="no-referrer"
-            loading="lazy"
+            loading="eager"
+            fetchPriority="high"
             decoding="async"
           />
         </div>

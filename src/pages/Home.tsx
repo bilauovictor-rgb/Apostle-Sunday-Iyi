@@ -47,27 +47,25 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative min-h-[75vh] flex items-center bg-primary pt-24 pb-8 overflow-hidden">
         {/* Background Placeholder & Image */}
-        <div className={`absolute inset-0 z-0 bg-primary ${!heroLoaded ? 'shimmer' : ''}`}>
+        <div className="absolute inset-0 z-0 bg-primary">
           {/* Lightweight Gradient Placeholder */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#0a192f] to-primary opacity-100"></div>
 
-          {/* Optimized Hero Image - Loaded progressively */}
-          <motion.img 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: heroLoaded ? 1 : 0 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+          {/* Optimized Hero Image - Loaded with high priority */}
+          <img 
             onLoad={() => setHeroLoaded(true)}
-            src={optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 400, quality: 50 })}
+            src={optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 400, quality: 60 })}
             srcSet={`
-              ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 400, quality: 50 })} 400w,
-              ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 800, quality: 60 })} 800w,
+              ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 400, quality: 60 })} 400w,
+              ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 800, quality: 70 })} 800w,
               ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 1200, quality: 70 })} 1200w,
               ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 1600, quality: 70 })} 1600w
             `}
             sizes="100vw"
             alt="Hero Background"
-            className="absolute inset-0 w-full h-full object-cover grayscale contrast-125"
-            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover grayscale contrast-125 opacity-100"
+            loading="eager"
+            fetchPriority="high"
             decoding="async"
           />
 

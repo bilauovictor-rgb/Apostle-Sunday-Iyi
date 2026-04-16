@@ -89,7 +89,14 @@
     rgba(255, 255, 255, 0.05),
     transparent
   );
-  animation: shimmer 2s infinite;
+  animation: shimmer 3s infinite linear;
+}
+
+@media (max-width: 640px) {
+  .shimmer::after {
+    animation: none;
+    display: none;
+  }
 }
 
 @keyframes fadeIn {

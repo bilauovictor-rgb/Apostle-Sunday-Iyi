@@ -135,7 +135,7 @@ export default function Gallery() {
     <div className="pt-20 bg-primary">
       {/* Hero Section */}
       <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden pt-32 pb-20 bg-primary">
-        <div className={`absolute inset-0 z-0 ${!heroLoaded ? 'shimmer' : ''}`}>
+        <div className="absolute inset-0 z-0">
           {/* Lightweight Gradient Placeholder */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#0a192f] to-primary opacity-100"></div>
 
@@ -154,18 +154,16 @@ export default function Gallery() {
           
           <div className="absolute inset-0 bg-primary/60 backdrop-blur-[2px] sm:backdrop-blur-none" />
           
-          <motion.img 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: heroLoaded ? 0.2 : 0 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+          <img 
             onLoad={() => setHeroLoaded(true)}
-            src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=50&w=400&fit=crop" 
-            srcSet="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=50&w=400&fit=crop 400w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=60&w=800&fit=crop 800w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=70&w=1200&fit=crop 1200w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=70&w=1600&fit=crop 1600w"
+            src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=60&w=400&fit=crop" 
+            srcSet="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=60&w=400&fit=crop 400w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=70&w=800&fit=crop 800w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=70&w=1200&fit=crop 1200w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=70&w=1600&fit=crop 1600w"
             sizes="100vw"
             alt="Gallery Background" 
-            className="w-full h-full object-cover grayscale"
+            className="w-full h-full object-cover grayscale opacity-20"
             referrerPolicy="no-referrer"
-            loading="lazy"
+            loading="eager"
+            fetchPriority="high"
             decoding="async"
           />
         </div>
