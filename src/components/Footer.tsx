@@ -1,4 +1,4 @@
-import { Mail, Globe, Facebook, Twitter, Youtube, ArrowUpRight, Music2 as Tiktok } from 'lucide-react';
+import { Mail, Globe, Facebook, Youtube, ArrowUpRight, Music2 as Tiktok } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 

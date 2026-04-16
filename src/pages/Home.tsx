@@ -1,47 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, useInView, animate } from 'motion/react';
-import { ArrowRight, Heart, Globe, BookOpen, Award, Users } from 'lucide-react';
+import { useState, lazy, Suspense } from 'react';
+import { motion } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { optimizeUnsplashUrl } from '../lib/imageUtils';
 
-function StatCounter({ value, suffix, decimals = 0 }: { value: number; suffix: string; decimals?: number }) {
-  const [displayValue, setDisplayValue] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
-
-  useEffect(() => {
-    if (isInView) {
-      const controls = animate(0, value, {
-        duration: 2,
-        ease: "easeOut",
-        onUpdate: (latest) => setDisplayValue(latest),
-      });
-      return () => controls.stop();
-    }
-  }, [isInView, value]);
-
-  return (
-    <span ref={ref}>
-      {displayValue.toFixed(decimals)}
-      {suffix}
-    </span>
-  );
-}
+// Lazy load below-the-fold sections
+const ConvictionsSection = lazy(() => import('../components/home/ConvictionsSection'));
+const ExpressionsSection = lazy(() => import('../components/home/ExpressionsSection'));
+const JoinMissionSection = lazy(() => import('../components/home/JoinMissionSection'));
 
 export default function Home() {
   const [heroLoaded, setHeroLoaded] = useState(false);
 
-  const stats = [
-    { label: 'Global Impact', value: 1.2, suffix: 'M+', decimals: 1, icon: Heart },
-    { label: 'Nations Reached', value: 15, suffix: '+', decimals: 0, icon: Globe },
-    { label: 'Leaders Trained', value: 5, suffix: 'k+', decimals: 0, icon: BookOpen },
-    { label: 'Years of Ministry', value: 30, suffix: '+', decimals: 0, icon: Award },
-  ];
-
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-[75vh] flex items-center bg-primary pt-24 pb-8 overflow-hidden">
+      <section className="hero-section bg-primary">
         {/* Background Placeholder & Image */}
         <div className="absolute inset-0 z-0 bg-primary">
           {/* Lightweight Gradient Placeholder */}
@@ -178,215 +152,13 @@ export default function Home() {
             </motion.div>
           </div>
         </div>
-
       </section>
 
-      {/* Core Apostolic Convictions */}
-      <section className="py-20 sm:py-28 bg-white relative overflow-visible">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-            {/* Image & Quote Card Container */}
-            <div className="relative order-1 lg:order-1 flex flex-col items-center lg:items-start">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8 }}
-                className="relative w-full max-w-md lg:max-w-none"
-              >
-                <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-premium grayscale hover:grayscale-0 transition-all duration-1000 shimmer">
-                  <img 
-                    src="https://i.ibb.co/HRNgSzR/papa-mama-iyi-3.jpg" 
-                    alt="Apostle Sunday Iyi and Pastor Gladys Iyi" 
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                    loading="lazy"
-                    onLoad={(e) => (e.currentTarget.parentElement?.classList.remove('shimmer'))}
-                  />
-                </div>
-                
-                {/* Quote Card */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  className="relative lg:absolute mt-6 lg:mt-0 lg:-bottom-10 lg:-right-10 bg-primary p-8 sm:p-10 lg:p-14 rounded-[2.5rem] shadow-2xl max-w-[90%] sm:max-w-xs z-20"
-                >
-                  <span className="text-secondary text-4xl sm:text-5xl font-serif absolute top-4 left-4 opacity-20">"</span>
-                  <p className="text-white font-serif italic text-xl sm:text-2xl leading-tight relative z-10">
-                    The church owes the world a definitive encounter with the divine.
-                  </p>
-                </motion.div>
-              </motion.div>
-            </div>
-
-            {/* Content Block */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="order-2 lg:order-2 mt-8 lg:mt-0"
-            >
-              <div className="inline-flex items-center space-x-4 mb-6">
-                <span className="text-secondary font-bold tracking-[0.3em] uppercase text-[10px] sm:text-xs">Restoring the Original Power & Purity</span>
-                <div className="h-px w-10 bg-secondary/40"></div>
-              </div>
-              <h2 className="text-4xl sm:text-6xl font-serif text-primary mb-10 leading-[1.1]">
-                Core Apostolic <span className="text-secondary italic">Convictions</span>
-              </h2>
-              <div className="space-y-6 text-lg sm:text-xl text-slate-600 leading-relaxed font-light mb-12">
-                <p>
-                  At the center of Apostle Sunday Iyi’s ministry is a commitment to restoring the original power and purity of the gospel.
-                </p>
-                <p>
-                  His theological worldview affirms that healing, miracles, and supernatural encounters remain essential expressions of authentic Christian experience.
-                </p>
-                <p>
-                  Through his teaching ministry, believers are equipped to live as agents of reconciliation, transforming both individuals and institutions.
-                </p>
-              </div>
-              
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-12">
-                {stats.map((stat, idx) => (
-                  <motion.div 
-                    key={stat.label}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.4 + (idx * 0.1) }}
-                    className="bg-slate-50/50 p-6 sm:p-8 rounded-3xl border border-slate-100 group hover:border-secondary/30 hover:bg-white hover:shadow-xl transition-all duration-500"
-                  >
-                    <div className="text-3xl sm:text-5xl font-serif text-primary mb-3 group-hover:text-secondary transition-colors">
-                      <StatCounter value={stat.value} suffix={stat.suffix} decimals={stat.decimals} />
-                    </div>
-                    <div className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">{stat.label}</div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Expressions of the Mandate */}
-      <section className="py-20 sm:py-24 bg-primary text-white relative overflow-hidden">
-        {/* Subtle Background Pattern */}
-        <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#c0a060_1px,transparent_1px)] [background-size:40px_40px]"></div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16 relative z-10">
-          <motion.span 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] sm:text-xs mb-6 block"
-          >
-            Structured Initiatives
-          </motion.span>
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl sm:text-6xl font-serif text-white mb-6"
-          >
-            Manifesting the <span className="gold-gradient-text italic">Vision</span>
-          </motion.h2>
-          <motion.div 
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            className="h-px w-24 bg-secondary mx-auto mb-8 origin-center"
-          ></motion.div>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-slate-400 max-w-2xl mx-auto text-lg font-light leading-relaxed"
-          >
-            The apostolic mandate is not merely a spiritual concept; it is expressed through structured, tangible initiatives designed to bring holistic transformation to communities worldwide.
-          </motion.p>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 relative z-10">
-          {[
-            { title: 'The Redeemed Assemblies', desc: 'My primary apostolic platform for spiritual revival and global church planting.', icon: Users },
-            { title: 'TRASS Humanitarian', desc: 'The vehicle through which I execute massive-scale poverty alleviation and civic intervention.', icon: Heart },
-            { title: 'Global School of Ministry', desc: 'My academic mandate to equip the next generation of five-fold and marketplace leaders.', icon: BookOpen },
-          ].map((pillar, idx) => (
-            <motion.div 
-              key={pillar.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="bg-white/5 p-10 sm:p-12 rounded-[2.5rem] border border-white/10 shadow-2xl hover:bg-white/10 transition-all duration-500 group hover:-translate-y-3 hover:shadow-secondary/10"
-            >
-              <div className="w-16 h-16 bg-secondary/10 border border-secondary/20 rounded-2xl flex items-center justify-center mb-10 group-hover:bg-secondary transition-all duration-500 group-hover:scale-110 group-hover:shadow-glow">
-                <pillar.icon className="h-7 w-7 text-secondary group-hover:text-primary transition-colors duration-500" aria-hidden="true" />
-              </div>
-              <h3 className="text-2xl sm:text-3xl font-serif text-white mb-6 group-hover:text-secondary transition-colors duration-300 tracking-tight">{pillar.title}</h3>
-              <p className="text-slate-400 leading-relaxed mb-12 text-base font-light group-hover:text-slate-300 transition-colors">{pillar.desc}</p>
-              <Link to="/mission" className="text-secondary font-bold flex items-center group/link text-[10px] tracking-[0.3em] uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary rounded-sm">
-                Explore Expression 
-                <ArrowRight className="ml-4 h-4 w-4 group-hover/link:translate-x-3 transition-transform" aria-hidden="true" />
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Join the Mission (New Section) */}
-      <section className="py-24 sm:py-32 bg-white relative">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.span 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-secondary font-bold tracking-[0.4em] uppercase text-[10px] sm:text-xs mb-8 block"
-          >
-            Take Action
-          </motion.span>
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl sm:text-7xl font-serif text-primary mb-10 tracking-tighter"
-          >
-            Join the <span className="gold-gradient-text italic">Mission</span>
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-xl sm:text-2xl text-slate-600 font-light leading-relaxed mb-16 max-w-3xl mx-auto"
-          >
-            Partner with us to manifest the reality of heaven on earth. Whether through strategic partnership or immersing yourself in the teachings, your journey of transformation starts here.
-          </motion.p>
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8"
-          >
-            <Link 
-              to="/ministry-partnership" 
-              className="premium-button w-full sm:w-auto flex items-center justify-center group"
-            >
-              Partner With the Mission <ArrowRight className="ml-4 h-5 w-5 group-hover:translate-x-2 transition-transform" aria-hidden="true" />
-            </Link>
-            <Link 
-              to="/teachings" 
-              className="w-full sm:w-auto px-12 py-5 rounded-xl border-2 border-slate-200 text-primary font-bold tracking-[0.2em] uppercase text-xs hover:border-secondary hover:text-secondary hover:bg-white transition-all duration-500 flex items-center justify-center group shadow-sm hover:shadow-xl hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
-            >
-              Explore Teachings <BookOpen className="ml-4 h-4 w-4 group-hover:scale-110 transition-transform" aria-hidden="true" />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+      <Suspense fallback={<div className="h-96 bg-white" />}>
+        <ConvictionsSection />
+        <ExpressionsSection />
+        <JoinMissionSection />
+      </Suspense>
     </div>
   );
 }
