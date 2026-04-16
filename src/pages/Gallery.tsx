@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { ImageIcon, Maximize2, Star, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
-import { optimizeCloudinaryUrl } from '../lib/imageUtils';
+import { optimizeCloudinaryUrl, optimizeUnsplashUrl } from '../lib/imageUtils';
 
 const GalleryLightbox = lazy(() => import('../components/GalleryLightbox'));
 
@@ -127,7 +127,7 @@ export default function Gallery() {
   return (
     <div className="pt-20 bg-primary">
       {/* Hero Section */}
-      <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden pt-32 pb-20 bg-primary">
+      <section className="relative min-h-[40vh] sm:min-h-[50vh] flex items-center justify-center overflow-hidden pt-24 sm:pt-32 pb-12 sm:pb-20 bg-primary">
         <div className="absolute inset-0 z-0">
           {/* Lightweight Gradient Placeholder */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#0a192f] to-primary opacity-100"></div>
@@ -149,15 +149,20 @@ export default function Gallery() {
           
           <img 
             onLoad={() => setHeroLoaded(true)}
-            src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=60&w=400&fit=crop" 
-            srcSet="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=60&w=400&fit=crop 400w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=70&w=800&fit=crop 800w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=70&w=1200&fit=crop 1200w, https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format,compress&q=70&w=1600&fit=crop 1600w"
+            src={optimizeUnsplashUrl("https://images.unsplash.com/photo-1492684223066-81342ee5ff30", { width: 400, quality: 50 })}
+            srcSet={`
+              ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1492684223066-81342ee5ff30", { width: 400, quality: 50 })} 400w,
+              ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1492684223066-81342ee5ff30", { width: 800, quality: 70 })} 800w,
+              ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1492684223066-81342ee5ff30", { width: 1200, quality: 70 })} 1200w,
+              ${optimizeUnsplashUrl("https://images.unsplash.com/photo-1492684223066-81342ee5ff30", { width: 1600, quality: 70 })} 1600w
+            `}
             sizes="100vw"
             alt="Gallery Background" 
             className="w-full h-full object-cover grayscale opacity-20"
             referrerPolicy="no-referrer"
             loading="eager"
             fetchPriority="high"
-            decoding="async"
+            decoding="sync"
           />
         </div>
 
@@ -218,11 +223,11 @@ export default function Gallery() {
             </div>
           </div>
 
-          <div className="relative min-h-[450px] sm:min-h-[600px] flex flex-col items-center justify-center">
+          <div className="relative min-h-[350px] sm:min-h-[600px] flex flex-col items-center justify-center">
             {loadingGallery ? (
               <div className="w-full relative px-4 sm:px-0 overflow-visible">
-                <div className="relative h-[300px] sm:h-[550px] md:h-[650px] w-full flex items-center justify-center overflow-visible">
-                  <div className="absolute w-[95%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] bg-white/[0.05] border border-secondary/20 shadow-2xl z-20 flex flex-col justify-end p-8 sm:p-16 overflow-hidden">
+                <div className="relative h-[250px] sm:h-[550px] md:h-[650px] w-full flex items-center justify-center overflow-visible">
+                  <div className="absolute w-[95%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[3/2] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] bg-white/[0.05] border border-secondary/20 shadow-2xl z-20 flex flex-col justify-end p-8 sm:p-16 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                     <div className="relative z-10 space-y-6">
                       <div className="h-4 w-32 bg-secondary/20 rounded-full animate-pulse" />
@@ -253,14 +258,13 @@ export default function Gallery() {
                 onMouseEnter={handleInteraction}
               >
                 {isMobile && !interacted ? (
-                  <div className="relative h-[280px] w-full flex items-center justify-center">
+                  <div className="relative h-[250px] w-full flex items-center justify-center">
                     <div className="w-[95%] aspect-[3/2] rounded-[2rem] overflow-hidden border border-secondary/20 shadow-2xl bg-white/5">
                       <img 
-                        src={optimizeCloudinaryUrl(sortedImages[0].imageUrl, { width: 400, quality: 60 })}
+                        src={optimizeCloudinaryUrl(sortedImages[0].imageUrl, { width: 400, quality: 50 })}
                         alt="Gallery Preview"
                         className="w-full h-full object-cover opacity-80"
-                        loading="eager"
-                        fetchPriority="high"
+                        loading="lazy"
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                         <div className="bg-secondary text-primary px-6 py-3 rounded-full text-[10px] font-black tracking-[0.2em] uppercase shadow-glow">
