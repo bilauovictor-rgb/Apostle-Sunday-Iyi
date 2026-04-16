@@ -79,11 +79,11 @@ export default function Home() {
                 <span className="gold-gradient-text italic font-normal text-5xl sm:text-7xl md:text-[8.5rem] sm:ml-6 -mt-6 drop-shadow-2xl">Iyi</span>
               </h1>
               
-              <p className="animate-fade-in text-lg sm:text-xl text-slate-300/90 mb-12 leading-relaxed max-w-xl mx-auto lg:mx-0 border-l-4 border-secondary/40 pl-10 italic font-light drop-shadow-lg" style={{ animationDelay: '0.4s' }}>
+              <p className="text-lg sm:text-xl text-slate-300/90 mb-12 leading-relaxed max-w-xl mx-auto lg:mx-0 border-l-4 border-secondary/40 pl-10 italic font-light drop-shadow-lg">
                 "Reconciling humanity back to God and manifesting the reality of heaven on earth through power, truth, and systemic compassion."
               </p>
               
-              <div className="animate-fade-in flex flex-wrap justify-center lg:justify-start gap-8" style={{ animationDelay: '0.5s' }}>
+              <div className="flex flex-wrap justify-center lg:justify-start gap-8">
                 <Link 
                   to="/connect" 
                   className="premium-button flex items-center group"
@@ -101,7 +101,7 @@ export default function Home() {
             </div>
 
             {/* Right Side: Portrait Card - Hidden on Mobile for LCP Optimization */}
-            <div className="relative hidden lg:flex justify-center lg:justify-end mt-8 lg:mt-0 lg:col-span-5 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            <div className="relative hidden lg:flex justify-center lg:justify-end mt-8 lg:mt-0 lg:col-span-5">
               <div className="relative w-full max-w-[400px] aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/5 shadow-2xl group">
                 <div className="absolute inset-0 z-10 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent opacity-80"></div>
                 <img 
