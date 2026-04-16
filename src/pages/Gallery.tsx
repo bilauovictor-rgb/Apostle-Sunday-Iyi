@@ -270,13 +270,14 @@ export default function Gallery() {
                 onMouseEnter={handleInteraction}
               >
                 {isMobile && !interacted ? (
-                  <div className="relative h-[300px] w-full flex items-center justify-center">
-                    <div className="w-[95%] aspect-[4/3] rounded-[2rem] overflow-hidden border border-secondary/20 shadow-2xl bg-white/5">
+                  <div className="relative h-[280px] w-full flex items-center justify-center">
+                    <div className="w-[95%] aspect-[3/2] rounded-[2rem] overflow-hidden border border-secondary/20 shadow-2xl bg-white/5">
                       <img 
                         src={optimizeCloudinaryUrl(sortedImages[0].imageUrl, { width: 400, quality: 60 })}
                         alt="Gallery Preview"
                         className="w-full h-full object-cover opacity-80"
                         loading="eager"
+                        fetchPriority="high"
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                         <div className="bg-secondary text-primary px-6 py-3 rounded-full text-[10px] font-black tracking-[0.2em] uppercase shadow-glow">
@@ -304,7 +305,7 @@ export default function Gallery() {
                   </div>
                 )}
 
-                <div className="relative h-[300px] sm:h-[550px] md:h-[650px] w-full flex items-center justify-center overflow-visible z-10">
+                <div className="relative h-[280px] sm:h-[550px] md:h-[650px] w-full flex items-center justify-center overflow-visible z-10">
                   <AnimatePresence initial={false}>
                     {sortedImages.map((image, idx) => {
                       const offset = (idx - activeIndex + sortedImages.length) % sortedImages.length;
@@ -355,7 +356,7 @@ export default function Gallery() {
                             else if (info.offset.x < -50) nextSlide();
                           }}
                           onClick={() => isCenter ? setSelectedImage(image) : setActiveIndex(idx)}
-                          className={`absolute w-[95%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] overflow-hidden border cursor-pointer transition-all duration-700 ${
+                          className={`absolute w-[95%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[3/2] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] overflow-hidden border cursor-pointer transition-all duration-700 ${
                             isCenter 
                               ? (isMobile ? 'border-secondary/20 shadow-xl' : 'border-secondary/40 ring-2 ring-secondary/10 shadow-[0_40px_100px_rgba(0,0,0,0.7)]') 
                               : 'border-white/5 shadow-none'
