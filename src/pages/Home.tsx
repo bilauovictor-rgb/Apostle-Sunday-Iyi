@@ -1,5 +1,4 @@
 import { useState, lazy, Suspense } from 'react';
-import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { optimizeUnsplashUrl } from '../lib/imageUtils';
@@ -65,45 +64,26 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
             {/* Left Side: Content */}
             <div className="text-center lg:text-left lg:col-span-7">
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-              >
+              <div>
                 <div className="inline-flex items-center space-x-4 mb-8">
                   <div className="h-px w-12 bg-secondary"></div>
                   <span className="text-secondary font-bold tracking-[0.5em] uppercase text-[10px] sm:text-xs drop-shadow-sm">The Apostolic Mandate</span>
                 </div>
-              </motion.div>
+              </div>
               
               <h1 className="flex flex-col font-serif text-white leading-[0.85] mb-10 uppercase tracking-tighter">
-                <motion.span 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.1 }}
-                  className="text-xl sm:text-3xl tracking-[0.4em] text-secondary/90 mb-6 font-serif italic drop-shadow-md"
-                >
+                <span className="text-xl sm:text-3xl tracking-[0.4em] text-secondary/90 mb-6 font-serif italic drop-shadow-md">
                   Apostle
-                </motion.span>
+                </span>
                 <span className="text-6xl sm:text-8xl md:text-[10rem] drop-shadow-2xl">Sunday</span>
                 <span className="gold-gradient-text italic font-normal text-5xl sm:text-7xl md:text-[8.5rem] sm:ml-6 -mt-6 drop-shadow-2xl">Iyi</span>
               </h1>
               
-              <motion.p 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-lg sm:text-xl text-slate-300/90 mb-12 leading-relaxed max-w-xl mx-auto lg:mx-0 border-l-4 border-secondary/40 pl-10 italic font-light drop-shadow-lg"
-              >
+              <p className="animate-fade-in text-lg sm:text-xl text-slate-300/90 mb-12 leading-relaxed max-w-xl mx-auto lg:mx-0 border-l-4 border-secondary/40 pl-10 italic font-light drop-shadow-lg" style={{ animationDelay: '0.4s' }}>
                 "Reconciling humanity back to God and manifesting the reality of heaven on earth through power, truth, and systemic compassion."
-              </motion.p>
+              </p>
               
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="flex flex-wrap justify-center lg:justify-start gap-8"
-              >
+              <div className="animate-fade-in flex flex-wrap justify-center lg:justify-start gap-8" style={{ animationDelay: '0.5s' }}>
                 <Link 
                   to="/connect" 
                   className="premium-button flex items-center group"
@@ -117,16 +97,11 @@ export default function Home() {
                 >
                   The Journey
                 </Link>
-              </motion.div>
+              </div>
             </div>
 
             {/* Right Side: Portrait Card - Hidden on Mobile for LCP Optimization */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-              className="relative hidden lg:flex justify-center lg:justify-end mt-8 lg:mt-0 lg:col-span-5"
-            >
+            <div className="relative hidden lg:flex justify-center lg:justify-end mt-8 lg:mt-0 lg:col-span-5 animate-fade-in" style={{ animationDelay: '0.6s' }}>
               <div className="relative w-full max-w-[400px] aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/5 shadow-2xl group">
                 <div className="absolute inset-0 z-10 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent opacity-80"></div>
                 <img 
@@ -149,7 +124,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
