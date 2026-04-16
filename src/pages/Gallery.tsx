@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
-import { ImageIcon, X, Maximize2, Star, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { ImageIcon, Maximize2, Star, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+
+const GalleryLightbox = lazy(() => import('../components/GalleryLightbox'));
 
 const STATES = [
   'Enugu', 'Ebonyi', 'Anambra', 'Benin', 'Akure', 'Ogun', 
@@ -22,14 +24,20 @@ const cleanTitle = (title: string) => {
   return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
 };
 
-const optimizeCloudinaryUrl = (url: string, options: { width?: number; height?: number; crop?: string; blur?: number; quality?: number | 'auto' } = {}) => {
+const optimizeCloudinaryUrl = (url: string, options: { width?: number; height?: number; crop?: string; blur?: number; quality?: number | 'auto'; lqip?: boolean } = {}) => {
   if (!url || !url.includes('cloudinary.com')) return url;
   
-  const transforms = ['f_auto', `q_${options.quality || 'auto'}`];
-  if (options.width) transforms.push(`w_${options.width}`);
-  if (options.height) transforms.push(`h_${options.height}`);
-  if (options.crop) transforms.push(`c_${options.crop},g_auto`);
-  if (options.blur) transforms.push(`e_blur:${options.blur}`);
+  const transforms = ['f_auto'];
+  
+  if (options.lqip) {
+    transforms.push('w_50', 'e_blur:1000', 'q_10');
+  } else {
+    transforms.push(`q_${options.quality || 'auto'}`);
+    if (options.width) transforms.push(`w_${options.width}`);
+    if (options.height) transforms.push(`h_${options.height}`);
+    if (options.crop) transforms.push(`c_${options.crop},g_auto`);
+    if (options.blur) transforms.push(`e_blur:${options.blur}`);
+  }
   
   return url.replace('/upload/', `/upload/${transforms.join(',')}/`);
 };
@@ -44,6 +52,7 @@ export default function Gallery() {
   const [gridLimit, setGridLimit] = useState(INITIAL_GRID_SIZE);
   const [isMobile, setIsMobile] = useState(false);
   const [interacted, setInteracted] = useState(false);
+  const [mainImageLoaded, setMainImageLoaded] = useState(false);
 
   // Detect mobile for performance optimizations
   useEffect(() => {
@@ -89,6 +98,7 @@ export default function Gallery() {
     setLoadingGallery(true);
     setActiveIndex(0);
     setGridLimit(INITIAL_GRID_SIZE);
+    setMainImageLoaded(false);
     const q = query(
       collection(db, 'state_galleries'),
       where('state', '==', selectedCity)
@@ -225,11 +235,11 @@ export default function Gallery() {
             </div>
           </div>
 
-          <div className="relative min-h-[600px] flex flex-col items-center justify-center">
+          <div className="relative min-h-[450px] sm:min-h-[600px] flex flex-col items-center justify-center">
             {loadingGallery ? (
               <div className="w-full relative px-4 sm:px-0 overflow-visible">
-                <div className="relative h-[400px] sm:h-[550px] md:h-[650px] w-full flex items-center justify-center overflow-visible">
-                  <div className="absolute w-[90%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[16/9] rounded-[3rem] bg-white/[0.05] border border-secondary/20 shadow-2xl z-20 flex flex-col justify-end p-8 sm:p-16 overflow-hidden">
+                <div className="relative h-[300px] sm:h-[550px] md:h-[650px] w-full flex items-center justify-center overflow-visible">
+                  <div className="absolute w-[95%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] bg-white/[0.05] border border-secondary/20 shadow-2xl z-20 flex flex-col justify-end p-8 sm:p-16 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                     <div className="relative z-10 space-y-6">
                       <div className="h-4 w-32 bg-secondary/20 rounded-full animate-pulse" />
@@ -260,16 +270,16 @@ export default function Gallery() {
                 onMouseEnter={handleInteraction}
               >
                 {isMobile && !interacted ? (
-                  <div className="relative h-[400px] w-full flex items-center justify-center">
-                    <div className="w-[90%] aspect-[16/9] rounded-[3rem] overflow-hidden border border-secondary/20 shadow-2xl bg-white/5">
+                  <div className="relative h-[300px] w-full flex items-center justify-center">
+                    <div className="w-[95%] aspect-[4/3] rounded-[2rem] overflow-hidden border border-secondary/20 shadow-2xl bg-white/5">
                       <img 
-                        src={optimizeCloudinaryUrl(sortedImages[0].imageUrl, { width: 400, quality: 50 })}
+                        src={optimizeCloudinaryUrl(sortedImages[0].imageUrl, { width: 400, quality: 60 })}
                         alt="Gallery Preview"
-                        className="w-full h-full object-cover opacity-60"
-                        loading="lazy"
+                        className="w-full h-full object-cover opacity-80"
+                        loading="eager"
                       />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="bg-secondary text-primary px-6 py-3 rounded-full text-xs font-bold tracking-widest uppercase shadow-glow">
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                        <div className="bg-secondary text-primary px-6 py-3 rounded-full text-[10px] font-black tracking-[0.2em] uppercase shadow-glow">
                           Tap to Explore
                         </div>
                       </div>
@@ -294,7 +304,7 @@ export default function Gallery() {
                   </div>
                 )}
 
-                <div className="relative h-[400px] sm:h-[550px] md:h-[650px] w-full flex items-center justify-center overflow-visible z-10">
+                <div className="relative h-[300px] sm:h-[550px] md:h-[650px] w-full flex items-center justify-center overflow-visible z-10">
                   <AnimatePresence initial={false}>
                     {sortedImages.map((image, idx) => {
                       const offset = (idx - activeIndex + sortedImages.length) % sortedImages.length;
@@ -323,7 +333,7 @@ export default function Gallery() {
                             scale: isCenter ? 1.05 : 0.85,
                             x: isCenter ? '0%' : isNext ? '65%' : '-65%',
                             zIndex: isCenter ? 30 : 10,
-                            filter: isCenter ? 'blur(0px)' : 'blur(8px)'
+                            filter: isCenter ? 'blur(0px)' : (isMobile ? 'none' : 'blur(8px)')
                           }}
                           exit={{ 
                             opacity: 0, 
@@ -345,12 +355,21 @@ export default function Gallery() {
                             else if (info.offset.x < -50) nextSlide();
                           }}
                           onClick={() => isCenter ? setSelectedImage(image) : setActiveIndex(idx)}
-                          className={`absolute w-[90%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[16/9] rounded-[3rem] overflow-hidden border cursor-pointer transition-all duration-700 ${
+                          className={`absolute w-[95%] sm:w-[75%] md:w-[65%] lg:w-[55%] aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] overflow-hidden border cursor-pointer transition-all duration-700 ${
                             isCenter 
-                              ? 'border-secondary/40 ring-2 ring-secondary/10 shadow-[0_40px_100px_rgba(0,0,0,0.7)]' 
+                              ? (isMobile ? 'border-secondary/20 shadow-xl' : 'border-secondary/40 ring-2 ring-secondary/10 shadow-[0_40px_100px_rgba(0,0,0,0.7)]') 
                               : 'border-white/5 shadow-none'
                           }`}
                         >
+                          {/* LQIP Placeholder */}
+                          {isCenter && !mainImageLoaded && (
+                            <img 
+                              src={optimizeCloudinaryUrl(image.imageUrl, { lqip: true })}
+                              className="absolute inset-0 w-full h-full object-cover scale-110"
+                              alt=""
+                            />
+                          )}
+
                           <img 
                             src={optimizeCloudinaryUrl(image.imageUrl, { width: isCenter ? (isMobile ? 600 : 1000) : 400, quality: isCenter ? 70 : 50 })} 
                             alt={image.title}
@@ -359,9 +378,10 @@ export default function Gallery() {
                             loading={isCenter ? "eager" : "lazy"}
                             decoding={isCenter ? "sync" : "async"}
                             {...(isCenter ? { fetchPriority: "high" } : {})}
+                            onLoad={() => isCenter && setMainImageLoaded(true)}
                           />
                           
-                          {image.featured && isCenter && (
+                          {image.featured && isCenter && mainImageLoaded && (
                             <motion.div 
                               initial={{ opacity: 0, x: 20 }}
                               animate={{ opacity: 1, x: 0 }}
@@ -372,9 +392,9 @@ export default function Gallery() {
                             </motion.div>
                           )}
 
-                          <div className={`absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent transition-opacity duration-700 ${isCenter ? 'opacity-100' : 'opacity-0'}`} />
+                          <div className={`absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent transition-opacity duration-700 ${isCenter && mainImageLoaded ? 'opacity-100' : 'opacity-0'}`} />
                           
-                          {isCenter && (
+                          {isCenter && mainImageLoaded && (
                             <motion.div 
                               initial={{ opacity: 0, y: 30 }}
                               animate={{ opacity: 1, y: 0 }}
@@ -404,43 +424,45 @@ export default function Gallery() {
                   </AnimatePresence>
                 </div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 sm:mt-28 flex flex-col sm:flex-row items-center justify-between gap-12 sm:gap-0">
-                  <div className="flex items-center gap-8 order-2 sm:order-1">
-                    <button 
-                      onClick={prevSlide}
-                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-2xl"
-                      aria-label="Previous Slide"
-                    >
-                      <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8 group-hover:-translate-x-2 transition-transform" />
-                    </button>
-                    <button 
-                      onClick={nextSlide}
-                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-2xl"
-                      aria-label="Next Slide"
-                    >
-                      <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8 group-hover:translate-x-2 transition-transform" />
-                    </button>
-                  </div>
+                {(!isMobile || mainImageLoaded) && (
+                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-28 flex flex-col sm:flex-row items-center justify-between gap-12 sm:gap-0">
+                    <div className="flex items-center gap-8 order-2 sm:order-1">
+                      <button 
+                        onClick={prevSlide}
+                        className="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-2xl"
+                        aria-label="Previous Slide"
+                      >
+                        <ChevronLeft className="w-5 h-5 sm:w-8 sm:h-8 group-hover:-translate-x-2 transition-transform" />
+                      </button>
+                      <button 
+                        onClick={nextSlide}
+                        className="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 group shadow-2xl"
+                        aria-label="Next Slide"
+                      >
+                        <ChevronRight className="w-5 h-5 sm:w-8 sm:h-8 group-hover:translate-x-2 transition-transform" />
+                      </button>
+                    </div>
 
-                  <div className="flex items-center gap-4 order-1 sm:order-2">
-                    {sortedImages.map((_, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setActiveIndex(idx)}
-                        className={`transition-all duration-700 rounded-full ${
-                          activeIndex === idx 
-                            ? 'w-12 sm:w-16 h-2 bg-secondary shadow-[0_0_20px_rgba(192,160,96,0.6)]' 
-                            : 'w-2 h-2 bg-white/10 hover:bg-white/30'
-                        }`}
-                        aria-label={`Go to slide ${idx + 1}`}
-                      />
-                    ))}
-                  </div>
+                    <div className="flex items-center gap-3 sm:gap-4 order-1 sm:order-2">
+                      {sortedImages.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setActiveIndex(idx)}
+                          className={`transition-all duration-700 rounded-full ${
+                            activeIndex === idx 
+                              ? 'w-10 sm:w-16 h-1.5 sm:h-2 bg-secondary shadow-[0_0_20px_rgba(192,160,96,0.6)]' 
+                              : 'w-1.5 sm:w-2 h-1.5 sm:h-2 bg-white/10 hover:bg-white/30'
+                          }`}
+                          aria-label={`Go to slide ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
 
-                  <div className="hidden sm:block text-slate-500 font-black tracking-[0.4em] uppercase text-[11px] order-3 bg-white/5 px-6 py-3 rounded-full border border-white/10">
-                    {activeIndex + 1} <span className="mx-3 text-white/20">/</span> {sortedImages.length}
+                    <div className="hidden sm:block text-slate-500 font-black tracking-[0.4em] uppercase text-[11px] order-3 bg-white/5 px-6 py-3 rounded-full border border-white/10">
+                      {activeIndex + 1} <span className="mx-3 text-white/20">/</span> {sortedImages.length}
+                    </div>
                   </div>
-                </div>
+                )}
                   </>
                 )}
               </div>
@@ -517,99 +539,16 @@ export default function Gallery() {
       {/* Lightbox Modal */}
       <AnimatePresence>
         {selectedImage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-primary/98 backdrop-blur-3xl"
-            onClick={() => setSelectedImage(null)}
-          >
-            {/* Navigation Arrows for Lightbox */}
-            <div className="absolute inset-x-4 sm:inset-x-12 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none z-[120]">
-              <motion.button
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                onClick={prevLightbox}
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 pointer-events-auto shadow-2xl group"
-              >
-                <ChevronLeft className="w-8 h-8 group-hover:-translate-x-1 transition-transform" />
-              </motion.button>
-              <motion.button
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                onClick={nextLightbox}
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-primary hover:border-secondary transition-all duration-500 pointer-events-auto shadow-2xl group"
-              >
-                <ChevronRight className="w-8 h-8 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
-            </div>
-
-            <motion.button
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="absolute top-8 right-8 p-4 bg-white/5 text-white rounded-full hover:bg-secondary hover:text-primary transition-all duration-500 z-[130] border border-white/10 shadow-2xl"
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedImage(null);
-              }}
-            >
-              <X className="w-6 h-6" />
-            </motion.button>
-
-            <motion.div
-              key={selectedImage.id}
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="relative max-w-6xl w-full max-h-[90vh] flex flex-col items-center z-[110]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="relative w-full aspect-video sm:aspect-auto sm:h-[70vh] rounded-[3rem] overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,0.9)] border border-white/10 bg-black/40 group">
-                <img 
-                  src={optimizeCloudinaryUrl(selectedImage.imageUrl, { width: 2000 })} 
-                  alt={selectedImage.title}
-                  className="w-full h-full object-contain transition-transform duration-700 hover:scale-105"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              
-              <div className="mt-12 text-center max-w-4xl px-8">
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="flex items-center justify-center gap-4 mb-6"
-                >
-                  <span className="text-secondary font-black tracking-[0.5em] uppercase text-[10px] bg-secondary/10 px-4 py-1.5 rounded-full border border-secondary/20">
-                    {selectedImage.state}
-                  </span>
-                  <span className="w-1 h-1 rounded-full bg-white/20" />
-                  <span className="text-slate-500 font-bold tracking-[0.2em] uppercase text-[10px]">
-                    {selectedImage.createdAt ? new Date(selectedImage.createdAt.toDate()).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recent Moment'}
-                  </span>
-                </motion.div>
-                <motion.h3 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="text-3xl sm:text-6xl font-serif text-white mb-8 tracking-tight leading-tight"
-                >
-                  {cleanTitle(selectedImage.title) || "Ministry Moment"}
-                </motion.h3>
-                {selectedImage.caption && (
-                  <motion.p 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                    className="text-slate-400 font-light text-xl sm:text-2xl leading-relaxed italic max-w-3xl mx-auto"
-                  >
-                    "{selectedImage.caption}"
-                  </motion.p>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
+          <Suspense fallback={null}>
+            <GalleryLightbox 
+              image={selectedImage}
+              onClose={() => setSelectedImage(null)}
+              onNext={nextLightbox}
+              onPrev={prevLightbox}
+              cleanTitle={cleanTitle}
+              optimizeUrl={optimizeCloudinaryUrl}
+            />
+          </Suspense>
         )}
       </AnimatePresence>
     </div>
