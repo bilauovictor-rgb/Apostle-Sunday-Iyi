@@ -1,11 +1,10 @@
-import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
+import { useState, useEffect, useCallback, useMemo, Suspense } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { ImageIcon, Maximize2, Star, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { optimizeCloudinaryUrl, optimizeUnsplashUrl } from '../lib/imageUtils';
-
-const GalleryLightbox = lazy(() => import('../components/GalleryLightbox'));
+import GalleryLightbox from '../components/GalleryLightbox';
 
 const STATES = [
   'Enugu', 'Ebonyi', 'Anambra', 'Benin', 'Akure', 'Ogun', 
@@ -527,18 +526,28 @@ export default function Gallery() {
       {/* Lightbox Modal */}
       <AnimatePresence>
         {selectedImage && (
-          <Suspense fallback={null}>
-            <GalleryLightbox 
-              image={selectedImage}
-              onClose={() => setSelectedImage(null)}
-              onNext={nextLightbox}
-              onPrev={prevLightbox}
-              cleanTitle={cleanTitle}
-              optimizeUrl={optimizeCloudinaryUrl}
-            />
-          </Suspense>
+          <GalleryLightbox 
+            image={selectedImage}
+            onClose={() => setSelectedImage(null)}
+            onNext={nextLightbox}
+            onPrev={prevLightbox}
+            cleanTitle={cleanTitle}
+            optimizeUrl={optimizeCloudinaryUrl}
+          />
         )}
       </AnimatePresence>
+
+      {/* Hidden Preloader for Next Image */}
+      {selectedImage && sortedImages.length > 0 && (
+        <link 
+          rel="preload" 
+          as="image" 
+          href={optimizeCloudinaryUrl(
+            sortedImages[(sortedImages.findIndex(img => img.id === selectedImage.id) + 1) % sortedImages.length].imageUrl, 
+            { width: isMobile ? 800 : 1600, quality: isMobile ? 60 : 80 }
+          )} 
+        />
+      )}
     </div>
   );
 }
