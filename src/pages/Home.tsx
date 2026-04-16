@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, useInView, animate } from 'motion/react';
 import { ArrowRight, Heart, Globe, BookOpen, Award, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { optimizeUnsplashUrl } from '../lib/imageUtils';
 
 function StatCounter({ value, suffix, decimals = 0 }: { value: number; suffix: string; decimals?: number }) {
   const [displayValue, setDisplayValue] = useState(0);
@@ -27,14 +28,17 @@ function StatCounter({ value, suffix, decimals = 0 }: { value: number; suffix: s
   );
 }
 
-const optimizeUnsplashUrl = (url: string, options: { width?: number; quality?: number } = {}) => {
-  if (!url || !url.includes('unsplash.com')) return url;
-  const baseUrl = url.split('?')[0];
-  return `${baseUrl}?auto=format,compress&q=${options.quality || 60}&w=${options.width || 1200}&fit=crop`;
-};
-
 export default function Home() {
   const [heroLoaded, setHeroLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const stats = [
     { label: 'Global Impact', value: 1.2, suffix: 'M+', decimals: 1, icon: Heart },
     { label: 'Nations Reached', value: 15, suffix: '+', decimals: 0, icon: Globe },
@@ -69,14 +73,15 @@ export default function Home() {
             decoding="async"
           />
 
-          {/* Cinematic Background Video (Hidden on Mobile & Deferred) */}
-          {heroLoaded && (
+          {/* Cinematic Background Video (Disabled on Mobile & Deferred) */}
+          {heroLoaded && !isMobile && (
             <div className="absolute inset-0 hidden md:block overflow-hidden">
               <video
                 autoPlay
                 muted
                 loop
                 playsInline
+                poster={optimizeUnsplashUrl("https://images.unsplash.com/photo-1438232992991-995b7058bbb3", { width: 1200, quality: 70 })}
                 className="absolute inset-0 w-full h-full object-cover opacity-50 grayscale contrast-125"
               >
                 <source src="/videos/Hero - Background.mp4" type="video/mp4" />
@@ -109,28 +114,46 @@ export default function Home() {
         <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
             {/* Left Side: Content */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="text-center lg:text-left lg:col-span-7"
-            >
-              <div className="inline-flex items-center space-x-4 mb-8">
-                <div className="h-px w-12 bg-secondary"></div>
-                <span className="text-secondary font-bold tracking-[0.5em] uppercase text-[10px] sm:text-xs drop-shadow-sm">The Apostolic Mandate</span>
-              </div>
+            <div className="text-center lg:text-left lg:col-span-7">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              >
+                <div className="inline-flex items-center space-x-4 mb-8">
+                  <div className="h-px w-12 bg-secondary"></div>
+                  <span className="text-secondary font-bold tracking-[0.5em] uppercase text-[10px] sm:text-xs drop-shadow-sm">The Apostolic Mandate</span>
+                </div>
+              </motion.div>
               
               <h1 className="flex flex-col font-serif text-white leading-[0.85] mb-10 uppercase tracking-tighter">
-                <span className="text-xl sm:text-3xl tracking-[0.4em] text-secondary/90 mb-6 font-serif italic drop-shadow-md">Apostle</span>
+                <motion.span 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.1 }}
+                  className="text-xl sm:text-3xl tracking-[0.4em] text-secondary/90 mb-6 font-serif italic drop-shadow-md"
+                >
+                  Apostle
+                </motion.span>
                 <span className="text-6xl sm:text-8xl md:text-[10rem] drop-shadow-2xl">Sunday</span>
                 <span className="gold-gradient-text italic font-normal text-5xl sm:text-7xl md:text-[8.5rem] sm:ml-6 -mt-6 drop-shadow-2xl">Iyi</span>
               </h1>
               
-              <p className="text-lg sm:text-xl text-slate-300/90 mb-12 leading-relaxed max-w-xl mx-auto lg:mx-0 border-l-4 border-secondary/40 pl-10 italic font-light drop-shadow-lg">
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-lg sm:text-xl text-slate-300/90 mb-12 leading-relaxed max-w-xl mx-auto lg:mx-0 border-l-4 border-secondary/40 pl-10 italic font-light drop-shadow-lg"
+              >
                 "Reconciling humanity back to God and manifesting the reality of heaven on earth through power, truth, and systemic compassion."
-              </p>
+              </motion.p>
               
-              <div className="flex flex-wrap justify-center lg:justify-start gap-8">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="flex flex-wrap justify-center lg:justify-start gap-8"
+              >
                 <Link 
                   to="/connect" 
                   className="premium-button flex items-center group"
@@ -144,8 +167,8 @@ export default function Home() {
                 >
                   The Journey
                 </Link>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
 
             {/* Right Side: Portrait Card - Hidden on Mobile for LCP Optimization */}
             <motion.div 

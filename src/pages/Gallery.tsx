@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { ImageIcon, Maximize2, Star, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { optimizeCloudinaryUrl } from '../lib/imageUtils';
 
 const GalleryLightbox = lazy(() => import('../components/GalleryLightbox'));
 
@@ -22,24 +23,6 @@ const cleanTitle = (title: string) => {
   cleaned = cleaned.trim();
   if (!cleaned || cleaned.length < 2) return "";
   return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
-};
-
-const optimizeCloudinaryUrl = (url: string, options: { width?: number; height?: number; crop?: string; blur?: number; quality?: number | 'auto'; lqip?: boolean } = {}) => {
-  if (!url || !url.includes('cloudinary.com')) return url;
-  
-  const transforms = ['f_auto'];
-  
-  if (options.lqip) {
-    transforms.push('w_50', 'e_blur:1000', 'q_10');
-  } else {
-    transforms.push(`q_${options.quality || 'auto'}`);
-    if (options.width) transforms.push(`w_${options.width}`);
-    if (options.height) transforms.push(`h_${options.height}`);
-    if (options.crop) transforms.push(`c_${options.crop},g_auto`);
-    if (options.blur) transforms.push(`e_blur:${options.blur}`);
-  }
-  
-  return url.replace('/upload/', `/upload/${transforms.join(',')}/`);
 };
 
 export default function Gallery() {

@@ -28,6 +28,26 @@
     <meta name="twitter:image" content="https://yourdomain.com/social-preview.png" />
     <meta name="twitter:image:alt" content="Apostle Sunday Iyi - The Apostolic Mandate" />
 
+    <!-- Preconnect for Media CDNs -->
+    <link rel="preconnect" href="https://res.cloudinary.com">
+    <link rel="dns-prefetch" href="https://res.cloudinary.com">
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
+
+    <!-- LCP Preload: Mobile-First Hero Image -->
+    <link 
+      rel="preload" 
+      as="image" 
+      href="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format,compress&q=60&w=400"
+      imagesrcset="
+        https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format,compress&q=60&w=400 400w,
+        https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format,compress&q=70&w=800 800w,
+        https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format,compress&q=70&w=1200 1200w
+      "
+      imagesizes="100vw"
+      fetchpriority="high"
+    >
+
     <!-- Preconnect for Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
