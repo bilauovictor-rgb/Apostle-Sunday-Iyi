@@ -76,7 +76,7 @@ export default function About() {
                 <div className="relative z-10">
                   <span className="text-secondary text-5xl font-serif absolute -top-4 -left-2 opacity-20">"</span>
                   <p className="text-lg font-serif text-primary italic leading-relaxed">
-                    I believe the contemporary church fundamentally owes the secular world a definitive, undeniable encounter with the divine.
+                    Apostle Sunday Iyi believes the contemporary church fundamentally owes the secular world a definitive, undeniable encounter with the divine.
                   </p>
                 </div>
               </div>
@@ -107,10 +107,10 @@ export default function About() {
 
               <div className="space-y-6">
                 <p>
-                  My spiritual pedigree is characterized by a deep, multi-generational entrenchment in Christian orthodoxy and Pentecostal tradition. As a fifth-generation teacher, I possess a rich heritage in the theology and experiential reality of the Holy Spirit.
+                  Apostle Sunday Iyi’s spiritual pedigree is characterized by a deep, multi-generational entrenchment in Christian orthodoxy and Pentecostal tradition. As a fifth-generation teacher, he possesses a rich heritage in the theology and experiential reality of the Holy Spirit.
                 </p>
                 <p>
-                  This ancestral lineage provides the foundational bedrock for my current pastoral methodology, effectively rooting my modern institutional practices in a long continuum of historical faith.
+                  This ancestral lineage provides the foundational bedrock for his current pastoral methodology, effectively rooting his modern institutional practices in a long continuum of historical faith.
                 </p>
               </div>
 
@@ -120,17 +120,17 @@ export default function About() {
                 <div className="relative z-10">
                   <span className="text-secondary text-6xl font-serif absolute -top-6 -left-4 opacity-20">"</span>
                   <p className="text-xl font-serif text-primary italic leading-relaxed">
-                    I believe the contemporary church fundamentally owes the secular world a definitive, undeniable encounter with the divine.
+                    Apostle Sunday Iyi believes the contemporary church fundamentally owes the secular world a definitive, undeniable encounter with the divine.
                   </p>
                 </div>
               </div>
 
               <div className="space-y-6">
                 <p>
-                  My theological worldview crystallizes around a profound, literalized understanding of the biblical phrase "on earth as it is in heaven". I teach that healing, miracles, and profound spiritual encounters should be viewed as normalized components of the standard Christian experience.
+                  His theological worldview crystallizes around a profound, literalized understanding of the biblical phrase "on earth as it is in heaven". He teaches that healing, miracles, and profound spiritual encounters should be viewed as normalized components of the standard Christian experience.
                 </p>
                 <p>
-                  At the absolute core of my spiritual philosophy is a defining mantra: <span className="text-primary font-bold italic">"God's plan is my mission"</span>. I interpret this divine mission specifically through the lens of the "Ministry of Reconciliation," democratizing the work of the church to mobilize every believer.
+                  At the absolute core of his spiritual philosophy is a defining mantra: <span className="text-primary font-bold italic">"God's plan is his mission"</span>. He interprets this divine mission specifically through the lens of the "Ministry of Reconciliation," democratizing the work of the church to mobilize every believer.
                 </p>
               </div>
               
@@ -168,10 +168,10 @@ export default function About() {
               
               <div className="space-y-6 text-lg sm:text-xl text-slate-400 leading-relaxed text-center lg:text-left font-light">
                 <p>
-                  My life and ministry are inextricably linked to the co-leadership of Pastor Gladys Iyi. As a Senior Leader, author, and chief intercessor, her ministry giftings provide the necessary counterbalance to our expansive operations.
+                  The life and ministry of Apostle Sunday Iyi are inextricably linked to the co-leadership of Pastor Gladys Iyi. As a Senior Leader, author, and chief intercessor, her ministry giftings provide the necessary counterbalance to the ministry’s expansive operations.
                 </p>
                 <p>
-                  Her focus on joyful intercession and holistic human welfare ensures that our mission addresses the tripartite nature of man: body, soul, and spirit.
+                  Her focus on joyful intercession and holistic human welfare ensures that the mission addresses the tripartite nature of man: body, soul, and spirit.
                 </p>
               </div>
 

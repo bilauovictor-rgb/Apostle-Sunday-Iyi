@@ -8,19 +8,19 @@ export default function Mission() {
     {
       title: 'The Redeemed Assemblies',
       icon: Church,
-      desc: 'My primary apostolic vehicle for global revival, church planting, and the Ministry of Reconciliation.',
+      desc: 'The primary apostolic vehicle for global revival, church planting, and the Ministry of Reconciliation.',
       details: ['Multi-racial Model', 'Cross-cultural Revival', 'Global Apostolic Network']
     },
     {
       title: 'TRASS Humanitarian',
       icon: ShoppingCart,
-      desc: 'Executing my mandate to relieve severe need, financial hardship, and emotional distress through systemic intervention.',
+      desc: 'Executing the mandate to relieve severe need, financial hardship, and emotional distress through systemic intervention.',
       details: ['Industrial Foodbank', 'Breakfast Service', 'Hygiene Distribution']
     },
     {
       title: 'Water & Infrastructure',
       icon: Droplets,
-      desc: 'My commitment to hard-infrastructure projects that combat waterborne diseases and improve local viability.',
+      desc: 'A commitment to hard-infrastructure projects that combat waterborne diseases and improve local viability.',
       details: ['Benue Water Project', 'Onwubiko Mission', 'Global Philanthropy']
     },
     {
@@ -82,11 +82,11 @@ export default function Mission() {
             
             <h1 className="flex flex-col font-serif text-white mb-10 uppercase tracking-tighter leading-[0.85]">
               <span className="text-4xl sm:text-6xl md:text-7xl text-secondary/80 mb-4 tracking-widest">Expressions of</span>
-              <span className="text-6xl sm:text-8xl md:text-[9rem] gold-gradient-text italic font-normal">My Calling</span>
+              <span className="text-6xl sm:text-8xl md:text-[9rem] gold-gradient-text italic font-normal">His Calling</span>
             </h1>
             
             <p className="text-lg sm:text-xl text-slate-400 max-w-2xl leading-relaxed border-l-2 border-secondary/20 pl-8 italic font-light">
-              My mission refuses to separate spiritual salvation from physical welfare. These institutions are the tangible manifestations of that mandate.
+              The mission of Apostle Sunday Iyi refuses to separate spiritual salvation from physical welfare. These institutions are the tangible manifestations of that mandate.
             </p>
           </motion.div>
         </div>
@@ -139,7 +139,7 @@ export default function Mission() {
             className="border-t border-slate-100 pt-16 mt-20 text-center max-w-3xl mx-auto"
           >
             <p className="text-lg sm:text-xl text-slate-500 leading-relaxed font-light italic">
-              While these local initiatives form the bedrock of our community impact, the apostolic mandate inherently demands a global perspective.
+              While these local initiatives form the bedrock of the ministry’s community impact, the apostolic mandate inherently demands a global perspective.
             </p>
           </motion.div>
         </div>
@@ -180,7 +180,7 @@ export default function Mission() {
                   transition={{ delay: 0.1 }}
                   className="text-lg sm:text-xl text-slate-400 mb-14 leading-relaxed font-light"
                 >
-                  My mandate extends far beyond the borders of the United Kingdom. Through strategic hard-infrastructure and humanitarian projects, I deploy capital to execute life-saving missions in the global south.
+                  His mandate extends far beyond the borders of the United Kingdom. Through strategic hard-infrastructure and humanitarian projects, he deploys capital to execute life-saving missions in the global south.
                 </motion.p>
                 
                 <div className="space-y-12">
@@ -210,7 +210,7 @@ export default function Mission() {
                     </div>
                     <div>
                       <h4 className="text-xl sm:text-2xl font-serif mb-3 text-white group-hover:text-secondary transition-colors">Onwubiko Mission</h4>
-                      <p className="text-slate-400 text-sm sm:text-base leading-relaxed font-light">Expanding my apostolic footprint in Ivory Coast and Benin Republic, establishing sustainable community support networks.</p>
+                      <p className="text-slate-400 text-sm sm:text-base leading-relaxed font-light">Expanding the apostolic footprint in Ivory Coast and Benin Republic, establishing sustainable community support networks.</p>
                     </div>
                   </motion.div>
                 </div>

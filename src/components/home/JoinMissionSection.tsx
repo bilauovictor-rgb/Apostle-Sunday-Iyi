@@ -28,7 +28,7 @@ export default function JoinMissionSection() {
           viewport={{ once: true }}
           className="text-xl sm:text-2xl text-slate-600 font-light leading-relaxed mb-16 max-w-3xl mx-auto"
         >
-          Partner with us to manifest the reality of heaven on earth. Whether through strategic partnership or immersing yourself in the teachings, your journey of transformation starts here.
+          Partner with the ministry to manifest the reality of heaven on earth. Whether through strategic partnership or immersing yourself in the teachings, your journey of transformation starts here.
         </motion.p>
         <motion.div 
           initial={{ opacity: 0, y: 20 }}

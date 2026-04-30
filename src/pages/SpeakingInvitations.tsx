@@ -143,7 +143,7 @@ export default function SpeakingInvitations() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-serif text-primary mb-6">Invitation <span className="gold-gradient-text italic">Request</span></h2>
-            <p className="text-slate-500 font-light">Please provide the details of your event below. Our office will review your request and get back to you shortly.</p>
+            <p className="text-slate-500 font-light">Please provide the details of your event below. The ministry's office will review your request and get back to you shortly.</p>
           </div>
           <form className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -175,7 +175,7 @@ export default function SpeakingInvitations() {
             </div>
             <div className="space-y-2">
               <label htmlFor="invite-desc" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-2">Event Description</label>
-              <textarea id="invite-desc" rows={6} className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light resize-none" placeholder="Tell us more about the event and the expected audience..."></textarea>
+              <textarea id="invite-desc" rows={6} className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all font-light resize-none" placeholder="Provide more details about the event and the expected audience..."></textarea>
             </div>
             <button type="submit" className="premium-button w-full py-6 flex items-center justify-center group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2">
               Send Invitation Request <Send className="ml-3 h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" aria-hidden="true" />

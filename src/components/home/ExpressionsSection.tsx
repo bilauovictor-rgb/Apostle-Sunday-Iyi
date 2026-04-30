@@ -45,9 +45,9 @@ export default function ExpressionsSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 relative z-10">
         {[
-          { title: 'The Redeemed Assemblies', desc: 'My primary apostolic platform for spiritual revival and global church planting.', icon: Users },
-          { title: 'TRASS Humanitarian', desc: 'The vehicle through which I execute massive-scale poverty alleviation and civic intervention.', icon: Heart },
-          { title: 'Global School of Ministry', desc: 'My academic mandate to equip the next generation of five-fold and marketplace leaders.', icon: BookOpen },
+          { title: 'The Redeemed Assemblies', desc: 'The primary apostolic platform for spiritual revival and global church planting.', icon: Users },
+          { title: 'TRASS Humanitarian', desc: 'The vehicle through which the ministry executes massive-scale poverty alleviation and civic intervention.', icon: Heart },
+          { title: 'Global School of Ministry', desc: 'The academic mandate to equip the next generation of five-fold and marketplace leaders.', icon: BookOpen },
         ].map((pillar, idx) => (
           <motion.div 
             key={pillar.title}

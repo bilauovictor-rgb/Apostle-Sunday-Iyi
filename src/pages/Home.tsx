@@ -88,7 +88,7 @@ export default function Home() {
                   to="/connect" 
                   className="premium-button flex items-center group"
                 >
-                  Partner With Me
+                  Partner With Him
                   <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform" aria-hidden="true" />
                 </Link>
                 <Link 

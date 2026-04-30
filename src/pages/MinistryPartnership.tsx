@@ -105,13 +105,13 @@ export default function MinistryPartnership() {
               
               <div className="space-y-6 text-xl text-slate-600 leading-relaxed font-light">
                 <p>
-                  My life and ministry are strengthened by the leadership and spiritual depth of Pastor Gladys Iyi. As a teacher, author, and devoted intercessor, she brings wisdom, balance, and discernment that enrich the work of the ministry.
+                  The life and ministry of Apostle Sunday Iyi are strengthened by the leadership and spiritual depth of Pastor Gladys Iyi. As a teacher, author, and devoted intercessor, she brings wisdom, balance, and discernment that enrich the work of the ministry.
                 </p>
                 <p>
                   Her voice and counsel help shape a ministry that ministers not only to the spirit of man, but also to the emotional and practical realities of everyday life.
                 </p>
                 <p>
-                  Through her commitment to prayer, mentorship, and compassionate service, she helps ensure that our mission addresses the full dimension of human transformation — spirit, soul, and body.
+                  Through her commitment to prayer, mentorship, and compassionate service, she helps ensure that the mission addresses the full dimension of human transformation — spirit, soul, and body.
                 </p>
               </div>
             </motion.div>

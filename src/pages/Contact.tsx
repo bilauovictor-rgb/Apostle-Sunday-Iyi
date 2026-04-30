@@ -18,7 +18,7 @@ export default function Contact() {
     },
     {
       title: 'GSOM Admissions',
-      desc: 'Inquire about enrollment in the Global School of Ministry under my deanship.',
+      desc: 'Inquire about enrollment in the Global School of Ministry under the deanship of Apostle Sunday Iyi.',
       icon: BookOpen,
       path: '/gsom-admissions'
     }
@@ -71,7 +71,7 @@ export default function Contact() {
             transition={{ delay: 0.2 }}
             className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-light"
           >
-            I am dedicated to building strategic relationships that advance the Kingdom and manifest the reality of heaven across the globe.
+            Apostle Sunday Iyi is dedicated to building strategic relationships that advance the Kingdom and manifest the reality of heaven across the globe.
           </motion.p>
         </div>
       </section>
@@ -134,7 +134,7 @@ export default function Contact() {
                     id="contact-message"
                     rows={6} 
                     className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-secondary focus:bg-white outline-none transition-all text-base font-light resize-none" 
-                    placeholder="How can we partner together?"
+                    placeholder="How can the ministry partner with you?"
                   ></textarea>
                 </div>
                 <button type="submit" className="premium-button px-12 py-5 flex items-center justify-center group w-full sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2">

@@ -188,7 +188,7 @@ export default function Gallery() {
             transition={{ delay: 0.2 }}
             className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-light"
           >
-            Witness the impact of the apostolic mandate as we traverse the nations, bringing the reality of heaven to every soul.
+            Witness the impact of the apostolic mandate as the ministry traverses the nations, bringing the reality of heaven to every soul.
           </motion.p>
         </div>
       </section>
@@ -470,7 +470,7 @@ export default function Gallery() {
                 </h2>
               </div>
               <p className="text-slate-500 max-w-md font-light text-lg">
-                Browse the complete visual record of our ministry engagements in {selectedCity}.
+                Browse the complete visual record of ministry engagements in {selectedCity}.
               </p>
             </div>
 
