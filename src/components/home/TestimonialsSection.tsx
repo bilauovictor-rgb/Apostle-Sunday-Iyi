@@ -17,9 +17,9 @@ const STATIC_TESTIMONIALS: Testimonial[] = [
   {
     id: '1',
     quote: "Apostle Sunday's teachings have fundamentally shifted my understanding of the Apostolic Mandate. His clarity and depth are truly transformative.",
-    author: "Pastor Emmanuel Adebayo",
-    location: "Lagos, Nigeria",
-    affiliation: "Regional Coordinator"
+    author: "Rev Zion Iyamu",
+    location: "Ogun, Nigeria",
+    affiliation: "Africa Regional Coordinator"
   },
   {
     id: '2',
