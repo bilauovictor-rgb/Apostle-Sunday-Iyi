@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
+import { Helmet } from 'react-helmet-async';
 import { doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { ArrowLeft, Calendar, Loader2, Share2, Twitter, Facebook, MessageCircle } from 'lucide-react';
@@ -63,6 +64,9 @@ export default function SermonDetail() {
   if (loading) {
     return (
       <div className="min-h-screen pt-32 pb-20 flex justify-center items-center bg-slate-50">
+        <Helmet>
+          <title>Loading Teaching... | Apostle Sunday Iyi</title>
+        </Helmet>
         <Loader2 className="w-12 h-12 animate-spin text-secondary" aria-hidden="true" />
       </div>
     );
@@ -71,6 +75,9 @@ export default function SermonDetail() {
   if (error || !sermon) {
     return (
       <div className="min-h-screen pt-32 pb-20 flex flex-col justify-center items-center bg-slate-50 text-center px-4">
+        <Helmet>
+          <title>Teaching Unavailable | Apostle Sunday Iyi</title>
+        </Helmet>
         <h2 className="text-3xl font-serif text-primary mb-4">Teaching Unavailable</h2>
         <p className="text-slate-500 font-light mb-8">{error || 'The requested teaching could not be found.'}</p>
         <Link to="/teachings" className="premium-button inline-flex items-center px-8 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2">
@@ -85,8 +92,74 @@ export default function SermonDetail() {
     ? new Date(sermon.publishAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
     : sermon.createdAt?.toDate().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
 
+  // Use AI-generated SEO metadata if available, fallback to goal or blog excerpt
+  const metaDescription = sermon.metaDescription || sermon.goal || 
+    (sermon.blog ? sermon.blog.substring(0, 160).replace(/[#*`]/g, '') + '...' : 'Listen to this powerful teaching by Apostle Sunday Iyi.');
+
+  const pageTitle = `${sermon.seoTitle || sermon.title} | Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives`;
+
   return (
     <div className="pt-20 bg-slate-50 min-h-screen">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={metaDescription} />
+        <meta name="keywords" content={sermon.focusKeyword || `Apostle Sunday Iyi, ${sermon.topic}, preaching, Christ, revelation`} />
+        <link rel="canonical" href={`https://apostlesundayiyi.org/teachings/${sermon.id}`} />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="article" />
+        <meta property="og:site_name" content="Apostle Sunday Iyi" />
+        <meta property="og:title" content={sermon.seoTitle || sermon.title} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:url" content={`https://apostlesundayiyi.org/teachings/${sermon.id}`} />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@ApostleSundayIyi" />
+        <meta name="twitter:creator" content="@ApostleSundayIyi" />
+        <meta name="twitter:title" content={sermon.seoTitle || sermon.title} />
+        <meta name="twitter:description" content={metaDescription} />
+        <meta name="twitter:image" content={imageUrl} />
+
+        {/* Article Specific Metadata */}
+        <meta property="article:published_time" content={sermon.publishAt || sermon.createdAt?.toDate().toISOString()} />
+        <meta property="article:author" content="Apostle Sunday Iyi" />
+        <meta property="article:tag" content={sermon.topic} />
+
+        {/* Structured Data for BlogPosting */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": sermon.seoTitle || sermon.title,
+            "image": imageUrl,
+            "datePublished": sermon.publishAt || sermon.createdAt?.toDate().toISOString(),
+            "dateModified": sermon.updatedAt?.toDate().toISOString() || sermon.publishAt || sermon.createdAt?.toDate().toISOString(),
+            "author": {
+              "@type": "Person",
+              "name": "Sunday Iyi",
+              "jobTitle": "Apostle",
+              "url": "https://apostlesundayiyi.org"
+            },
+            "publisher": {
+              "@type": "ReligiousOrganization",
+              "name": "Apostle Sunday Iyi",
+              "alternateName": "The Apostolic Mandate",
+              "url": "https://apostlesundayiyi.org",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://res.cloudinary.com/dg5zoqaxo/image/upload/v1778169660/Apostle_Sunday_Iyi_Og_fuf85q.png"
+              }
+            },
+            "description": metaDescription,
+            "mainEntityOfPage": {
+              "@type": "WebPage",
+              "@id": `https://apostlesundayiyi.org/teachings/${sermon.id}`
+            }
+          })}
+        </script>
+      </Helmet>
       {/* Hero Section */}
       <section className="relative py-20 sm:py-32 bg-primary overflow-hidden">
         <div className="absolute inset-0 z-0">

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { GoogleGenAI, Type } from '@google/genai';
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, serverTimestamp, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
-import { FileText, Youtube, Share2, Mail, CheckCircle2, XCircle, Eye, Loader2, RefreshCw, Save, Wand2, Settings, Calendar, Trash2 } from 'lucide-react';
+import { FileText, Youtube, Share2, Mail, CheckCircle2, XCircle, Eye, Loader2, RefreshCw, Save, Wand2, Settings, Calendar, Trash2, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 export default function AdminSermonDashboard() {
@@ -22,6 +22,10 @@ export default function AdminSermonDashboard() {
   const [editedFeaturedImage, setEditedFeaturedImage] = useState('');
   const [editedPublishAt, setEditedPublishAt] = useState('');
   const [editedExcerpt, setEditedExcerpt] = useState('');
+  const [editedSeoTitle, setEditedSeoTitle] = useState('');
+  const [editedMetaDescription, setEditedMetaDescription] = useState('');
+  const [editedFocusKeyword, setEditedFocusKeyword] = useState('');
+  const [editedSlug, setEditedSlug] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [regeneratingField, setRegeneratingField] = useState('');
@@ -77,6 +81,10 @@ export default function AdminSermonDashboard() {
     setEditedFeaturedImage(sermon.featuredImage || '');
     setEditedPublishAt(sermon.publishAt || '');
     setEditedExcerpt(sermon.excerpt || '');
+    setEditedSeoTitle(sermon.seoTitle || '');
+    setEditedMetaDescription(sermon.metaDescription || '');
+    setEditedFocusKeyword(sermon.focusKeyword || '');
+    setEditedSlug(sermon.slug || '');
     setError(null);
     setActionSuccess('');
   };
@@ -94,6 +102,10 @@ export default function AdminSermonDashboard() {
         featuredImage: editedFeaturedImage,
         publishAt: editedPublishAt,
         excerpt: editedExcerpt,
+        seoTitle: editedSeoTitle,
+        metaDescription: editedMetaDescription,
+        focusKeyword: editedFocusKeyword,
+        slug: editedSlug,
         updatedAt: serverTimestamp()
       };
 
@@ -467,6 +479,7 @@ ${fieldPrompt}`;
                       { id: 'youtube', icon: Youtube, label: 'Script' },
                       { id: 'social', icon: Share2, label: 'Social' },
                       { id: 'email', icon: Mail, label: 'Email' },
+                      { id: 'seo', icon: Sparkles, label: 'SEO' },
                       { id: 'settings', icon: Settings, label: 'Config' }
                     ].map(tab => (
                       <button 
@@ -622,6 +635,62 @@ ${fieldPrompt}`;
                           className="flex-grow w-full p-6 rounded-2xl border border-white/5 bg-white/[0.01] focus:border-secondary/30 outline-none resize-none min-h-[400px] text-slate-300 font-light leading-relaxed text-sm custom-scrollbar"
                           placeholder="Drafting the apostolic charge..."
                         />
+                      </div>
+                    )}
+
+                    {activeTab === 'seo' && (
+                      <div className="flex flex-col h-full space-y-8 pb-10">
+                        <div className="flex justify-between items-center">
+                          <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Apostolic SEO Metadata</h4>
+                        </div>
+                        
+                        <div className="space-y-6">
+                          <div className="space-y-2">
+                            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">SEO Title</label>
+                            <input 
+                              type="text"
+                              value={editedSeoTitle}
+                              onChange={(e) => setEditedSeoTitle(e.target.value)}
+                              className="w-full bg-white/[0.03] px-5 py-4 rounded-2xl border border-white/10 focus:border-secondary/50 outline-none text-white text-sm"
+                              placeholder="SEO optimized title..."
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Meta Description</label>
+                            <textarea 
+                              value={editedMetaDescription}
+                              onChange={(e) => setEditedMetaDescription(e.target.value)}
+                              rows={3}
+                              className="w-full bg-white/[0.03] px-5 py-4 rounded-2xl border border-white/10 focus:border-secondary/50 outline-none resize-none text-slate-300 text-sm font-light"
+                              placeholder="Summary for search engines (max 160 chars)..."
+                            />
+                            <p className="text-[9px] text-slate-600 text-right">{editedMetaDescription.length}/160</p>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Focus Keyword</label>
+                              <input 
+                                type="text"
+                                value={editedFocusKeyword}
+                                onChange={(e) => setEditedFocusKeyword(e.target.value)}
+                                className="w-full bg-white/[0.03] px-5 py-4 rounded-2xl border border-white/10 focus:border-secondary/50 outline-none text-white text-sm"
+                                placeholder="Mandate, Reconciliation, etc."
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">URL Slug</label>
+                              <input 
+                                type="text"
+                                value={editedSlug}
+                                onChange={(e) => setEditedSlug(e.target.value)}
+                                className="w-full bg-white/[0.03] px-5 py-4 rounded-2xl border border-white/10 focus:border-secondary/50 outline-none text-white text-sm font-mono"
+                                placeholder="the-ministry-of-reconciliation"
+                              />
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     )}
 

@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { Helmet } from 'react-helmet-async';
 import { ExternalLink, Download, FileText } from 'lucide-react';
 
 export default function SundaySchoolManual() {
@@ -8,6 +9,11 @@ export default function SundaySchoolManual() {
 
   return (
     <div className="pt-20 bg-primary min-h-screen">
+      <Helmet>
+        <title>Sunday School Manual | Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives</title>
+        <meta name="description" content="Official weekly Sunday School manual for the global body of Christ. Equip yourself with spiritual insights and deep scriptural study." />
+        <link rel="canonical" href="https://apostlesundayiyi.org/resources/sunday-school-manual" />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 z-0">

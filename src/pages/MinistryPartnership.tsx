@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'motion/react';
 import { Heart, Users, UserCheck, Globe, ArrowRight, ShieldCheck } from 'lucide-react';
 
@@ -22,6 +23,11 @@ export default function MinistryPartnership() {
 
   return (
     <div className="overflow-hidden bg-white">
+      <Helmet>
+        <title>Ministry Partnership | Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives</title>
+        <meta name="description" content="Partner with Apostle Sunday Iyi and Pastor Gladys Iyi in the global mission of reconciliation. Strengthening the mandate through shared vision and purpose." />
+        <link rel="canonical" href="https://apostlesundayiyi.org/ministry-partnership" />
+      </Helmet>
       {/* SECTION 1 — HERO INTRODUCTION */}
       <section className="relative min-h-screen flex items-center bg-primary pt-32 pb-20 overflow-hidden">
         {/* Background Elements */}

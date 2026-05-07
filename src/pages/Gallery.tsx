@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, Suspense } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Helmet } from 'react-helmet-async';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { ImageIcon, Maximize2, Star, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
@@ -125,6 +126,11 @@ export default function Gallery() {
 
   return (
     <div className="pt-20 bg-primary">
+      <Helmet>
+        <title>Ministry Moments | apostle sunday iyi | Teaching, Equipping & Transforming Lives</title>
+        <meta name="description" content="Witness the visual testimony of the Apostolic Mandate. A collection of ministry moments from diverse locations and engagements." />
+        <link rel="canonical" href="https://apostlesundayiyi.org/gallery" />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-[40vh] sm:min-h-[50vh] flex items-center justify-center overflow-hidden pt-24 sm:pt-32 pb-12 sm:pb-20 bg-primary">
         <div className="absolute inset-0 z-0">

@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'motion/react';
 import { Users, Calendar, Mic2, MapPin, Send } from 'lucide-react';
 
@@ -19,6 +20,11 @@ export default function SpeakingInvitations() {
 
   return (
     <div className="pt-20 bg-primary min-h-screen">
+      <Helmet>
+        <title>Speaking Invitations | Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives</title>
+        <meta name="description" content="Invite Apostle Sunday Iyi to speak at your conference, church, or leadership summit. A voice for global reconciliation and transformation." />
+        <link rel="canonical" href="https://apostlesundayiyi.org/speaking-invitations" />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-[65vh] flex items-center justify-center overflow-hidden pt-32 pb-20">
         <div className="absolute inset-0 z-0">

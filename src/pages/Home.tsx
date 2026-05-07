@@ -1,4 +1,5 @@
 import { useState, lazy, Suspense } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { optimizeUnsplashUrl } from '../lib/imageUtils';
@@ -6,6 +7,7 @@ import { optimizeUnsplashUrl } from '../lib/imageUtils';
 // Lazy load below-the-fold sections
 const ConvictionsSection = lazy(() => import('../components/home/ConvictionsSection'));
 const ExpressionsSection = lazy(() => import('../components/home/ExpressionsSection'));
+const TestimonialsSection = lazy(() => import('../components/home/TestimonialsSection'));
 const JoinMissionSection = lazy(() => import('../components/home/JoinMissionSection'));
 
 export default function Home() {
@@ -13,6 +15,11 @@ export default function Home() {
 
   return (
     <div className="overflow-hidden">
+      <Helmet>
+        <title>Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives</title>
+        <meta name="description" content="Apostle Sunday Iyi is a preacher, teacher, and transformational leader committed to building faith, raising leaders, and impacting nations through biblical teaching and leadership development." />
+        <link rel="canonical" href="https://apostlesundayiyi.org" />
+      </Helmet>
       {/* Hero Section */}
       <section className="hero-section bg-primary">
         {/* Background Placeholder & Image */}
@@ -132,6 +139,7 @@ export default function Home() {
       <Suspense fallback={<div className="h-96 bg-white" />}>
         <ConvictionsSection />
         <ExpressionsSection />
+        <TestimonialsSection />
         <JoinMissionSection />
       </Suspense>
     </div>

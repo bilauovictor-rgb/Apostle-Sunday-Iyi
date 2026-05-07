@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
+import { Helmet } from 'react-helmet-async';
 import { ShoppingCart, Droplets, GraduationCap, ShieldCheck, Users, Church, Globe, ArrowRight } from 'lucide-react';
+import ImpactVisualizations from '../components/ImpactVisualizations';
 
 export default function Mission() {
   const [heroLoaded, setHeroLoaded] = useState(false);
@@ -45,6 +47,12 @@ export default function Mission() {
 
   return (
     <div className="overflow-hidden">
+      <Helmet>
+        <title>The Mission & Mandate | Apostle Sunday Iyi</title>
+        <meta name="description" content="Explore the diverse expressions of the Apostolic Mandate, from church planting and global revival to systemic humanitarian intervention through TRASS." />
+        <meta name="keywords" content="Apostolic Mandate mission, TRASS Humanitarian, Redeemed Assemblies, global revival, Benue water project, Sunday Iyi vision" />
+        <link rel="canonical" href="https://apostlesundayiyi.org/mission" />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-[70vh] flex items-center bg-primary pt-32 pb-20 overflow-hidden">
         {/* Background Elements */}
@@ -144,6 +152,9 @@ export default function Mission() {
           </motion.div>
         </div>
       </section>
+
+      {/* Data Visualizations */}
+      <ImpactVisualizations />
 
       {/* Global Philanthropy */}
       <section className="py-24 sm:py-32 bg-primary text-white relative overflow-hidden">

@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'motion/react';
 import { GraduationCap, BookOpen, Award, CheckCircle2, Send, FileText } from 'lucide-react';
 
@@ -30,6 +31,12 @@ export default function GSOMAdmissions() {
 
   return (
     <div className="pt-20 bg-primary min-h-screen">
+      <Helmet>
+        <title>GSOM Admissions | Global School of Ministry</title>
+        <meta name="description" content="Apply to the Global School of Ministry (GSOM). Specialized tracks in Apostolic Leadership, Ministry of Reconciliation, and Socio-Economic Mandate." />
+        <meta name="keywords" content="Global School of Ministry, GSOM, ministry school, apostolic leadership, theological training, Sunday Iyi" />
+        <link rel="canonical" href="https://apostlesundayiyi.org/gsom-admissions" />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-[65vh] flex items-center justify-center overflow-hidden pt-32 pb-20">
         <div className="absolute inset-0 z-0">

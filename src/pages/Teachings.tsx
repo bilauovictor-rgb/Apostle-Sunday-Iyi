@@ -1,12 +1,32 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import PublicSermonsList from '../components/PublicSermonsList';
 
 export default function Teachings() {
   const [heroLoaded, setHeroLoaded] = useState(false);
   return (
     <div className="pt-20 bg-primary">
+      <Helmet>
+        <title>Teachings & Sermons | Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives</title>
+        <meta name="description" content="Explore deep scriptural insights and prophetic revelations by Apostle Sunday Iyi. Watch and read teachings designed to activate your calling and manifest the reality of heaven." />
+        <meta name="keywords" content="Apostle Sunday Iyi, teachings, sermons, Christian revelation, prophetic, spiritual growth, five-fold ministry" />
+        <link rel="canonical" href="https://apostlesundayiyi.org/teachings" />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://apostlesundayiyi.org/teachings" />
+        <meta property="og:title" content="Teachings & Sermons | Apostle Sunday Iyi" />
+        <meta property="og:description" content="Explore deep scriptural insights and prophetic revelations by Apostle Sunday Iyi." />
+        <meta property="og:image" content="https://res.cloudinary.com/dg5zoqaxo/image/upload/v1778169660/Apostle_Sunday_Iyi_Og_fuf85q.png" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Teachings & Sermons | Apostle Sunday Iyi" />
+        <meta name="twitter:description" content="Explore deep scriptural insights and prophetic revelations by Apostle Sunday Iyi." />
+        <meta name="twitter:image" content="https://res.cloudinary.com/dg5zoqaxo/image/upload/v1778169660/Apostle_Sunday_Iyi_Og_fuf85q.png" />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-[65vh] flex items-center justify-center overflow-hidden pt-32 pb-20 bg-primary">
         {/* Background Elements */}
