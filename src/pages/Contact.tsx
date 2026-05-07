@@ -30,7 +30,7 @@ export default function Contact() {
       <Helmet>
         <title>Connect & Partner | Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives</title>
         <meta name="description" content="Get in touch with the ministry of Apostle Sunday Iyi. Invite for speaking engagements, explore partnership opportunities, or inquire about the Global School of Ministry." />
-        <link rel="canonical" href="https://apostlesundayiyi.org/connect" />
+        <link rel="canonical" href="https://apostlesundayiyi.com/connect" />
       </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-[65vh] flex items-center justify-center overflow-hidden pt-32 pb-20">

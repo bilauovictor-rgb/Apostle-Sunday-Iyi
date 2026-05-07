@@ -23,7 +23,7 @@ export default function SpeakingInvitations() {
       <Helmet>
         <title>Speaking Invitations | Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives</title>
         <meta name="description" content="Invite Apostle Sunday Iyi to speak at your conference, church, or leadership summit. A voice for global reconciliation and transformation." />
-        <link rel="canonical" href="https://apostlesundayiyi.org/speaking-invitations" />
+        <link rel="canonical" href="https://apostlesundayiyi.com/speaking-invitations" />
       </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-[65vh] flex items-center justify-center overflow-hidden pt-32 pb-20">

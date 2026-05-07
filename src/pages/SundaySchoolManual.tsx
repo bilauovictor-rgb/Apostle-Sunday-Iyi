@@ -12,7 +12,7 @@ export default function SundaySchoolManual() {
       <Helmet>
         <title>Sunday School Manual | Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives</title>
         <meta name="description" content="Official weekly Sunday School manual for the global body of Christ. Equip yourself with spiritual insights and deep scriptural study." />
-        <link rel="canonical" href="https://apostlesundayiyi.org/resources/sunday-school-manual" />
+        <link rel="canonical" href="https://apostlesundayiyi.com/resources/sunday-school-manual" />
       </Helmet>
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">

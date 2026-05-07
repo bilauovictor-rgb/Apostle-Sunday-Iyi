@@ -32,13 +32,13 @@ export default function App() {
         <meta name="description" content="Apostle Sunday Iyi is a preacher, teacher, and transformational leader committed to building faith, raising leaders, and impacting nations through biblical teaching, discipleship, leadership development, and prayer." />
         <meta name="keywords" content="Apostle Sunday Iyi, Apostolic Mandate, TRASS Humanitarian, Global School of Ministry, Christian Ministry, Teaching, Equipping, Transforming Lives" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-        <link rel="canonical" href={"https://apostlesundayiyi.org" + window.location.pathname} />
+        <link rel="canonical" href={"https://apostlesundayiyi.com" + window.location.pathname} />
         
         <meta property="og:site_name" content="Apostle Sunday Iyi" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={"https://apostlesundayiyi.org" + window.location.pathname} />
+        <meta property="og:url" content={"https://apostlesundayiyi.com" + window.location.pathname} />
         <meta property="og:title" content="Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives" />
-        <meta property="og:description" content="Apostle Sunday Iyi is a preacher, teacher, and transformational leader committed to building faith, raising leaders, and impacting nations through biblical teaching, discipleship, leadership development, and prayer." />
+        <meta property="og:description" content="Apostle Sunday Iyi is a preacher, teacher, and transformational leader committed to building faith, raising leaders, and impacting nations through biblical teaching, discipleship, and prayer." />
         <meta property="og:image" content="https://res.cloudinary.com/dg5zoqaxo/image/upload/v1778169660/Apostle_Sunday_Iyi_Og_fuf85q.png" />
         <meta property="og:locale" content="en_US" />
         
@@ -46,7 +46,7 @@ export default function App() {
         <meta name="twitter:creator" content="@ApostleSundayIyi" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives" />
-        <meta name="twitter:description" content="Apostle Sunday Iyi is a preacher, teacher, and transformational leader committed to building faith, raising leaders, and impacting nations through biblical teaching, discipleship, leadership development, and prayer." />
+        <meta name="twitter:description" content="Apostle Sunday Iyi is a preacher, teacher, and transformational leader committed to building faith, raising leaders, and impacting nations." />
         <meta name="twitter:image" content="https://res.cloudinary.com/dg5zoqaxo/image/upload/v1778169660/Apostle_Sunday_Iyi_Og_fuf85q.png" />
 
         {/* Structured Data (JSON-LD) for the Person/Organization */}
@@ -56,7 +56,7 @@ export default function App() {
             "@type": "Person",
             "name": "Sunday Iyi",
             "jobTitle": "Apostle",
-            "url": "https://apostlesundayiyi.org",
+            "url": "https://apostlesundayiyi.com",
             "description": "Apostle Sunday Iyi is a preacher, teacher, and transformational leader committed to building faith, raising leaders, and impacting nations.",
             "sameAs": [
               "https://twitter.com/ApostleSundayIyi",

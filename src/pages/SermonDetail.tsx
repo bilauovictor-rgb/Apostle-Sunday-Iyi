@@ -104,7 +104,7 @@ export default function SermonDetail() {
         <title>{pageTitle}</title>
         <meta name="description" content={metaDescription} />
         <meta name="keywords" content={sermon.focusKeyword || `Apostle Sunday Iyi, ${sermon.topic}, preaching, Christ, revelation`} />
-        <link rel="canonical" href={`https://apostlesundayiyi.org/teachings/${sermon.id}`} />
+        <link rel="canonical" href={`https://apostlesundayiyi.com/teachings/${sermon.id}`} />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="article" />
@@ -112,7 +112,7 @@ export default function SermonDetail() {
         <meta property="og:title" content={sermon.seoTitle || sermon.title} />
         <meta property="og:description" content={metaDescription} />
         <meta property="og:image" content={imageUrl} />
-        <meta property="og:url" content={`https://apostlesundayiyi.org/teachings/${sermon.id}`} />
+        <meta property="og:url" content={`https://apostlesundayiyi.com/teachings/${sermon.id}`} />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
@@ -140,13 +140,13 @@ export default function SermonDetail() {
               "@type": "Person",
               "name": "Sunday Iyi",
               "jobTitle": "Apostle",
-              "url": "https://apostlesundayiyi.org"
+              "url": "https://apostlesundayiyi.com"
             },
             "publisher": {
               "@type": "ReligiousOrganization",
               "name": "Apostle Sunday Iyi",
               "alternateName": "The Apostolic Mandate",
-              "url": "https://apostlesundayiyi.org",
+              "url": "https://apostlesundayiyi.com",
               "logo": {
                 "@type": "ImageObject",
                 "url": "https://res.cloudinary.com/dg5zoqaxo/image/upload/v1778169660/Apostle_Sunday_Iyi_Og_fuf85q.png"
@@ -155,7 +155,7 @@ export default function SermonDetail() {
             "description": metaDescription,
             "mainEntityOfPage": {
               "@type": "WebPage",
-              "@id": `https://apostlesundayiyi.org/teachings/${sermon.id}`
+              "@id": `https://apostlesundayiyi.com/teachings/${sermon.id}`
             }
           })}
         </script>

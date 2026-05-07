@@ -129,7 +129,7 @@ export default function Gallery() {
       <Helmet>
         <title>Ministry Moments | apostle sunday iyi | Teaching, Equipping & Transforming Lives</title>
         <meta name="description" content="Witness the visual testimony of the Apostolic Mandate. A collection of ministry moments from diverse locations and engagements." />
-        <link rel="canonical" href="https://apostlesundayiyi.org/gallery" />
+        <link rel="canonical" href="https://apostlesundayiyi.com/gallery" />
       </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-[40vh] sm:min-h-[50vh] flex items-center justify-center overflow-hidden pt-24 sm:pt-32 pb-12 sm:pb-20 bg-primary">

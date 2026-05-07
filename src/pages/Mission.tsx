@@ -51,7 +51,7 @@ export default function Mission() {
         <title>The Mission & Mandate | Apostle Sunday Iyi</title>
         <meta name="description" content="Explore the diverse expressions of the Apostolic Mandate, from church planting and global revival to systemic humanitarian intervention through TRASS." />
         <meta name="keywords" content="Apostolic Mandate mission, TRASS Humanitarian, Redeemed Assemblies, global revival, Benue water project, Sunday Iyi vision" />
-        <link rel="canonical" href="https://apostlesundayiyi.org/mission" />
+        <link rel="canonical" href="https://apostlesundayiyi.com/mission" />
       </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-[70vh] flex items-center bg-primary pt-32 pb-20 overflow-hidden">

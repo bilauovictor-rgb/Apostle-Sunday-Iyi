@@ -26,7 +26,7 @@ export default function MinistryPartnership() {
       <Helmet>
         <title>Ministry Partnership | Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives</title>
         <meta name="description" content="Partner with Apostle Sunday Iyi and Pastor Gladys Iyi in the global mission of reconciliation. Strengthening the mandate through shared vision and purpose." />
-        <link rel="canonical" href="https://apostlesundayiyi.org/ministry-partnership" />
+        <link rel="canonical" href="https://apostlesundayiyi.com/ministry-partnership" />
       </Helmet>
       {/* SECTION 1 — HERO INTRODUCTION */}
       <section className="relative min-h-screen flex items-center bg-primary pt-32 pb-20 overflow-hidden">

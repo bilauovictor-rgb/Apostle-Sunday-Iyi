@@ -12,11 +12,11 @@ export default function Teachings() {
         <title>Teachings & Sermons | Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives</title>
         <meta name="description" content="Explore deep scriptural insights and prophetic revelations by Apostle Sunday Iyi. Watch and read teachings designed to activate your calling and manifest the reality of heaven." />
         <meta name="keywords" content="Apostle Sunday Iyi, teachings, sermons, Christian revelation, prophetic, spiritual growth, five-fold ministry" />
-        <link rel="canonical" href="https://apostlesundayiyi.org/teachings" />
+        <link rel="canonical" href="https://apostlesundayiyi.com/teachings" />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://apostlesundayiyi.org/teachings" />
+        <meta property="og:url" content="https://apostlesundayiyi.com/teachings" />
         <meta property="og:title" content="Teachings & Sermons | Apostle Sunday Iyi" />
         <meta property="og:description" content="Explore deep scriptural insights and prophetic revelations by Apostle Sunday Iyi." />
         <meta property="og:image" content="https://res.cloudinary.com/dg5zoqaxo/image/upload/v1778169660/Apostle_Sunday_Iyi_Og_fuf85q.png" />

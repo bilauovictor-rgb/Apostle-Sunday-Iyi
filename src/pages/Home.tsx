@@ -18,7 +18,7 @@ export default function Home() {
       <Helmet>
         <title>Apostle Sunday Iyi | Teaching, Equipping & Transforming Lives</title>
         <meta name="description" content="Apostle Sunday Iyi is a preacher, teacher, and transformational leader committed to building faith, raising leaders, and impacting nations through biblical teaching and leadership development." />
-        <link rel="canonical" href="https://apostlesundayiyi.org" />
+        <link rel="canonical" href="https://apostlesundayiyi.com" />
       </Helmet>
       {/* Hero Section */}
       <section className="hero-section bg-primary">

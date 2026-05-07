@@ -10,7 +10,7 @@ export default function About() {
         <title>About Apostle Sunday Iyi | Fifth-Generation Global Minister</title>
         <meta name="description" content="Discover the spiritual pedigree and apostolic calling of Apostle Sunday Iyi. A fifth-generation teacher and visionary leader of the Global School of Ministry." />
         <meta name="keywords" content="Sunday Iyi biography, Sunday Iyi heritage, Gladys Iyi, fifth generation minister, apostolic leader, GSOM, ministry founder" />
-        <link rel="canonical" href="https://apostlesundayiyi.org/about" />
+        <link rel="canonical" href="https://apostlesundayiyi.com/about" />
       </Helmet>
       {/* Page Header */}
       <section className="relative min-h-[65vh] flex items-center bg-primary text-white overflow-hidden pt-32 pb-20">
