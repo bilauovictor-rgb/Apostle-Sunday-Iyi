@@ -192,7 +192,7 @@ export default function TestimonialsSection() {
                 ))}
               </div>
               <p className="text-xs font-bold text-primary uppercase tracking-tighter">
-                Joined by over <span className="text-secondary">45,000+</span> witnesses globally
+                Joined by over <span className="text-secondary">1,000,000+</span> witnesses globally
               </p>
             </div>
           </div>
