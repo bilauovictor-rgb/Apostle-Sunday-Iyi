@@ -101,10 +101,26 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-xs text-slate-500 tracking-wider uppercase">
-            © {new Date().getFullYear()} Apostle Sunday Iyi. All Rights Reserved.
-          </p>
+        <div className="border-t border-white/10 pt-12 flex flex-col md:flex-row justify-between items-center gap-10">
+          <div className="flex flex-col items-center md:items-start gap-4">
+            <p className="text-xs text-slate-500 tracking-wider uppercase">
+              © {new Date().getFullYear()} Apostle Sunday Iyi. All Rights Reserved.
+            </p>
+            <div className="flex flex-col items-center md:items-start group">
+              <p className="text-[11px] text-slate-500 uppercase tracking-[0.25em] font-medium mb-1">
+                Developed by <span className="text-slate-300 transition-colors group-hover:text-white">Gigantic Computers</span>
+              </p>
+              <a 
+                href="https://Bilauovictor.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-[10px] text-slate-600 hover:text-secondary transition-all duration-500 font-mono tracking-wider relative overflow-hidden"
+              >
+                <span className="relative z-10">https://Bilauovictor.com</span>
+                <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-secondary group-hover:w-full transition-all duration-700 ease-in-out"></span>
+              </a>
+            </div>
+          </div>
           <div className="flex items-center space-x-8 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
             <Link to="/admin" onClick={scrollToTop} className="hover:text-secondary transition-colors">Admin Access</Link>
             <a href="#" className="hover:text-secondary transition-colors">Privacy Policy</a>
